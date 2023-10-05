@@ -1,6 +1,4 @@
-# IncluyeME
-
-![Logo](Documentacion/Logo.png)
+## IncluyeME
 
 **IncluyeMe+** es una aplicación destinada a apoyar a las personas con diversidad funcional durante el programa PTVAL, destinado a la transición a la vida adulta. La aplicación será desarrollada para el colegio San Rafael (Granada). La aplicación debe ser accesible a todo tipo de estudiantes, profesores y administradores. Debe ser lo más simple posible pero también personalizable. Esta aplicación debe cumplir con los requisitos en el pliego técnico proporcionado por el colegio, que refleja sus solicitudes y necesidades específicas. Además, estamos dispuestos a adaptar la aplicación de acuerdo a posibles cambios de las necesidades del cliente.
 
@@ -11,3 +9,5 @@ La aplicación puede enviar alertas, a modo de recordatorio, en las tareas pendi
 El proyecto se llevará a cabo en un periodo de cuatro meses, con fecha de finalización en diciembre tras las tres primeras iteraciones del proyecto. En tal fecha, se entregará un primer prototipo donde estarán disponibles algunas de las funcionalidades prioritarias de la aplicación. 
 
 El modelo de negocio de la aplicación se basa en la modalidad bajo demanda, lo que implica que el primer prototipo de la aplicación estará disponible tan pronto como se complete su desarrollo, permitiendo al cliente acceder a los servicios más básicos.
+
+![Logo](Documentacion/Logo.png)
