@@ -1,1 +1,3 @@
-# DGP-IncluyeME
+# IncluyeME
+
+![Logo](Documentacion/Logo.png)
