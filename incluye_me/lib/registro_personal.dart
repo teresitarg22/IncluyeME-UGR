@@ -185,6 +185,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   onPressed: () {
                     _pickImage(); // Llama a la función para seleccionar una imagen
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Seleccionar Foto'),
                 ),
                 if (_imageError !=
@@ -287,6 +290,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           .add(''); // Agregar un nuevo campo vacío
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Añadir Título Académico'),
                 ),
                 // Mapear la lista de certificados académicos adicionales en campos de entrada
@@ -322,6 +328,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           .add(''); // Agregar un nuevo campo vacío
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Añadir Certificado Adicional'),
                 ),
                 // Mapear la lista de experiencia laboral en campos de entrada
@@ -356,12 +365,18 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           .add(''); // Agregar un nuevo campo vacío
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Añadir Experiencia Laboral'),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     _pickFile(); // Abre el selector de archivos
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Añadir CV'),
                 ),
                 if (_attachedFile != null)
@@ -450,6 +465,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       _aulasProfesor.add(''); // Agregar un nuevo campo vacío
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Añadir Aulas del Profesor'),
                 ),
 
@@ -595,14 +613,21 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   },
                 ),
 
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Los datos son válidos, puedes procesar el registro.
-                    }
-                  },
-                  child: Text('Registrarse'),
-                ),
+                Align(
+                  alignment: Alignment.center, // Centra el botón en el medio
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Los datos son válidos, puedes procesar el registro.
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(
+                          0xFF29DA81), // Cambia el color del botón a verde
+                    ),
+                    child: Text('Registrarse'),
+                  ),
+                )
               ],
             ),
           ),
