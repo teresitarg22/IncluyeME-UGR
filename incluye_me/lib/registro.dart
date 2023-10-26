@@ -26,8 +26,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Selección de Rol'),
-      ),
+          title: Text('Selección de Rol'),
+          backgroundColor: Color.fromARGB(255, 41, 218, 129)),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

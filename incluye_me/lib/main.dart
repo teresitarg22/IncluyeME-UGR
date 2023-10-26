@@ -39,14 +39,59 @@ class _UserListPageState extends State<UserListPage> {
     // Agrega más usuarios según tus necesidades
   ];
 
-  String? selectedFilter = "Todos"; // Cambiado a String?
+  String? selectedFilter = "Todos";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Usuarios'),
+        backgroundColor: Color(0xFF29DA81), // Color personalizado
         actions: [
+          IconButton(
+            onPressed: () {
+              // Abre un cuadro de diálogo para la búsqueda
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  String query =
+                      ''; // Variable para almacenar la consulta de búsqueda
+
+                  return AlertDialog(
+                    title: Text('Buscar por Nombre'),
+                    content: TextField(
+                      onChanged: (text) {
+                        query =
+                            text; // Almacena la consulta a medida que se escribe
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Cierra el cuadro de diálogo y realiza la búsqueda
+                          Navigator.of(context).pop();
+                          // Lógica de búsqueda con "query"
+                          List<User> searchResults = users
+                              .where((user) => user.name
+                                  .toLowerCase()
+                                  .contains(query.toLowerCase()))
+                              .toList();
+                          // Filtra la lista de usuarios según "query"
+                          setState(() {
+                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
+                            users.clear();
+                            users.addAll(searchResults);
+                          });
+                        },
+                        child: Text('Buscar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: Icon(Icons.search), // Icono de lupa
+          ),
           DropdownButton<String?>(
             value: selectedFilter,
             onChanged: (String? newValue) {
@@ -64,79 +109,76 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (BuildContext context, int index) {
-          if (selectedFilter == "Todos" ||
-              (selectedFilter == "Profesores" && users[index].isTeacher) ||
-              (selectedFilter == "Alumnos" && !users[index].isTeacher)) {
-            return Card(
-              margin: EdgeInsets.all(8.0),
-              child: ListTile(
-                title: GestureDetector(
-                  child: Text(users[index].name),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return UserDetailsPage(
-                        user: users[index],
-                      );
-                    }));
-                  },
-                ),
-                subtitle: Text(users[index].email),
-                leading: Icon(Icons.person),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, color: Colors.black),
-                      onPressed: () {
-                        // Agregar lógica de edición
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.black),
-                      onPressed: () {
-                        // Agregar lógica de eliminación
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-          return Container(); // Oculta usuarios que no cumplen con el filtro
-        },
-      ),
-      floatingActionButton: Container(
-        alignment: Alignment.center,
-        margin: EdgeInsets.all(16.0),
-        child: Material(
-          elevation: 4.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          color: Colors.blue,
-          child: InkWell(
-            onTap: () {
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
               Navigator.pushNamed(context, '/registroPage');
             },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-              child: Text(
-                'Crear Nuevo Usuario',
-                style: TextStyle(color: Colors.white),
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFF29DA81),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
               ),
+              padding: EdgeInsets.all(16.0),
+            ),
+            child: Text('Crear Nuevo Usuario'),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (selectedFilter == "Todos" ||
+                    (selectedFilter == "Profesores" &&
+                        users[index].isTeacher) ||
+                    (selectedFilter == "Alumnos" && !users[index].isTeacher)) {
+                  return Card(
+                    margin: EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: GestureDetector(
+                        child: Text(users[index].name),
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return UserDetailsPage(
+                              user: users[index],
+                            );
+                          }));
+                        },
+                      ),
+                      subtitle: Text(users[index].email),
+                      leading: Icon(Icons.person),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.black),
+                            onPressed: () {
+                              // Agregar lógica de edición
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.black),
+                            onPressed: () {
+                              // Agregar lógica de eliminación
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                return Container();
+              },
             ),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.blue, // Cambiar el color de fondo a azul
+        backgroundColor: Color(0xFF29DA81), // Color personalizado
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: Colors.blue,
+            backgroundColor: Color(0xFF29DA81), // Color personalizado
             icon: Icon(Icons.people, color: Colors.white),
             label: 'Usuarios',
           ),
@@ -172,6 +214,7 @@ class UserDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detalles del Usuario'),
+        backgroundColor: Color(0xFF29DA81), // Color personalizado
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
