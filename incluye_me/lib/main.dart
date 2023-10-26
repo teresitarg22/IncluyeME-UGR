@@ -483,7 +483,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     return null;
                   },
                 ),
-                if (_selectedGender == 'Otro')
+                if (_selectedRelacion == 'Otro')
                   TextFormField(
                     decoration: InputDecoration(
                         labelText: 'Relación entre el tutor y el alumno *'),
