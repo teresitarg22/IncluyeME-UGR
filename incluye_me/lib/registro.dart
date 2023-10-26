@@ -232,7 +232,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     _imageError!,
                     style: TextStyle(color: Colors.red),
                   ),
-               /* Padding(
+                /* Padding(
                   padding: EdgeInsets.only(
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
@@ -705,6 +705,8 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _passwd = null;
   String? _confirmPasswd = null;
   bool? _isAdmin = false;
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _dateControllerContratacion = TextEditingController();
@@ -1194,7 +1196,20 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   ),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Contraseña *'),
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña *',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _showPassword ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _showPassword = !_showPassword;
+                        });
+                      },
+                    ),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'La contraseña es obligatoria';
@@ -1207,12 +1222,27 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
 
                     return null;
                   },
-                  obscureText: true ,
+                  obscureText:
+                      !_showPassword, // Mostrar u ocultar la contraseña según el estado
                 ),
 
                 TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Confirmar contraseña *'),
+                  decoration: InputDecoration(
+                    labelText: 'Confirmar contraseña *',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _showConfirmPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _showConfirmPassword = !_showConfirmPassword;
+                        });
+                      },
+                    ),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'La confirmación de contraseña es obligatoria';
@@ -1225,6 +1255,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
 
                     return null;
                   },
+                  obscureText: !_showConfirmPassword,
                 ),
 
                 Padding(
