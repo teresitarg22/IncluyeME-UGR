@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
@@ -68,9 +66,9 @@ class AlumnoRegistration extends StatefulWidget {
 class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _selectedGender;
-  String? _selectedDiscapacidad;
+  /*String? _selectedDiscapacidad;
   String? _selectedTipo;
-  String? _selectedNecesidad;
+  String? _selectedNecesidad;*/
   String? _selectedFont;
   String? _selectedTamanio;
   String? _selectedRelacion;
@@ -234,7 +232,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     _imageError!,
                     style: TextStyle(color: Colors.red),
                   ),
-                Padding(
+               /* Padding(
                   padding: EdgeInsets.only(
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
@@ -346,7 +344,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                 TextFormField(
                   decoration:
                       InputDecoration(labelText: 'Información Adicional '),
-                ),
+                ),*/
                 Padding(
                   padding: EdgeInsets.only(
                       top:
@@ -469,13 +467,13 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   value: _selectedGender,
                   onChanged: (value) {
                     setState(() {
-                      _selectedGender = value;
+                      _selectedRelacion = value;
                     });
                   },
                   items: ['Madre', 'Padre', 'Otro']
-                      .map((gender) => DropdownMenuItem<String>(
-                            value: gender,
-                            child: Text(gender),
+                      .map((relacion) => DropdownMenuItem<String>(
+                            value: relacion,
+                            child: Text(relacion),
                           ))
                       .toList(),
                   decoration: InputDecoration(
@@ -487,7 +485,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     return null;
                   },
                 ),
-                if (_selectedGender == 'Otro')
+                if (_selectedRelacion == 'Otro')
                   TextFormField(
                     decoration: InputDecoration(
                         labelText: 'Relación entre el tutor y el alumno *'),
@@ -1209,6 +1207,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
 
                     return null;
                   },
+                  obscureText: true ,
                 ),
 
                 TextFormField(

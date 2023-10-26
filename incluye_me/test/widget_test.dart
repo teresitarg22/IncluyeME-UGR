@@ -8,7 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:registrar_usuario/registro.dart';
 import 'package:registrar_usuario/main.dart';
 
 void main() {
