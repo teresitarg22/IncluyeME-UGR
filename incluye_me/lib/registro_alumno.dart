@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
 
 class AlumnoRegistration extends StatefulWidget {
@@ -31,20 +31,23 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   bool? _isTactil = false;
 
   List<String> availableFonts = GoogleFonts.asMap().keys.toList();
-  List<String> selectedOptions =
-      []; // Lista para rastrear opciones seleccionadas
-  List<String> options = [
-    "Opción 1",
-    "Opción 2",
-    "Opción 3",
-    "Opción 4",
+  List<String> selectedOptions = [];
+
+  List<MultiSelectItem<String>> multiSelectOptions = [
+    MultiSelectItem("Pictograma", "Pictograma"),
+    MultiSelectItem("Audio", "Audio"),
+    MultiSelectItem("Imagen", "Imagen"),
+    MultiSelectItem("Video", "Video"),
+    MultiSelectItem("Dibujo", "Dibujo"),
+    MultiSelectItem("Texto", "Texto"),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registro de Alumno'),
-      ),
+          title: Text('Registro de Alumno'),
+          backgroundColor: Color.fromARGB(255, 41, 218, 129)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -173,6 +176,9 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   onPressed: () {
                     _pickImage(); // Llama a la función para seleccionar una imagen
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Seleccionar Foto'),
                 ),
                 if (_imageError !=
@@ -299,7 +305,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
                   child: Text(
-                    'Historial Medico ',
+                    'Historial Médico ',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -319,6 +325,9 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       });
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
                   child: Text('Adjuntar Archivo'),
                 ),
 
@@ -389,6 +398,19 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       }
                       return null;
                     }),
+                MultiSelectDialogField<String>(
+                  items: multiSelectOptions,
+                  initialValue: selectedOptions,
+                  title: Text("Selecciona opciones"),
+                  selectedColor: Colors.green,
+                  buttonText: Text(
+                      'Selecciona preferencias para mostrar el contenido en la app'),
+                  onConfirm: (values) {
+                    setState(() {
+                      selectedOptions = values;
+                    });
+                  },
+                ),
                 CheckboxListTile(
                   title: Text('Uso de pantalla táctil'),
                   value:
@@ -581,14 +603,22 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   decoration:
                       InputDecoration(labelText: 'Correo electrónico *'),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Los datos son válidos, puedes procesar el registro.
-                    }
-                  },
-                  child: Text('Registrarse'),
-                ),
+
+                Align(
+                  alignment: Alignment.center, // Centra el botón en el medio
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Los datos son válidos, puedes procesar el registro.
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(
+                          0xFF29DA81), // Cambia el color del botón a verde
+                    ),
+                    child: Text('Registrarse'),
+                  ),
+                )
               ],
             ),
           ),

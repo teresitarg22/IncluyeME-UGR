@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'registro_alumno.dart';
-import 'registro_personal.dart'; 
+import 'registro_personal.dart';
 
 /*
 void main() {
@@ -35,7 +35,17 @@ class HomeScreen extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => AlumnoRegistration()));
               },
-              child: Text('Alumno'),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFF29DA81),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.school), // Icono de estudiante
+                  SizedBox(width: 8), // Espacio entre el icono y el texto
+                  Text('Alumno'), // Texto del botón
+                ],
+              ),
             ),
             SizedBox(width: 20),
             ElevatedButton(
@@ -45,8 +55,18 @@ class HomeScreen extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => ProfesorRegistration()));
               },
-              child: Text('Personal'),
-            ),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFF29DA81),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.work), // Icono de estudiante
+                  SizedBox(width: 8), // Espacio entre el icono y el texto
+                  Text('Personal'), // Texto del botón
+                ],
+              ),
+            )
           ],
         ),
       ),

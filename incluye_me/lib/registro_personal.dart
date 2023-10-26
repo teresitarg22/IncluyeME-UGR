@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -6,7 +5,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-
 
 class ProfesorRegistration extends StatefulWidget {
   @override
@@ -47,8 +45,8 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registro de Profesor'),
-      ),
+          title: Text('Registro de Personal'),
+          backgroundColor: Color.fromARGB(255, 41, 218, 129)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
