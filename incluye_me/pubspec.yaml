@@ -42,12 +42,12 @@ flutter_localizations:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  image_picker: ^0.8.4
-  intl: ^0.17.0
-  file_picker: ^4.2.0
-  google_fonts: ^2.0.0
+  image_picker: ^1.0.4
+  intl: ^0.18.1
+  file_picker: ^6.0.0
+  google_fonts: ^6.1.0
   multi_select_flutter: ^4.0.0
-  permission_handler: ^10.1.0
+  permission_handler: ^11.0.1
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -55,7 +55,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

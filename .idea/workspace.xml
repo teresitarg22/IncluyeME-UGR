@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="66290c39-47ed-4d83-a60b-dc4daaac8cad" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/.metadata" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/.metadata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/analysis_options.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/analysis_options.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/debug/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/debug/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/main/kotlin/com/example/incluye_me/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/main/kotlin/com/example/incluye_me/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/drawable-v21/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/drawable-v21/launch_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/drawable/launch_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/drawable/launch_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/values-night/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/values-night/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/app/src/profile/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/app/src/profile/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Flutter/AppFrameworkInfo.plist" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Flutter/AppFrameworkInfo.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Flutter/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Flutter/Debug.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Flutter/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Flutter/Release.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/AppDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/Base.lproj/LaunchScreen.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/Base.lproj/LaunchScreen.storyboard" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/Base.lproj/Main.storyboard" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/Base.lproj/Main.storyboard" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/Runner/Runner-Bridging-Header.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/Runner/Runner-Bridging-Header.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/ios/RunnerTests/RunnerTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/ios/RunnerTests/RunnerTests.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/flutter/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/flutter/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/main.cc" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/main.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/my_application.cc" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/my_application.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/linux/my_application.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/linux/my_application.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Flutter/Flutter-Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Flutter/Flutter-Debug.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Flutter/Flutter-Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Flutter/Flutter-Release.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/AppDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Base.lproj/MainMenu.xib" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Base.lproj/MainMenu.xib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/AppInfo.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/AppInfo.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/Debug.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/Release.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/Warnings.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Configs/Warnings.xcconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/DebugProfile.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/DebugProfile.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/MainFlutterWindow.swift" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/MainFlutterWindow.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/Runner/Release.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/Runner/Release.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/macos/RunnerTests/RunnerTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/macos/RunnerTests/RunnerTests.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/test/widget_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/test/widget_test.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/web/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/web/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/web/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/flutter/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/flutter/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/Runner.rc" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/Runner.rc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/flutter_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/flutter_window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/flutter_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/flutter_window.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/resource.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/resource.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/runner.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/runner.exe.manifest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/utils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/win32_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/win32_window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/incluye_me/windows/runner/win32_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/incluye_me/windows/runner/win32_window.h" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2XI2tMIJP9lvyBczOte4R680Y8Y" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "last_opened_file_path": "C:/Users/Antonio/Desktop/incluyeme/DGP-IncluyeME",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="66290c39-47ed-4d83-a60b-dc4daaac8cad" name="Changes" comment="" />
+      <created>1698302486723</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1698302486723</updated>
+    </task>
+    <servers />
+  </component>
+</project>
