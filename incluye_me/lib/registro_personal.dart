@@ -6,6 +6,16 @@ import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
+import 'package:postgres/postgres.dart';
+
+final connection = PostgreSQLConnection(
+  'localhost', // host de la base de datos
+  5432, // puerto de la base de datos
+  'my_database', // nombre de la base de datos
+  username: 'my_user', // nombre de usuario de la base de datos
+  password: 'admin', // contraseña del usuario de la base de datos
+);
+
 class ProfesorRegistration extends StatefulWidget {
   @override
   _ProfesorRegistrationState createState() => _ProfesorRegistrationState();
@@ -19,7 +29,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _confirmPasswd = null;
   bool? _isAdmin = false;
   bool _showPassword = false;
-  bool _showConfirmPassword = false; 
+  bool _showConfirmPassword = false;
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _dateControllerContratacion = TextEditingController();
@@ -27,11 +37,19 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   DateTime? _selectedDateContratacion;
 
   //TextEditingController _cvController =
-      //TextEditingController(); //CREO QUE NO SE UTILIZA
+  //TextEditingController(); //CREO QUE NO SE UTILIZA
   File? _attachedFile;
 
   File? _image;
   String? _imageError;
+
+  String? _nombre;
+  String? _apellidos;
+  String? _genero;
+  String? _nacionalidad; 
+  String? _id;
+  String? _tarjetaSanitaria;
+  String? _direccionDomicilio;
 
   List<String> _titulosAcademicos =
       []; // Lista para almacenar los títulos académicos
@@ -40,6 +58,20 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   List<String> _experienciaLaboral =
       []; //Lista para almacenar la experiencia laboral
   List<String> _aulasProfesor = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _connectToDatabase(); //CONECTAR A LA BASE DE DATOS
+  }
+
+  void _connectToDatabase() async {
+    try {
+      await connection.open();
+    } catch (e) {
+      print('Error de conexión a la base de datos: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +102,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _nombre =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Apellido *'),
@@ -78,6 +114,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return 'El apellido es obligatorio';
                     }
                     return null;
+                  },
+                  onSaved: (value) {
+                    _apellidos =
+                        value; // Asignar el valor introducido a la variable
                   },
                 ),
                 TextFormField(
@@ -116,6 +156,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _genero =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
 
                 if (_selectedGenderProf == 'Otro')
@@ -127,6 +171,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       }
                       return null;
                     },
+                    onSaved: (value) {
+                      _genero =
+                          value; // Reescribir el valor introducido a la variable
+                    },
                   ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Nacionalidad *'),
@@ -135,6 +183,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return 'La nacionalidad es obligatoria';
                     }
                     return null;
+                  },
+                  onSaved: (value) {
+                    _nacionalidad =
+                        value; // Asignar el valor introducido a la variable
                   },
                 ),
                 TextFormField(
@@ -146,6 +198,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _direccionDomicilio =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -156,6 +212,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _id =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -165,6 +225,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return 'El número de seguridad social es obligatorio';
                     }
                     return null;
+                  },
+                  onSaved: (value) {
+                    _tarjetaSanitaria =
+                        value; // Asignar el valor introducido a la variable
                   },
                 ),
                 Padding(
@@ -251,7 +315,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return null;
                     },
                   ),
-                  
+
                 // Mapear la lista de títulos académicos en campos de entrada
                 ..._titulosAcademicos.asMap().entries.map((entry) {
                   final int index = entry.key;

@@ -45,9 +45,9 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   ];
 
   List<MultiSelectItem<String>> multiSelectImagenes = [
-    MultiSelectItem("Balon", "assets/balon.png"),
-    MultiSelectItem("assets/martillo.png", "Martillo"),
-    MultiSelectItem("assets/raqueta.png", "Raqueta"),
+    MultiSelectItem("../assets/balon.png", "Balon"),
+    MultiSelectItem("../assets/martillo.png", "Martillo"),
+    MultiSelectItem("../assets/raqueta.png", "Raqueta"),
     // Agrega más imágenes si es necesario
   ];
 
@@ -464,17 +464,35 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       InputDecoration(labelText: 'Correo electrónico *'),
                 ),
 
-                MultiSelectDialogField<String>(
+                MultiSelectDialogField(
                   items: multiSelectImagenes,
                   initialValue: selectedImages,
-                  title: Text("Selecciona imágenes"),
+                  title: Text('Selecciona imágenes'),
                   selectedColor: Colors.green,
-                  buttonText: Text('Selecciona imágenes'),
+                  buttonText: Text('Imágenes seleccionadas'),
                   onConfirm: (values) {
                     setState(() {
-                      selectedImages = values;
+                      selectedOptions = values;
                     });
                   },
+                ),
+                SizedBox(height: 20), // Espacio entre el menú y otros elementos
+                Text(
+                  'Imágenes seleccionadas:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: selectedOptions.map((option) {
+                    return Image.asset(
+                      option,
+                      width: 50, // Tamaño de la imagen
+                      height: 50,
+                    );
+                  }).toList(),
                 ),
 
                 Align(
