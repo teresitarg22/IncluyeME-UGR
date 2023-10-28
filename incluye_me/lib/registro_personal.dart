@@ -9,10 +9,10 @@ import 'dart:io';
 import 'package:postgres/postgres.dart';
 
 final connection = PostgreSQLConnection(
-  'localhost', // host de la base de datos
+  'DGP', // host de la base de datos
   5432, // puerto de la base de datos
-  'DGP', // nombre de la base de datos
-  username: 'admin', // nombre de usuario de la base de datos
+  'prueba', // nombre de la base de datos
+  username: 'postgres', // nombre de usuario de la base de datos
   password: 'admin', // contraseña del usuario de la base de datos
 );
 
@@ -46,18 +46,17 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _nombre;
   String? _apellidos;
   String? _genero;
-  String? _nacionalidad; 
+  String? _nacionalidad;
   String? _id;
   String? _tarjetaSanitaria;
   String? _direccionDomicilio;
-  String? _nivelEstudios; 
+  String? _nivelEstudios;
   String? _informacionAdicional;
-  String? _puesto; 
-  String? _departamento; 
-  String? _numeroTlf; 
-  String? _correoElectronico; 
-  String? _tlfEmergencia; 
-
+  String? _puesto;
+  String? _departamento;
+  String? _numeroTlf;
+  String? _correoElectronico;
+  String? _tlfEmergencia;
 
   List<String> _titulosAcademicos =
       []; // Lista para almacenar los títulos académicos
@@ -221,8 +220,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     return null;
                   },
                   onSaved: (value) {
-                    _id =
-                        value; // Asignar el valor introducido a la variable
+                    _id = value; // Asignar el valor introducido a la variable
                   },
                 ),
                 TextFormField(
@@ -327,9 +325,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return null;
                     },
                     onSaved: (value) {
-                    _nivelEstudios =
-                        value; // Asignar el valor introducido a la variable
-                  },
+                      _nivelEstudios =
+                          value; // Asignar el valor introducido a la variable
+                    },
                   ),
 
                 // Mapear la lista de títulos académicos en campos de entrada
@@ -723,7 +721,17 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Los datos son válidos, puedes procesar el registro.
+                        _formKey.currentState!.save();
+
+                        // Aquí se realiza el INSERT INTO en la base de datos
+                        connection.query(
+                          "INSERT INTO aula (nombre) VALUES (@valor1)",
+                          substitutionValues: {
+                            'valor1': "LOLI",
+                          },
+                        );
+
+                        connection.close();
                       }
                     },
                     style: ElevatedButton.styleFrom(
