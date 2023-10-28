@@ -21,10 +21,11 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   String? _selectedFont;
   String? _selectedTamanio;
   String? _selectedRelacion;
+  String? _selectedImage;
 
   TextEditingController _dateController = TextEditingController();
   DateTime? _selectedDate;
-  TextEditingController _historialMedicoController = TextEditingController();
+  //TextEditingController _historialMedicoController = TextEditingController();
   File? _attachedFile;
   File? _image;
   String? _imageError;
@@ -32,6 +33,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
 
   List<String> availableFonts = GoogleFonts.asMap().keys.toList();
   List<String> selectedOptions = [];
+  List<String> selectedImages = [];
 
   List<MultiSelectItem<String>> multiSelectOptions = [
     MultiSelectItem("Pictograma", "Pictograma"),
@@ -40,6 +42,13 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     MultiSelectItem("Video", "Video"),
     MultiSelectItem("Dibujo", "Dibujo"),
     MultiSelectItem("Texto", "Texto"),
+  ];
+
+  List<MultiSelectItem<String>> multiSelectImagenes = [
+    MultiSelectItem("Balon", "assets/balon.png"),
+    MultiSelectItem("assets/martillo.png", "Martillo"),
+    MultiSelectItem("assets/raqueta.png", "Raqueta"),
+    // Agrega más imágenes si es necesario
   ];
 
   @override
@@ -187,154 +196,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     _imageError!,
                     style: TextStyle(color: Colors.red),
                   ),
-                /* Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Discapacidad',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                DropdownButtonFormField<String>(
-                    value: _selectedTipo,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedTipo = value;
-                      });
-                    },
-                    items: ['Física', 'Visual', 'Auditiva', 'Cognitiva', 'Otro']
-                        .map((tipo) => DropdownMenuItem<String>(
-                              value: tipo,
-                              child: Text(tipo),
-                            ))
-                        .toList(),
-                    decoration:
-                        InputDecoration(labelText: 'Tipo Discapacidad *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El tipo  es obligatorio';
-                      }
-                      return null;
-                    }),
-                if (_selectedTipo == 'Otro')
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El tipo de discapacidad es obligatorio';
-                      }
-                      return null;
-                    },
-                  ),
-                DropdownButtonFormField<String>(
-                    value: _selectedDiscapacidad,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedDiscapacidad = value;
-                      });
-                    },
-                    items: ['Leve', 'Moderado', 'Grave', 'Otro']
-                        .map((discapacidad) => DropdownMenuItem<String>(
-                              value: discapacidad,
-                              child: Text(discapacidad),
-                            ))
-                        .toList(),
-                    decoration:
-                        InputDecoration(labelText: 'Grado Discapacidad *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El grado es obligatorio';
-                      }
-                      return null;
-                    }),
-                if (_selectedDiscapacidad == 'Otro')
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El grado de discapacidad es obligatorio';
-                      }
-                      return null;
-                    },
-                  ),
-                DropdownButtonFormField<String>(
-                    value: _selectedNecesidad,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedNecesidad = value;
-                      });
-                    },
-                    items: [
-                      'Ninguna',
-                      'Silla de Ruedas',
-                      'Audifonos',
-                      'Bastón de Movilidad',
-                      'Asistencia para la Comunicación',
-                      'Otro'
-                    ]
-                        .map((necesidad) => DropdownMenuItem<String>(
-                              value: necesidad,
-                              child: Text(necesidad),
-                            ))
-                        .toList(),
-                    decoration:
-                        InputDecoration(labelText: 'Necesidades Específicas *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'La necesidad específica es obligatoria';
-                      }
-                      return null;
-                    }),
-                if (_selectedNecesidad == 'Otro')
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'La necesidad específica es obligatoria';
-                      }
-                      return null;
-                    },
-                  ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Información Adicional '),
-                ),*/
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Historial Médico ',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles();
-
-                    if (result != null) {
-                      _attachedFile = File(result.files.single.path!);
-                      setState(() {
-                        _historialMedicoController.text =
-                            result.files.single.name;
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Adjuntar Archivo'),
-                ),
-
-                TextFormField(
-                  controller: _historialMedicoController,
-                  decoration: InputDecoration(labelText: 'Historial Médico'),
-                ),
                 TextFormField(
                   decoration:
                       InputDecoration(labelText: 'Alergías o intolerancias '),
@@ -403,8 +264,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   initialValue: selectedOptions,
                   title: Text("Selecciona opciones"),
                   selectedColor: Colors.green,
-                  buttonText: Text(
-                      'Selecciona preferencias para mostrar el contenido en la app'),
+                  buttonText: Text('Preferencias para mostrar el contenido'),
                   onConfirm: (values) {
                     setState(() {
                       selectedOptions = values;
@@ -604,6 +464,19 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       InputDecoration(labelText: 'Correo electrónico *'),
                 ),
 
+                MultiSelectDialogField<String>(
+                  items: multiSelectImagenes,
+                  initialValue: selectedImages,
+                  title: Text("Selecciona imágenes"),
+                  selectedColor: Colors.green,
+                  buttonText: Text('Selecciona imágenes'),
+                  onConfirm: (values) {
+                    setState(() {
+                      selectedImages = values;
+                    });
+                  },
+                ),
+
                 Align(
                   alignment: Alignment.center, // Centra el botón en el medio
                   child: ElevatedButton(
@@ -644,6 +517,16 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   }
 
   Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      setState(() {
+        _attachedFile = File(result.files.single.path!);
+      });
+    }
+  }
+
+/*
+  Future<void> _pickFile() async {
     PermissionStatus status = await Permission.storage.request();
 
     if (status.isGranted) {
@@ -657,7 +540,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
       // El usuario denegó el permiso, puedes mostrar un mensaje de error o solicitar permisos nuevamente más tarde.
     }
   }
-
+*/
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
     final pickedImage =

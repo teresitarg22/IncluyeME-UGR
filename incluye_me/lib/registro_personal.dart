@@ -19,15 +19,15 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _confirmPasswd = null;
   bool? _isAdmin = false;
   bool _showPassword = false;
-  bool _showConfirmPassword = false;
+  bool _showConfirmPassword = false; 
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _dateControllerContratacion = TextEditingController();
   DateTime? _selectedDate;
   DateTime? _selectedDateContratacion;
 
-  TextEditingController _cvController =
-      TextEditingController(); //CREO QUE NO SE UTILIZA
+  //TextEditingController _cvController =
+      //TextEditingController(); //CREO QUE NO SE UTILIZA
   File? _attachedFile;
 
   File? _image;
@@ -251,6 +251,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return null;
                     },
                   ),
+                  
                 // Mapear la lista de títulos académicos en campos de entrada
                 ..._titulosAcademicos.asMap().entries.map((entry) {
                   final int index = entry.key;
