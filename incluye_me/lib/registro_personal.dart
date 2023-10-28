@@ -50,6 +50,13 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _id;
   String? _tarjetaSanitaria;
   String? _direccionDomicilio;
+  String? _nivelEstudios; 
+  String? _informacionAdicional;
+  String? _puesto; 
+  String? _departamento; 
+  String? _numeroTlf; 
+  String? _correoElectronico; 
+  String? _tlfEmergencia; 
 
 
   List<String> _titulosAcademicos =
@@ -303,6 +310,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _nivelEstudios =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
 
                 if (_selectedStudyLevel == 'Otro')
@@ -315,6 +326,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       }
                       return null;
                     },
+                    onSaved: (value) {
+                    _nivelEstudios =
+                        value; // Asignar el valor introducido a la variable
+                  },
                   ),
 
                 // Mapear la lista de títulos académicos en campos de entrada
@@ -451,6 +466,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                 TextFormField(
                   decoration:
                       InputDecoration(labelText: 'Información adicional '),
+                  onSaved: (value) {
+                    _informacionAdicional =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
 
                 Padding(
@@ -475,6 +494,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _puesto =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Departamento *'),
@@ -483,6 +506,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return 'El departamento es obligatorio';
                     }
                     return null;
+                  },
+                  onSaved: (value) {
+                    _departamento =
+                        value; // Asignar el valor introducido a la variable
                   },
                 ),
                 TextFormField(
@@ -558,6 +585,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _numeroTlf =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
                 TextFormField(
                   decoration:
@@ -568,6 +599,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     }
                     return null;
                   },
+                  onSaved: (value) {
+                    _correoElectronico =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -577,6 +612,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       return 'El número de teléfono de emergencia es obligatorio';
                     }
                     return null;
+                  },
+                  onSaved: (value) {
+                    _tlfEmergencia =
+                        value; // Asignar el valor introducido a la variable
                   },
                 ),
 

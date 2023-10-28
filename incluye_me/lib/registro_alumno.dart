@@ -53,7 +53,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     MultiSelectItem("../assets/oso.png", "Oso"),
     MultiSelectItem("../assets/hamburguesa.png", "Hamburguesa"),
     MultiSelectItem("../assets/reloj.png", "Relon"),
-    MultiSelectItem("../assets/casa.png", "Casa"), 
+    MultiSelectItem("../assets/casa.png", "Casa"),
   ];
 
   @override
@@ -494,19 +494,27 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       InputDecoration(labelText: 'Correo electrónico *'),
                 ),
 
-               MultiSelectDialogField(
-  items: multiSelectImagenes,
-  initialValue: selectedImages,
-  title: Text('Selecciona imágenes'),
-  selectedColor: Colors.green,
-  buttonText: Text('Imágenes seleccionadas'),
-  onConfirm: (values) {
-    setState(() {
-      selectedImages = values;
-    });
-  },
-  maxItems: 3, // Establece el número máximo de elementos que se pueden seleccionar
-)
+                MultiSelectDialogField(
+                  items: multiSelectImagenes,
+                  initialValue: selectedImages,
+                  title: Text('Selecciona imágenes'),
+                  buttonText: Text('Imágenes seleccionadas'),
+                  onConfirm: (values) {
+                    if (values.length == 3) {
+                      setState(() {
+                        selectedImages = values;
+                      });
+                    } else {
+                      values.clear();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'TIENES QUE SELECCIONAR 3 ELEMENTOS'),
+                        ),
+                      );
+                    }
+                  },
+                ),
                 SizedBox(height: 20), // Espacio entre el menú y otros elementos
                 Text(
                   'Imágenes seleccionadas:',
@@ -517,7 +525,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: selectedOptions.map((option) {
+                  children: selectedImages.map((option) {
                     return Image.asset(
                       option,
                       width: 50, // Tamaño de la imagen
