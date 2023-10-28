@@ -11,8 +11,8 @@ import 'package:postgres/postgres.dart';
 final connection = PostgreSQLConnection(
   'localhost', // host de la base de datos
   5432, // puerto de la base de datos
-  'my_database', // nombre de la base de datos
-  username: 'my_user', // nombre de usuario de la base de datos
+  'DGP', // nombre de la base de datos
+  username: 'admin', // nombre de usuario de la base de datos
   password: 'admin', // contraseña del usuario de la base de datos
 );
 
@@ -50,6 +50,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _id;
   String? _tarjetaSanitaria;
   String? _direccionDomicilio;
+
 
   List<String> _titulosAcademicos =
       []; // Lista para almacenar los títulos académicos

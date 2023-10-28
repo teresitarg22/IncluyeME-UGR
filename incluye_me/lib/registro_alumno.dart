@@ -45,10 +45,15 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   ];
 
   List<MultiSelectItem<String>> multiSelectImagenes = [
-    MultiSelectItem("../assets/balon.png", "Balon"),
+    MultiSelectItem("../assets/balon.png", "Balón"),
     MultiSelectItem("../assets/martillo.png", "Martillo"),
     MultiSelectItem("../assets/raqueta.png", "Raqueta"),
-    // Agrega más imágenes si es necesario
+    MultiSelectItem("../assets/telefono.png", "Teléfono"),
+    MultiSelectItem("../assets/silla.png", "Silla"),
+    MultiSelectItem("../assets/oso.png", "Oso"),
+    MultiSelectItem("../assets/hamburguesa.png", "Hamburguesa"),
+    MultiSelectItem("../assets/reloj.png", "Relon"),
+    MultiSelectItem("../assets/casa.png", "Casa"), 
   ];
 
   @override
@@ -196,6 +201,31 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     _imageError!,
                     style: TextStyle(color: Colors.red),
                   ),
+
+                Padding(
+                  padding: EdgeInsets.only(
+                      top:
+                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
+                  child: Text(
+                    'Historial Médico',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _pickFile(); // Abre el selector de archivos
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF29DA81),
+                  ),
+                  child: Text('Añadir historial médico'),
+                ),
+                if (_attachedFile != null)
+                  Text('Archivo adjunto: ${_attachedFile!.path}'),
+
                 TextFormField(
                   decoration:
                       InputDecoration(labelText: 'Alergías o intolerancias '),
@@ -464,18 +494,19 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       InputDecoration(labelText: 'Correo electrónico *'),
                 ),
 
-                MultiSelectDialogField(
-                  items: multiSelectImagenes,
-                  initialValue: selectedImages,
-                  title: Text('Selecciona imágenes'),
-                  selectedColor: Colors.green,
-                  buttonText: Text('Imágenes seleccionadas'),
-                  onConfirm: (values) {
-                    setState(() {
-                      selectedOptions = values;
-                    });
-                  },
-                ),
+               MultiSelectDialogField(
+  items: multiSelectImagenes,
+  initialValue: selectedImages,
+  title: Text('Selecciona imágenes'),
+  selectedColor: Colors.green,
+  buttonText: Text('Imágenes seleccionadas'),
+  onConfirm: (values) {
+    setState(() {
+      selectedImages = values;
+    });
+  },
+  maxItems: 3, // Establece el número máximo de elementos que se pueden seleccionar
+)
                 SizedBox(height: 20), // Espacio entre el menú y otros elementos
                 Text(
                   'Imágenes seleccionadas:',
