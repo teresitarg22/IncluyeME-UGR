@@ -16,17 +16,12 @@ final connection = PostgreSQLConnection(
   password: 'admin', // contraseña del usuario de la base de datos
 );
 
-void request() async{
+void request(String query) async{
   try {
     await connection.open();
     print('Connected to the database');
 
-    await connection.query(
-      "INSERT INTO aula (nombre) VALUES (@valor1)",
-      substitutionValues: {
-        'valor1': "LOLA",
-      },
-    );
+    await connection.query(query);
   } catch (e) {
     print('Error: $e');
   } finally {
@@ -732,7 +727,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        request();
+
+                        String query = 
+                        "INSERT INTO aula (nombre) VALUES (@valor1)";
+                        request(query);
                       }
                     },
                     style: ElevatedButton.styleFrom(
