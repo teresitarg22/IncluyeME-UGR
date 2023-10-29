@@ -9,11 +9,11 @@ import 'dart:io';
 import 'package:postgres/postgres.dart';
 
 final connection = PostgreSQLConnection(
-  'localhost', // host de la base de datos
+  'flora.db.elephantsql.com', // host de la base de datos
   5432, // puerto de la base de datos
-  'DGP_DB', // nombre de la base de datos
-  username: 'postgres', // nombre de usuario de la base de datos
-  password: 'admin', // contraseña del usuario de la base de datos
+  '', // nombre de la base de datos
+  username: 'srvvjedp', // nombre de usuario de la base de datos
+  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
 );
 
 void request(String query) async{
@@ -729,7 +729,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         _formKey.currentState!.save();
 
                         String query = 
-                        "INSERT INTO aula (nombre) VALUES (@valor1)";
+                        "INSERT INTO aula (nombre) VALUES ('LOLI')";
                         request(query);
                       }
                     },
