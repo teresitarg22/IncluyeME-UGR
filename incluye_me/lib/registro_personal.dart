@@ -9,12 +9,31 @@ import 'dart:io';
 import 'package:postgres/postgres.dart';
 
 final connection = PostgreSQLConnection(
-  'DGP', // host de la base de datos
+  'localhost', // host de la base de datos
   5432, // puerto de la base de datos
-  'prueba', // nombre de la base de datos
+  'DGP_DB', // nombre de la base de datos
   username: 'postgres', // nombre de usuario de la base de datos
   password: 'admin', // contraseña del usuario de la base de datos
 );
+
+void request() async{
+  try {
+    await connection.open();
+    print('Connected to the database');
+
+    await connection.query(
+      "INSERT INTO aula (nombre) VALUES (@valor1)",
+      substitutionValues: {
+        'valor1': "LOLA",
+      },
+    );
+  } catch (e) {
+    print('Error: $e');
+  } finally {
+    await connection.close();
+    print('Connection closed');
+  }
+}
 
 class ProfesorRegistration extends StatefulWidget {
   @override
@@ -69,15 +88,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   @override
   void initState() {
     super.initState();
-    _connectToDatabase(); //CONECTAR A LA BASE DE DATOS
-  }
-
-  void _connectToDatabase() async {
-    try {
-      await connection.open();
-    } catch (e) {
-      print('Error de conexión a la base de datos: $e');
-    }
   }
 
   @override
@@ -722,16 +732,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-
-                        // Aquí se realiza el INSERT INTO en la base de datos
-                        connection.query(
-                          "INSERT INTO aula (nombre) VALUES (@valor1)",
-                          substitutionValues: {
-                            'valor1': "LOLI",
-                          },
-                        );
-
-                        connection.close();
+                        request();
                       }
                     },
                     style: ElevatedButton.styleFrom(
