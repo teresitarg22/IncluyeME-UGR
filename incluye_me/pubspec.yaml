@@ -50,6 +50,7 @@ dev_dependencies:
   google_fonts: ^6.1.0
   multi_select_flutter: ^4.0.0
   permission_handler: ^11.0.1
+  dropdown_search: ^5.0.6 
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -69,6 +70,17 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/reloj.png
+    - assets/balon.png
+    - assets/espana.png
+    - assets/francia.png
+    - assets/italia.png
+    - assets/eeuu.png
+    - assets/uk.png
+    - assets/irlanda.png
+    - assets/portugal.png
+    - assets/desconocido.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
