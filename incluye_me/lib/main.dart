@@ -122,6 +122,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'views/login_view.dart';
+import 'views/home_view.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -131,43 +134,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Selección de Rol'),
-      ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AlumnoRegistration()));
-              },
-              child: Text('Alumno'),
-            ),
-            SizedBox(width: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProfesorRegistration()));
-              },
-              child: Text('Personal'),
-            ),
-          ],
-        ),
-      ),
+      routes: {
+        '/login': (context) => LoginView(),
+      },
     );
   }
 }
