@@ -81,6 +81,15 @@ flutter:
     - assets/irlanda.png
     - assets/portugal.png
     - assets/desconocido.png
+    - assets/telefono.png
+    - assets/hamburguesa.png
+    - assets/silla.png
+    - assets/casa.png
+    - assets/martillo.png
+    - assets/oso.png
+    - assets/raqueta.png
+    - assets/telefono.png
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:
