@@ -10,13 +10,14 @@ class StartView extends StatelessWidget {
         backgroundColor: Colors.blue, // Color de fondo de la AppBar (opcional)
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(image: AssetImage("assets/logo.png")),
-            Text(
-              'Incluye-me',
-              style: TextStyle(
+        child: SingleChildScrollView(  // Agregar esto
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(image: AssetImage("assets/logo.png")),
+              Text(
+                'Incluye-me',
+                style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -55,6 +56,7 @@ class StartView extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }
