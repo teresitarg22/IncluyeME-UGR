@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/student_login_view.dart';
 import 'teacher_login_view.dart';
 
 class StartView extends StatelessWidget {
@@ -6,21 +7,14 @@ class StartView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar( // Esta es la AppBar
-        title: Text('Bienvenido a Incluye-Me '), // El título que aparecerá en la barra
+        title: Text('Bienvenido a Incluye-Me 💚💚💚'), // El título que aparecerá en la barra
         backgroundColor: Colors.blue, // Color de fondo de la AppBar (opcional)
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(image: AssetImage("assets/logo.png")),
-            Text(
-              'Incluye-me',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Image(image: AssetImage("assets/logo.png"), height: 200, width: 200),
             SizedBox(height: 40), // Espacio adicional antes de los botones
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -30,9 +24,15 @@ class StartView extends StatelessWidget {
                   textStyle: TextStyle(fontSize: 20), // Aumentar el tamaño del texto
                 ),
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StudentLoginView()),
+                  );
                   // Navegar a la pantalla de reconocimiento facial
                 },
-                child: Text('Estudiantes'),
+                child: Text('Alumnos',
+                    style: TextStyle(color: Colors.white, fontSize: 50),
+                ),
               ),
             ),
             SizedBox(height: 20),

@@ -45,15 +45,15 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   ];
 
   List<MultiSelectItem<String>> multiSelectImagenes = [
-    MultiSelectItem("../assets/balon.png", "Balón"),
-    MultiSelectItem("../assets/martillo.png", "Martillo"),
-    MultiSelectItem("../assets/raqueta.png", "Raqueta"),
-    MultiSelectItem("../assets/telefono.png", "Teléfono"),
-    MultiSelectItem("../assets/silla.png", "Silla"),
-    MultiSelectItem("../assets/oso.png", "Oso"),
-    MultiSelectItem("../assets/hamburguesa.png", "Hamburguesa"),
-    MultiSelectItem("../assets/reloj.png", "Relon"),
-    MultiSelectItem("../assets/casa.png", "Casa"),
+    MultiSelectItem("../assets/symbol0.png", "Balón"),
+    MultiSelectItem("../assets/symbol8.png", "Martillo"),
+    MultiSelectItem("../assets/symbol5.png", "Raqueta"),
+    MultiSelectItem("../assets/symbol2.png", "Teléfono"),
+    MultiSelectItem("../assets/symbol3.png", "Silla"),
+    MultiSelectItem("../assets/symbol6.png", "Oso"),
+    MultiSelectItem("../assets/symbol7.png", "Hamburguesa"),
+    MultiSelectItem("../assets/symbol4.png", "Relon"),
+    MultiSelectItem("../assets/symbol1.png", "Casa"),
   ];
 
   @override
