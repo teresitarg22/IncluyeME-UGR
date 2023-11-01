@@ -11,6 +11,8 @@ class EditarUsuarioPage extends StatefulWidget {
   _EditarUsuarioPageState createState() => _EditarUsuarioPageState();
 }
 
+// -----------------------------------------------------------
+
 class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey();
 
@@ -32,6 +34,7 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              // -----------------------------------------------------------
               ListTile(
                 title: Text('Nombre: ${widget.user.name}'),
                 subtitle: Text('Email: ${widget.user.email}'),
@@ -45,23 +48,34 @@ class _EditarUsuarioPageState extends State<EditarUsuarioPage> {
                 name: 'email',
                 decoration: InputDecoration(labelText: 'Email'),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_fbKey.currentState!.saveAndValidate()) {
-                    // Guarda los datos actualizados en el objeto User
-                    final updatedUser = User(
-                      name: _fbKey.currentState!.fields['name']?.value,
-                      email: _fbKey.currentState!.fields['email']?.value,
-                      isTeacher:
-                          widget.user.isTeacher, // No cambiamos el valor.
-                    );
+              Container(
+                // -----------------------------------------------------------
+                margin: EdgeInsets.only(top: 16.0), // Define el margen superior
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_fbKey.currentState!.saveAndValidate()) {
+                      // Guarda los datos actualizados en el objeto User
+                      final updatedUser = User(
+                        name: _fbKey.currentState!.fields['name']?.value,
+                        email: _fbKey.currentState!.fields['email']?.value,
+                        isTeacher:
+                            widget.user.isTeacher, // No cambiamos el valor.
+                      );
 
-                    // Vuelve a la página de detalles del usuario con los datos actualizados
-                    Navigator.of(context).pop(updatedUser);
-                  }
-                },
-                child: Text('Guardar Cambios'),
-              ),
+                      // Vuelve a la página de detalles del usuario con los datos actualizados
+                      Navigator.of(context).pop(updatedUser);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF29DA81),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: EdgeInsets.all(16.0),
+                  ),
+                  child: Text('Guardar Cambios'),
+                ),
+              )
             ],
           ),
         ),
