@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => StartView(),
-
         '/registroPage': (context) => HomeScreen(),
       },
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'teacher_login_view.dart';
 
 class StartView extends StatelessWidget {
   @override
@@ -12,6 +13,7 @@ class StartView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image(image: AssetImage('assets/logo.png')),
             Text(
               'Incluye-me',
               style: TextStyle(
@@ -43,6 +45,10 @@ class StartView extends StatelessWidget {
                 ),
                 onPressed: () {
                   // Navegar a la pantalla de logIn para profesores
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TeacherLoginView()),
+                  );
                 },
                 child: Text('Profesores'),
               ),
