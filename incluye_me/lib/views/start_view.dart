@@ -13,7 +13,7 @@ class StartView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(image: AssetImage('assets/logo.png')),
+            Image(image: AssetImage("assets/logo.png")),
             Text(
               'Incluye-me',
               style: TextStyle(
