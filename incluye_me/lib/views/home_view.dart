@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:registrar_usuario/main.dart';
+import 'package:incluye_me/views/registro_alumno.dart';
+import 'package:incluye_me/views/registro_personal.dart';
 
 class HomeScreen extends StatelessWidget {
   @override

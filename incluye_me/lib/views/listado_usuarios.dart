@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'editar_usuario.dart';
+import '../views/editar_usuario.dart';
 import 'package:incluye_me/model/user.dart';
 
 class UserListPage extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'registro.dart';
-import 'listado_usuarios.dart';
+import 'package:incluye_me/views/start_view.dart';
+import 'views/registro.dart';
+import 'views/listado_usuarios.dart';
 
 // -------------------------------------------------------------------
 
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => UserListPage(),
+        '/': (context) => StartView(),
+
         '/registroPage': (context) => HomeScreen(),
       },
     );
