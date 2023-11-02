@@ -5,18 +5,18 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+
 import 'package:postgres/postgres.dart';
 
-Future<void> request(String query) async {
-  final connection = PostgreSQLConnection(
-    'flora.db.elephantsql.com', // host de la base de datos
-    5432, // puerto de la base de datos
-    'srvvjedp', // nombre de la base de datos
-    username: 'srvvjedp', // nombre de usuario de la base de datos
-    password:
-        'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
-  );
+final connection = PostgreSQLConnection(
+  'flora.db.elephantsql.com', // host de la base de datos
+  5432, // puerto de la base de datos
+  '', // nombre de la base de datos
+  username: 'srvvjedp', // nombre de usuario de la base de datos
+  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
+);
 
+void request(String query) async{
   try {
     await connection.open();
     print('Connected to the database');
@@ -25,7 +25,7 @@ Future<void> request(String query) async {
   } catch (e) {
     print('Error: $e');
   } finally {
-    //await connection.close();
+    await connection.close();
     print('Connection closed');
   }
 }
@@ -44,7 +44,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   bool? _isAdmin = false;
   bool _showPassword = false;
   bool _showConfirmPassword = false;
-  String? _selectedNacionalidad;
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _dateControllerContratacion = TextEditingController();
@@ -80,28 +79,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   List<String> _experienciaLaboral =
       []; //Lista para almacenar la experiencia laboral
   List<String> _aulasProfesor = [];
-
-  List<String> nacionalidades = [
-    'España',
-    'Francia',
-    'Italia',
-    'Portugal',
-    'Estados Unidos',
-    'Reino Unido',
-    'Irlanda',
-    'Otro'
-  ];
-
-  Map<String, String> banderas = {
-    'España': 'assets/espana.png',
-    'Francia': 'assets/francia.png',
-    'Italia': 'assets/italia.png',
-    'Reino Unido': 'assets/uk.png',
-    'Estados Unidos': 'assets/eeuu.png',
-    'Irlanda': 'assets/irlanda.png',
-    'Portugal': 'assets/portugal.png',
-    'Otro' :  'assets/desconocido.png'
-  };
 
   @override
   void initState() {
@@ -211,43 +188,33 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           value; // Reescribir el valor introducido a la variable
                     },
                   ),
-
-                Row(
-                  children: [
-                    Text('Nacionalidad:'), 
-                    SizedBox(
-                        width:
-                            20), // Espacio entre el texto y el botón desplegable
-                    DropdownButton<String>(
-                      value: _selectedNacionalidad,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedNacionalidad = value;
-                        });
-                      },
-                      items: nacionalidades.map((nacionalidad) {
-                        return DropdownMenuItem<String>(
-                          value: nacionalidad,
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                banderas[
-                                    nacionalidad]!, // Obtiene la ruta de la bandera
-                                width: 32, // Ajusta el tamaño de la bandera
-                                height: 20,
-                              ),
-                              SizedBox(
-                                  width:
-                                      8), // Espacio entre la bandera y el texto
-                              Text(nacionalidad), // Nombre de la nacionalidad
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Nacionalidad *'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'La nacionalidad es obligatoria';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _nacionalidad =
+                        value; // Asignar el valor introducido a la variable
+                  },
                 ),
-
+                TextFormField(
+                  decoration:
+                      InputDecoration(labelText: 'Dirección del domiciio *'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'La dirección es obligatoria';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    _direccionDomicilio =
+                        value; // Asignar el valor introducido a la variable
+                  },
+                ),
                 TextFormField(
                   decoration: InputDecoration(
                       labelText: 'Documento de Identificación *'),
@@ -760,10 +727,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(_selectedDate!);
-                        String query =
-                            "INSERT INTO supervisor (dni, genero, nombre, apellidos, fechanacimiento, contraseña, tarjetasanitaria, direcciondomiciliar, nacionalidad, numerotelefono, numerotelefonoemergencia, correoelectronico, foto, nivelestudios, tituloacademico, experiencialaboralprevia, certificacionesadicionales, curriculumvitae, informacionacademicaadicional, puesto, fechacontratacion, departamento, admin) VALUES ('$_id', '$_genero', '$_nombre', '$_apellidos', '$formattedDate', '$_passwd', '$_tarjetaSanitaria', '$_direccionDomicilio', '$_nacionalidad', '$_numeroTlf', '$_tlfEmergencia', '$_correoElectronico', '$_image', '$_nivelEstudios', '$_titulosAcademicos', '$_experienciaLaboral', '$_certificadosAdicionales', '$_attachedFile', '$_informacionAdicional', '$_puesto', '$_selectedDateContratacion', '$_departamento', '$_isAdmin')";
+
+                        String query = 
+                        "INSERT INTO aula (nombre) VALUES ('LOLI')";
                         request(query);
                       }
                     },
