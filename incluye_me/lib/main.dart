@@ -13,6 +13,28 @@ final connection = PostgreSQLConnection(
       'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
 );
 
+Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
+  List<Map<String, Map<String, dynamic>>> results = [];
+
+  try {
+    // Verificar si la conexión está cerrada antes de intentar abrirla
+    if (connection.isClosed) {
+      await connection.open();
+      print('Connected to the database');
+    }
+
+    results = await connection.mappedResultsQuery(query);
+  } catch (e) {
+    print('Error: $e');
+  } finally {
+    // No cerrar la conexión aquí
+    print('Query executed');
+  }
+
+  return results;
+}
+
+/*
 //Obtenemos los id de los estudiantes
 Future<List<String>> getEstudiantesIds(PostgreSQLConnection connection) async {
   final List<String> estudiantesIds = [];
@@ -34,9 +56,9 @@ Future<List<String>> getEstudiantesIds(PostgreSQLConnection connection) async {
   return estudiantesIds;
 }
 
-//Obtenemos los id del personal
-Future<List<String>> getPersonalIds(PostgreSQLConnection connection) async {
-  final List<String> personalIds = [];
+//Obtenemos los id del supervisor
+Future<List<String>> getsupervisorIds(PostgreSQLConnection connection) async {
+  final List<String> supervisorIds = [];
 
   try {
     if (connection.isClosed) {
@@ -47,13 +69,13 @@ Future<List<String>> getPersonalIds(PostgreSQLConnection connection) async {
     final results = await connection.query('SELECT dni FROM supervisor');
 
     for (final row in results) {
-      personalIds.add(row[0] as String);
+      supervisorIds.add(row[0] as String);
     }
   } catch (e) {
     throw Exception('$e');
   }
 
-  return personalIds;
+  return supervisorIds;
 }
 
 //Obtenemos los datos de los usuarios
@@ -67,27 +89,23 @@ Future<Map<String, dynamic>> getUserById(
 
     final results;
     if (esEstudiante) {
-      results = await connection.query(
+      results = await connection.mappedResultsQuery(
         'SELECT * FROM estudiante WHERE dni = @id',
         substitutionValues: {'id': id},
       );
     } else {
-      results = await connection.query(
+      results = await connection.mappedResultsQuery(
         'SELECT * FROM supervisor WHERE dni = @id',
         substitutionValues: {'id': id},
       );
     }
 
-    if (results.isNotEmpty) {
-      final user = results.first;
-      final userMap = user.mappedResultsQuery();
-      return userMap;
-    }
-    throw Exception('No se pudo obtener el usuario');
+    return results;
   } catch (e) {
     throw Exception('No se pudo obtener el usuario: $e');
   }
 }
+*/
 
 void main() {
   runApp(MyApp());
@@ -112,9 +130,9 @@ class UserListPage extends StatefulWidget {
 }
 
 class _UserListPageState extends State<UserListPage> {
-  List<String> estudiantes = [];
-  List<String> personal = [];
-  List<String> usuarios = [];
+  var estudiantes = [];
+  var supervisor = [];
+  var usuarios = [];
 
   String? selectedFilter = "Estudiantes";
 
@@ -125,20 +143,22 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> loadUsersIds() async {
-    estudiantes = await getEstudiantesIds(connection);
-    personal = await getPersonalIds(connection);
+    estudiantes = await request('SELECT dni FROM estudiante');
+    supervisor = await request('SELECT dni FROM supervisor');
+    //estudiantes = await getEstudiantesIds(connection);
+    //supervisor = await getsupervisorIds(connection);
     usuarios.addAll(estudiantes);
-    usuarios.addAll(personal);
+    usuarios.addAll(supervisor);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> filteredUsers = [];
+    var filteredUsers = [];
     bool esEstudiante = true;
 
-    if (selectedFilter == "Personal") {
-      filteredUsers = personal;
+    if (selectedFilter == "Supervisor") {
+      filteredUsers = supervisor;
       esEstudiante = false;
     } else if (selectedFilter == "Estudiantes") {
       filteredUsers = estudiantes;
@@ -180,7 +200,7 @@ class _UserListPageState extends State<UserListPage> {
                 selectedFilter = newValue;
               });
             },
-            items: <String?>['Personal', 'Estudiantes']
+            items: <String?>['Supervisor', 'Estudiantes']
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
