@@ -32,10 +32,23 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   return results;
 }
 
-class UserDetailsPage extends StatelessWidget {
+class UserDetailsPage extends StatefulWidget {
   String userId;
+  bool esEstudiante;
+  UserDetailsPage({required this.userId, required this.esEstudiante});
+  @override
+  _UserDetailsPageState createState() => _UserDetailsPageState();
+}
 
-  UserDetailsPage({required this.userId});
+
+class _UserDetailsPageState extends State<UserDetailsPage> {
+  var usuario = [];
+
+  if(esEstudiante){
+    usuario = await request("Select * from estudiante where dni = $userId");
+  }else{
+    usuario = await request("Select * from supervisor where dni = $userId");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +63,8 @@ class UserDetailsPage extends StatelessWidget {
           child: Column(
             children: <Widget>[
               ListTile(
-                title: Text('Nombre: ${userId}'),
-                subtitle: Text('Email: ${userId}'),
+                title: Text('Nombre: ${usuario.nombre}'),
+                subtitle: Text('Email: ${usuario['email']}'),
               ),
               // Puedes mostrar más detalles del usuario aquí dentro de Card
             ],

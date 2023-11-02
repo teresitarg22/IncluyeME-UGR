@@ -73,8 +73,6 @@ class _UserListPageState extends State<UserListPage> {
   Future<void> loadUsersIds() async {
     estudiantes = await request('SELECT * FROM estudiante');
     supervisor = await request('SELECT * FROM supervisor');
-    //estudiantes = await getEstudiantesIds(connection);
-    //supervisor = await getsupervisorIds(connection);
     usuarios.addAll(estudiantes);
     usuarios.addAll(supervisor);
     setState(() {});
@@ -175,6 +173,7 @@ class _UserListPageState extends State<UserListPage> {
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
                         userId: filteredUsers[index]['dni'],
+                        esEstudiante: esEstudiante,
                       );
                     }));
                   },
@@ -217,9 +216,9 @@ class _UserListPageState extends State<UserListPage> {
                               // Nos dirigimos a la interfaz de edición de usuario:
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => EditarUsuarioPage(
-                                      userId: filteredUsers[index]['dni']),
-                                ),
+                                    builder: (context) => EditarUsuarioPage(
+                                        userId: filteredUsers[index]['dni'],
+                                        esEstudiante: esEstudiante)),
                               );
                             },
                           ),

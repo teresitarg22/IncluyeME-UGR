@@ -4,8 +4,9 @@ import 'package:incluye_me/model/user.dart';
 
 class EditarUsuarioPage extends StatefulWidget {
   String userId;
+  bool esEstudiante;
 
-  EditarUsuarioPage({required this.userId});
+  EditarUsuarioPage({required this.userId, required this.esEstudiante});
 
   @override
   _EditarUsuarioPageState createState() => _EditarUsuarioPageState();
