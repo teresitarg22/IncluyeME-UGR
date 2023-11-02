@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/start_view.dart';
 import 'views/registro.dart';
-import 'views/listado_usuarios.dart';
+import 'views/user_list.dart';
 
 // -------------------------------------------------------------------
 

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 
-// Crear la conexión como una variable global
+// -------------------------- DATA BASE --------------------------
+
+// Create the connection as a global variable
 final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
+  'flora.db.elephantsql.com', // database host
+  5432, // database port
+  'srvvjedp', // database name
+  username: 'srvvjedp', // database username
+  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
 );
 
 Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   List<Map<String, Map<String, dynamic>>> results = [];
 
   try {
-    // Verificar si la conexión está cerrada antes de intentar abrirla
+    // Check if the connection is closed before attempting to open it
     if (connection.isClosed) {
       await connection.open();
       print('Connected to the database');
@@ -25,29 +26,41 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   } catch (e) {
     print('Error: $e');
   } finally {
-    // No cerrar la conexión aquí
+    // Do not close the connection here
     print('Query executed');
   }
 
   return results;
 }
 
+// -----------------------------------------------------
+
 class UserDetailsPage extends StatefulWidget {
-  String userId;
-  bool esEstudiante;
+  final String userId;
+  final bool esEstudiante;
+
   UserDetailsPage({required this.userId, required this.esEstudiante});
   @override
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
 
-
 class _UserDetailsPageState extends State<UserDetailsPage> {
-  var usuario = [];
+  var usuario = <Map<String, Map<String, dynamic>>>[];
 
-  if(esEstudiante){
-    usuario = await request("Select * from estudiante where dni = $userId");
-  }else{
-    usuario = await request("Select * from supervisor where dni = $userId");
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    if (widget.esEstudiante) {
+      usuario = await connection.mappedResultsQuery(
+          "SELECT * FROM estudiante WHERE dni = ${widget.userId}");
+    } else {
+      usuario = await connection.mappedResultsQuery(
+          "SELECT * FROM supervisor WHERE dni = ${widget.userId}");
+    }
   }
 
   @override
@@ -63,8 +76,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           child: Column(
             children: <Widget>[
               ListTile(
-                title: Text('Nombre: ${usuario.nombre}'),
-                subtitle: Text('Email: ${usuario['email']}'),
+                title: Text(
+                    'Nombre: ${usuario.isNotEmpty ? usuario[0]['nombre'] : ''}'),
+                subtitle: Text(
+                    'Email: ${usuario.isNotEmpty ? usuario[0]['email'] : ''}'),
               ),
               // Puedes mostrar más detalles del usuario aquí dentro de Card
             ],

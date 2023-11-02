@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'registro.dart';
 import 'mostrar_usuario.dart';
-import 'editar_usuario.dart';
+import 'edit_user.dart';
 
-// Crear la conexión como una variable global
+// -------------------------- DATA BASE --------------------------
+
+// Create the connection as a global variable
 final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
+  'flora.db.elephantsql.com', // database host
+  5432, // database port
+  'srvvjedp', // database name
+  username: 'srvvjedp', // database username
+  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
 );
 
 Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   List<Map<String, Map<String, dynamic>>> results = [];
 
   try {
-    // Verificar si la conexión está cerrada antes de intentar abrirla
+    // Check if the connection is closed before attempting to open it
     if (connection.isClosed) {
       await connection.open();
       print('Connected to the database');
@@ -28,12 +29,14 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   } catch (e) {
     print('Error: $e');
   } finally {
-    // No cerrar la conexión aquí
+    // Do not close the connection here
     print('Query executed');
   }
 
   return results;
 }
+
+// -----------------------------------------------------
 
 void main() {
   runApp(MyApp());
@@ -51,6 +54,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// -----------------------------------------------------
 
 class UserListPage extends StatefulWidget {
   @override
@@ -185,7 +190,7 @@ class _UserListPageState extends State<UserListPage> {
                             SizedBox(height: 4),
                             Text(
                               filteredUsers[index]['nombre'] +
-                                  ' ' +
+                                  (' ') +
                                   filteredUsers[index]['apellidos'],
                               style: TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
@@ -213,9 +218,9 @@ class _UserListPageState extends State<UserListPage> {
                               // Nos dirigimos a la interfaz de edición de usuario:
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (context) => EditarUsuarioPage(
+                                    builder: (context) => EditUserPage(
                                         userId: filteredUsers[index]['dni'],
-                                        esEstudiante: esEstudiante)),
+                                        isStudent: esEstudiante)),
                               );
                             },
                           ),
