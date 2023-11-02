@@ -164,6 +164,46 @@ class _EditUserPageState extends State<EditUserPage> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFF29DA81), // Color personalizado
+        currentIndex: 0,
+        onTap: (int index) {
+          if (index == 0) {
+            Navigator.pushNamed(context, '/userList');
+          } else if (index == 1) {
+            // Lógica para la pestaña "Tareas"
+          } else if (index == 2) {
+            // Lógica para la pestaña "Gráficos"
+          } else if (index == 3) {
+            // Lógica para la pestaña "Chat"
+          } else if (index == 4) {
+            // Lógica para la pestaña "Perfil"
+          }
+        },
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Color(0xFF29DA81), // Color personalizado
+            icon: Icon(Icons.people, color: Colors.white),
+            label: 'Usuarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment, color: Colors.white),
+            label: 'Tareas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart, color: Colors.white),
+            label: 'Gráficos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat, color: Colors.white),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.white),
+            label: 'Perfil',
+          ),
+        ],
+      ),
     );
   }
 }

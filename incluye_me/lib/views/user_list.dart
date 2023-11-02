@@ -88,13 +88,16 @@ class _UserListPageState extends State<UserListPage> {
   Widget build(BuildContext context) {
     var filteredUsers = [];
     bool esEstudiante = true;
+    String user = "estudiante";
 
     if (selectedFilter == "Supervisor") {
       filteredUsers = supervisor;
       esEstudiante = false;
+      user = "supervisor";
     } else if (selectedFilter == "Estudiantes") {
       filteredUsers = estudiantes;
       esEstudiante = true;
+      user = "estudiante";
     }
 
     return Scaffold(
@@ -126,15 +129,24 @@ class _UserListPageState extends State<UserListPage> {
                           Navigator.of(context).pop();
                           // Lógica de búsqueda con "query"
                           var searchResults = usuarios
-                              .where((user) => user.nombre
-                                  .toLowerCase()
-                                  .contains(query.toLowerCase()))
+                              .where((user) =>
+                                  (user['estudiante'] != null &&
+                                      user['estudiante']['nombre'] != null &&
+                                      user['estudiante']['nombre']
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase())) ||
+                                  (user['supervisor'] != null &&
+                                      user['supervisor']['nombre'] != null &&
+                                      user['supervisor']['nombre']
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase())))
                               .toList();
                           // Filtra la lista de usuarios según "query"
                           setState(() {
                             // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
-                            usuarios.clear();
-                            usuarios.addAll(searchResults);
+                            filteredUsers.clear();
+                            filteredUsers.addAll(searchResults
+                                .cast<Map<String, Map<String, dynamic>>>());
                           });
                         },
                         child: Text('Buscar'),
@@ -174,7 +186,7 @@ class _UserListPageState extends State<UserListPage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
-                        userId: filteredUsers[index]['dni'],
+                        userId: filteredUsers[index][user]['dni'],
                         esEstudiante: esEstudiante,
                       );
                     }));
@@ -189,9 +201,7 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              filteredUsers[index]['nombre'] +
-                                  (' ') +
-                                  filteredUsers[index]['apellidos'],
+                              filteredUsers[index][user]['nombre'],
                               style: TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande
@@ -202,7 +212,8 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle: Text(filteredUsers[index]['email']),
+                      subtitle:
+                          Text(filteredUsers[index][user]['correoelectronico']),
                       leading: Icon(
                         Icons.person,
                         size: 45,
@@ -219,7 +230,8 @@ class _UserListPageState extends State<UserListPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => EditUserPage(
-                                        userId: filteredUsers[index]['dni'],
+                                        userId: filteredUsers[index][user]
+                                            ['dni'],
                                         isStudent: esEstudiante)),
                               );
                             },
