@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'registro.dart';
 import 'mostrar_usuario.dart';
-import 'editar_usuario.dart';
+import 'edit_user.dart';
 
-// Crear la conexión como una variable global
+// -------------------------- DATA BASE --------------------------
+
+// Create the connection as a global variable
 final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
+  'flora.db.elephantsql.com', // database host
+  5432, // database port
+  'srvvjedp', // database name
+  username: 'srvvjedp', // database username
+  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
 );
 
 Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   List<Map<String, Map<String, dynamic>>> results = [];
 
   try {
-    // Verificar si la conexión está cerrada antes de intentar abrirla
+    // Check if the connection is closed before attempting to open it
     if (connection.isClosed) {
       await connection.open();
       print('Connected to the database');
@@ -28,12 +29,14 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   } catch (e) {
     print('Error: $e');
   } finally {
-    // No cerrar la conexión aquí
+    // Do not close the connection here
     print('Query executed');
   }
 
   return results;
 }
+
+// -----------------------------------------------------
 
 void main() {
   runApp(MyApp());
@@ -51,6 +54,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// -----------------------------------------------------
 
 class UserListPage extends StatefulWidget {
   @override
@@ -83,13 +88,16 @@ class _UserListPageState extends State<UserListPage> {
   Widget build(BuildContext context) {
     var filteredUsers = [];
     bool esEstudiante = true;
+    String user = "estudiante";
 
     if (selectedFilter == "Supervisor") {
       filteredUsers = supervisor;
       esEstudiante = false;
+      user = "supervisor";
     } else if (selectedFilter == "Estudiantes") {
       filteredUsers = estudiantes;
       esEstudiante = true;
+      user = "estudiante";
     }
 
     return Scaffold(
@@ -121,15 +129,24 @@ class _UserListPageState extends State<UserListPage> {
                           Navigator.of(context).pop();
                           // Lógica de búsqueda con "query"
                           var searchResults = usuarios
-                              .where((user) => user.nombre
-                                  .toLowerCase()
-                                  .contains(query.toLowerCase()))
+                              .where((user) =>
+                                  (user['estudiante'] != null &&
+                                      user['estudiante']['nombre'] != null &&
+                                      user['estudiante']['nombre']
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase())) ||
+                                  (user['supervisor'] != null &&
+                                      user['supervisor']['nombre'] != null &&
+                                      user['supervisor']['nombre']
+                                          .toLowerCase()
+                                          .contains(query.toLowerCase())))
                               .toList();
                           // Filtra la lista de usuarios según "query"
                           setState(() {
                             // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
-                            usuarios.clear();
-                            usuarios.addAll(searchResults);
+                            filteredUsers.clear();
+                            filteredUsers.addAll(searchResults
+                                .cast<Map<String, Map<String, dynamic>>>());
                           });
                         },
                         child: Text('Buscar'),
@@ -164,16 +181,12 @@ class _UserListPageState extends State<UserListPage> {
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
-                //if (selectedFilter == "Todos" ||
-                // (selectedFilter == "Profesores" &&
-                //     users[index].isTeacher) ||
-                // (selectedFilter == "Alumnos" && !users[index].isTeacher)) {
                 return InkWell(
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
-                        userId: filteredUsers[index]['dni'],
+                        userId: filteredUsers[index][user]['dni'],
                         esEstudiante: esEstudiante,
                       );
                     }));
@@ -188,9 +201,7 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              filteredUsers[index]['nombre'] +
-                                  ' ' +
-                                  filteredUsers[index]['apellidos'],
+                              filteredUsers[index][user]['nombre'],
                               style: TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande
@@ -201,7 +212,8 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle: Text(filteredUsers[index]['email']),
+                      subtitle:
+                          Text(filteredUsers[index][user]['correoelectronico']),
                       leading: Icon(
                         Icons.person,
                         size: 45,
@@ -217,9 +229,10 @@ class _UserListPageState extends State<UserListPage> {
                               // Nos dirigimos a la interfaz de edición de usuario:
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                    builder: (context) => EditarUsuarioPage(
-                                        userId: filteredUsers[index]['dni'],
-                                        esEstudiante: esEstudiante)),
+                                    builder: (context) => EditUserPage(
+                                        userId: filteredUsers[index][user]
+                                            ['dni'],
+                                        isStudent: esEstudiante)),
                               );
                             },
                           ),
