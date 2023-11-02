@@ -35,67 +35,6 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   return results;
 }
 
-/*
-Future<List<Map<String, Map<String, dynamic>>>> getUserById(
-    String id, bool esEstudiante, PostgreSQLConnection connection) async {
-  final results;
-  if (esEstudiante) {
-    results = await request('SELECT * FROM estudiante WHERE dni = @id');
-  } else {
-    results = await request('SELECT * FROM supervisor WHERE dni = @id');
-  }
-
-  return results;
-}
-
-
-//Obtenemos los id de los estudiantes
-Future<List<String>> getEstudiantesIds(PostgreSQLConnection connection) async {
-  final List<String> estudiantesIds = [];
-
-  try {
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-    final results = await connection.query('SELECT dni FROM estudiante');
-
-    for (final row in results) {
-      estudiantesIds.add(row[0] as String);
-    }
-  } catch (e) {
-    throw Exception('$e');
-  }
-
-  return estudiantesIds;
-}
-
-//Obtenemos los id del supervisor
-Future<List<String>> getsupervisorIds(PostgreSQLConnection connection) async {
-  final List<String> supervisorIds = [];
-
-  try {
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    final results = await connection.query('SELECT dni FROM supervisor');
-
-    for (final row in results) {
-      supervisorIds.add(row[0] as String);
-    }
-  } catch (e) {
-    throw Exception('$e');
-  }
-
-  return supervisorIds;
-}
-
-//Obtenemos los datos de los usuarios
-
-*/
-
 void main() {
   runApp(MyApp());
 }
@@ -183,7 +122,7 @@ class _UserListPageState extends State<UserListPage> {
                           Navigator.of(context).pop();
                           // Lógica de búsqueda con "query"
                           var searchResults = usuarios
-                              .where((user) => user.name
+                              .where((user) => user.nombre
                                   .toLowerCase()
                                   .contains(query.toLowerCase()))
                               .toList();
@@ -235,7 +174,7 @@ class _UserListPageState extends State<UserListPage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
-                        userId: filteredUsers[index].dni,
+                        userId: filteredUsers[index]['dni'],
                       );
                     }));
                   },
@@ -249,7 +188,9 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              filteredUsers[index].name,
+                              filteredUsers[index]['nombre'] +
+                                  ' ' +
+                                  filteredUsers[index]['apellidos'],
                               style: TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande
@@ -260,7 +201,7 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle: Text(filteredUsers[index].email),
+                      subtitle: Text(filteredUsers[index]['email']),
                       leading: Icon(
                         Icons.person,
                         size: 45,
@@ -277,7 +218,7 @@ class _UserListPageState extends State<UserListPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => EditarUsuarioPage(
-                                      userId: filteredUsers[index].dni),
+                                      userId: filteredUsers[index]['dni']),
                                 ),
                               );
                             },
