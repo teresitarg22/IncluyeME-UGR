@@ -68,7 +68,7 @@ CREATE TABLE public.estudiante (
     nombre character varying(50),
     apellidos character varying(50),
     fechanacimiento date,
-    "contraseña" character varying(50),
+    constrasenia character varying(50),
     tarjetasanitaria character varying(50),
     direcciondomiciliar character varying(50),
     numerotelefono character varying(50),
@@ -109,7 +109,7 @@ CREATE TABLE public.supervisor (
     nombre character varying(50),
     apellidos character varying(50),
     fechanacimiento date,
-    "contraseña" character varying(50),
+    constrasenia character varying(50),
     tarjetasanitaria character varying(50),
     direcciondomiciliar text,
     nacionalidad character varying(50),
@@ -156,7 +156,7 @@ ALTER TABLE public.tutor_legal OWNER TO postgres;
 --
 
 COPY public.aula (nombre) FROM stdin;
-\.
+
 
 
 --
@@ -164,7 +164,7 @@ COPY public.aula (nombre) FROM stdin;
 --
 
 COPY public.discapacidad (nombre, nivel) FROM stdin;
-\.
+
 
 
 --
@@ -172,7 +172,7 @@ COPY public.discapacidad (nombre, nivel) FROM stdin;
 --
 
 COPY public.discapacidad_de (dni, nombre, nivel, informacionadicionaldiscapacidad, necesidadesespecificas) FROM stdin;
-\.
+
 
 
 --
@@ -180,7 +180,7 @@ COPY public.discapacidad_de (dni, nombre, nivel, informacionadicionaldiscapacida
 --
 
 COPY public.estudiante (dni, genero, nombre, apellidos, fechanacimiento, "contraseña", tarjetasanitaria, direcciondomiciliar, numerotelefono, correoelectronico, foto, archivomedico, alergiasintolerancias, informacionadicionalmedico, tipodeletra, minmay, formatodeapp, pantallatactil, dni_tutor) FROM stdin;
-\.
+
 
 
 --
@@ -188,7 +188,7 @@ COPY public.estudiante (dni, genero, nombre, apellidos, fechanacimiento, "contra
 --
 
 COPY public.imparte_en (dni, nombre) FROM stdin;
-\.
+
 
 
 --
@@ -196,7 +196,7 @@ COPY public.imparte_en (dni, nombre) FROM stdin;
 --
 
 COPY public.supervisor (dni, genero, nombre, apellidos, fechanacimiento, "contraseña", tarjetasanitaria, direcciondomiciliar, nacionalidad, numerotelefono, numerotelefonoemergencia, correoelectronico, foto, nivelestudios, tituloacademico, experiencialaboralprevia, certificacionesadicionales, curriculumvitae, informacionacademicaadicional, puesto, fechacontratacion, departamento, admin) FROM stdin;
-\.
+
 
 
 --
@@ -204,7 +204,7 @@ COPY public.supervisor (dni, genero, nombre, apellidos, fechanacimiento, "contra
 --
 
 COPY public.tutor_legal (dni, genero, nombre, apellidos, direcciondomiciliar, numerotelefono, correoelectronico, contactoemergencia, relacion) FROM stdin;
-\.
+
 
 
 --
