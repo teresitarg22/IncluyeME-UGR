@@ -55,10 +55,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
   Future<void> fetchUserData() async {
     if (widget.esEstudiante) {
-      usuario = await connection.mappedResultsQuery(
+      usuario = await request(
           "SELECT * FROM estudiante WHERE dni = ${widget.userId}");
     } else {
-      usuario = await connection.mappedResultsQuery(
+      usuario = await request(
           "SELECT * FROM supervisor WHERE dni = ${widget.userId}");
     }
   }
@@ -91,7 +91,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/userList');
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
