@@ -16,18 +16,25 @@ final connection = PostgreSQLConnection(
   password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
 );
 
-void request(String query) async{
-  try {
-    await connection.open();
-    print('Connected to the database');
+Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
+  List<Map<String, Map<String, dynamic>>> results = [];
 
-    await connection.query(query);
+  try {
+    // Verificar si la conexión está cerrada antes de intentar abrirla
+    if (connection.isClosed) {
+      await connection.open();
+      print('Connected to the database');
+    }
+
+    results = await connection.mappedResultsQuery(query);
   } catch (e) {
     print('Error: $e');
   } finally {
-    await connection.close();
-    print('Connection closed');
+    // No cerrar la conexión aquí
+    print('Query executed');
   }
+
+  return results;
 }
 
 class ProfesorRegistration extends StatefulWidget {
@@ -44,11 +51,13 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   bool? _isAdmin = false;
   bool _showPassword = false;
   bool _showConfirmPassword = false;
+  String? _selectedNacionalidad;
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _dateControllerContratacion = TextEditingController();
   DateTime? _selectedDate;
   DateTime? _selectedDateContratacion;
+  String? _otherNacionalidad; // Nueva
 
   //TextEditingController _cvController =
   //TextEditingController(); //CREO QUE NO SE UTILIZA
@@ -79,6 +88,28 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   List<String> _experienciaLaboral =
       []; //Lista para almacenar la experiencia laboral
   List<String> _aulasProfesor = [];
+
+  List<String> nacionalidades = [
+    'España',
+    'Francia',
+    'Italia',
+    'Portugal',
+    'Estados Unidos',
+    'Reino Unido',
+    'Irlanda',
+    'Otro'
+  ];
+
+  Map<String, String> banderas = {
+    'España': 'assets/espana.png',
+    'Francia': 'assets/francia.png',
+    'Italia': 'assets/italia.png',
+    'Reino Unido': 'assets/uk.png',
+    'Estados Unidos': 'assets/eeuu.png',
+    'Irlanda': 'assets/irlanda.png',
+    'Portugal': 'assets/portugal.png',
+    'Otro': 'assets/desconocido.png'
+  };
 
   @override
   void initState() {
@@ -188,32 +219,56 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           value; // Reescribir el valor introducido a la variable
                     },
                   ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Nacionalidad *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'La nacionalidad es obligatoria';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _nacionalidad =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Dirección del domiciio *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'La dirección es obligatoria';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _direccionDomicilio =
-                        value; // Asignar el valor introducido a la variable
-                  },
+
+                Row(
+                  children: [
+                    Text('Nacionalidad:'),
+                    SizedBox(
+                        width:
+                            20), // Espacio entre el texto y el botón desplegable
+                    DropdownButton<String>(
+                      value: _selectedNacionalidad,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedNacionalidad = value;
+                          _nacionalidad = value;
+                        });
+                      },
+                      items: nacionalidades.map((nacionalidad) {
+                        return DropdownMenuItem<String>(
+                          value: nacionalidad,
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                banderas[
+                                    nacionalidad]!, // Obtiene la ruta de la bandera
+                                width: 32, // Ajusta el tamaño de la bandera
+                                height: 20,
+                              ),
+                              SizedBox(
+                                  width:
+                                      8), // Espacio entre la bandera y el texto
+                              Text(nacionalidad), // Nombre de la nacionalidad
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    if (_selectedNacionalidad == 'Otro')
+                      Expanded(
+                        child: TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              _otherNacionalidad = value;
+                              _nacionalidad = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Introduce tu nacionalidad',
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -345,12 +400,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           initialValue:
                               entry.value, // Mostrar el título existente
                           decoration:
-                              InputDecoration(labelText: 'Título Académico *'),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'El título académico es obligatorio';
-                            }
-                            return null;
+                              InputDecoration(labelText: 'Título Académico '),
+                              onChanged: (value) {
+                            // Guardar el valor introducido en _aulasProfesor
+                            setState(() {
+                              _titulosAcademicos[index] = value;
+                            });
                           },
                         ),
                       ),
@@ -390,6 +445,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               entry.value, // Mostrar el título existente
                           decoration: InputDecoration(
                               labelText: 'Certificados adicionales '),
+                              onChanged: (value) {
+                            // Guardar el valor introducido en _aulasProfesor
+                            setState(() {
+                              _certificadosAdicionales[index] = value;
+                            });
+                          },
                         ),
                       ),
                       IconButton(
@@ -428,6 +489,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               entry.value, // Mostrar la experiencia laboral
                           decoration: InputDecoration(
                               labelText: 'Experiencia laboral '),
+                              onChanged: (value) {
+                            // Guardar el valor introducido en _aulasProfesor
+                            setState(() {
+                              _experienciaLaboral[index] = value;
+                            });
+                          },
                         ),
                       ),
                       IconButton(
@@ -529,7 +596,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   onTap: () {
                     _selectDateContratacion(context);
                   },
-                  readOnly: true,
+                  readOnly: false, // Permitir la edición del campo
                 ),
                 ..._aulasProfesor.asMap().entries.map((entry) {
                   final int index = entry.key;
@@ -537,18 +604,22 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          initialValue:
-                              entry.value, // Mostrar la experiencia laboral
+                          initialValue: entry.value, // Mostrar el aula
                           decoration:
                               InputDecoration(labelText: 'Aulas de Profesor '),
+                          onChanged: (value) {
+                            // Guardar el valor introducido en _aulasProfesor
+                            setState(() {
+                              _aulasProfesor[index] = value;
+                            });
+                          },
                         ),
                       ),
                       IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
                           setState(() {
-                            _aulasProfesor.removeAt(
-                                index); // Eliminar la experiencia laboral
+                            _aulasProfesor.removeAt(index); // Eliminar el aula
                           });
                         },
                       ),
@@ -724,13 +795,81 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                 Align(
                   alignment: Alignment.center, // Centra el botón en el medio
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      // Hacer la función asíncrona
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(_selectedDate!);
 
-                        String query = 
-                        "INSERT INTO aula (nombre) VALUES ('LOLI')";
-                        request(query);
+                        // Verificar si el correo electrónico o el DNI ya existen
+                        String checkQuery =
+                            "SELECT * FROM supervisor WHERE dni = '$_id'";
+                        String checkQuery2 =
+                            "SELECT * FROM supervisor WHERE correoelectronico = '$_correoElectronico'";
+                        var result = await request(checkQuery);
+                        var result2 = await request(checkQuery2);
+                        if (result.isNotEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text(
+                                    'Ya existe una cuenta asociada a ese DNI.'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else if (result2.isNotEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Error'),
+                                content: Text(
+                                    'Ya existe una cuenta asociada a ese correo electronico.'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          String query =
+                              "INSERT INTO supervisor (dni, genero, nombre, apellidos, fechanacimiento, contraseña, tarjetasanitaria, direcciondomiciliar, nacionalidad, numerotelefono, numerotelefonoemergencia, correoelectronico, foto, nivelestudios, tituloacademico, experiencialaboralprevia, certificacionesadicionales, curriculumvitae, informacionacademicaadicional, puesto, fechacontratacion, departamento, admin) VALUES ('$_id', '$_genero', '$_nombre', '$_apellidos', '$formattedDate', '$_passwd', '$_tarjetaSanitaria', '$_direccionDomicilio', '$_nacionalidad', '$_numeroTlf', '$_tlfEmergencia', '$_correoElectronico', '$_image', '$_nivelEstudios', '$_titulosAcademicos', '$_experienciaLaboral', '$_certificadosAdicionales', '$_attachedFile', '$_informacionAdicional', '$_puesto', '$_selectedDateContratacion', '$_departamento', '$_isAdmin')";
+                          request(query);
+                          if (_aulasProfesor.isNotEmpty) {
+                            for (var aula in _aulasProfesor) {
+                              // Verificar si el aula ya existe
+                              String checkAulaQuery =
+                                  "SELECT * FROM aula WHERE nombre = '$aula'";
+                              var aulaResult = await request(checkAulaQuery);
+                              // Si el aula no existe, insertarla
+                              if (aulaResult.isEmpty) {
+                                String insertAulaQuery =
+                                    "INSERT INTO aula (nombre) VALUES ('$aula')";
+                                await request(insertAulaQuery);
+                              }
+
+                              String insertAulaProfesorQuery =
+                                  "INSERT INTO imparte_en (nombre, dni) VALUES ('$aula', '$_id')";
+                              await request(insertAulaProfesorQuery);
+                            }
+                          }
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
