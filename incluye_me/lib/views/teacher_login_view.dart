@@ -152,7 +152,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
 
       Future.delayed(Duration(seconds: 2), () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/principal');
+        Navigator.pushNamed(context, '/userList');
       });
     }
   }
