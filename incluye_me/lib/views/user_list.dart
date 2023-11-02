@@ -63,7 +63,6 @@ class UserListPage extends StatefulWidget {
 }
 
 class _UserListPageState extends State<UserListPage> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var estudiantes = [];
   var supervisor = [];
   var usuarios = [];
@@ -77,8 +76,8 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> loadUsersIds() async {
-    estudiantes = await request('SELECT * FROM estudiante where activo = true');
-    supervisor = await request('SELECT * FROM supervisor where activo = true');
+    estudiantes = await request('SELECT * FROM estudiante');
+    supervisor = await request('SELECT * FROM supervisor');
     usuarios.addAll(estudiantes);
     usuarios.addAll(supervisor);
     setState(() {});
@@ -242,53 +241,8 @@ class _UserListPageState extends State<UserListPage> {
                           IconButton(
                             icon: Icon(Icons.delete,
                                 color: Color.fromARGB(255, 76, 76, 76)),
-                            onPressed: () async {
-                              // Hacer la función asíncrona
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-
-                                // Mostrar un diálogo de confirmación
-                                bool confirmar = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Confirmar Eliminación'),
-                                      content: Text(
-                                          '¿Seguro que quiere eliminar al usuario?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text('Sí'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                true); // Confirma la eliminación
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text('No'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                false); // Cancela la eliminación
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-
-                                if (confirmar) {
-                                  // Realizar la actualización en la base de dos
-                                  var id = filteredUsers[index]['dni'];
-                                  String updateQuery;
-                                  if (esEstudiante) {
-                                    updateQuery =
-                                        "UPDATE estudiante SET activo = false WHERE dni = '$id'";
-                                  } else {
-                                    updateQuery =
-                                        "UPDATE supervisor SET activo = false WHERE dni = '$id'";
-                                  }
-                                  request(updateQuery);
-                                }
-                              }
+                            onPressed: () {
+                              // Agregar lógica de eliminación
                             },
                           ),
                         ],
