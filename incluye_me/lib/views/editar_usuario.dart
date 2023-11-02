@@ -3,9 +3,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:incluye_me/model/user.dart';
 
 class EditarUsuarioPage extends StatefulWidget {
-  final User user;
+  String userId;
 
-  EditarUsuarioPage({required this.user});
+  EditarUsuarioPage({required this.userId});
 
   @override
   _EditarUsuarioPageState createState() => _EditarUsuarioPageState();

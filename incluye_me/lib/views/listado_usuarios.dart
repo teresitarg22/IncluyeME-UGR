@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'registro.dart';
 import 'mostrar_usuario.dart';
+import 'editar_usuario.dart';
 
 // Crear la conexión como una variable global
 final connection = PostgreSQLConnection(
@@ -34,6 +35,7 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   return results;
 }
 
+/*
 Future<List<Map<String, Map<String, dynamic>>>> getUserById(
     String id, bool esEstudiante, PostgreSQLConnection connection) async {
   final results;
@@ -46,7 +48,7 @@ Future<List<Map<String, Map<String, dynamic>>>> getUserById(
   return results;
 }
 
-/*
+
 //Obtenemos los id de los estudiantes
 Future<List<String>> getEstudiantesIds(PostgreSQLConnection connection) async {
   final List<String> estudiantesIds = [];
@@ -130,8 +132,8 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> loadUsersIds() async {
-    estudiantes = await request('SELECT dni FROM estudiante');
-    supervisor = await request('SELECT dni FROM supervisor');
+    estudiantes = await request('SELECT * FROM estudiante');
+    supervisor = await request('SELECT * FROM supervisor');
     //estudiantes = await getEstudiantesIds(connection);
     //supervisor = await getsupervisorIds(connection);
     usuarios.addAll(estudiantes);
@@ -174,11 +176,32 @@ class _UserListPageState extends State<UserListPage> {
                             text; // Almacena la consulta a medida que se escribe
                       },
                     ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Cierra el cuadro de diálogo y realiza la búsqueda
+                          Navigator.of(context).pop();
+                          // Lógica de búsqueda con "query"
+                          var searchResults = usuarios
+                              .where((user) => user.name
+                                  .toLowerCase()
+                                  .contains(query.toLowerCase()))
+                              .toList();
+                          // Filtra la lista de usuarios según "query"
+                          setState(() {
+                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
+                            usuarios.clear();
+                            usuarios.addAll(searchResults);
+                          });
+                        },
+                        child: Text('Buscar'),
+                      ),
+                    ],
                   );
                 },
               );
             },
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search), // Icono de lupa
           ),
           DropdownButton<String?>(
             value: selectedFilter,
@@ -187,7 +210,7 @@ class _UserListPageState extends State<UserListPage> {
                 selectedFilter = newValue;
               });
             },
-            items: <String?>['Supervisor', 'Estudiantes']
+            items: <String?>['Estudiantes', 'Supervisor']
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
@@ -203,56 +226,109 @@ class _UserListPageState extends State<UserListPage> {
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
-                return FutureBuilder(
-                  future: getUserById(
-                      filteredUsers[index], esEstudiante, connection),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData) {
-                      final userData = snapshot.data as Map<String, dynamic>;
-                      final userName = userData[
-                          'nombre']; // Reemplaza 'nombre' con el campo que desees mostrar
-
-                      return Card(
-                        margin: EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: GestureDetector(
-                            child: Text(userName),
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return UserDetailsPage(
-                                  userId: filteredUsers[index],
-                                );
-                              }));
+                //if (selectedFilter == "Todos" ||
+                // (selectedFilter == "Profesores" &&
+                //     users[index].isTeacher) ||
+                // (selectedFilter == "Alumnos" && !users[index].isTeacher)) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return UserDetailsPage(
+                        userId: filteredUsers[index].dni,
+                      );
+                    }));
+                  },
+                  child: Card(
+                    margin: EdgeInsets.only(
+                        top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
+                    child: ListTile(
+                      title: GestureDetector(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4),
+                            Text(
+                              filteredUsers[index].name,
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 76, 76, 76),
+                                fontSize: 18, // Tamaño de fuente más grande
+                                fontWeight: FontWeight.bold, // Texto en negrita
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                          ],
+                        ),
+                      ),
+                      subtitle: Text(filteredUsers[index].email),
+                      leading: Icon(
+                        Icons.person,
+                        size: 45,
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // ------------------------------------
+                          IconButton(
+                            icon: Icon(Icons.edit,
+                                color: Color.fromARGB(255, 76, 76, 76)),
+                            onPressed: () {
+                              // Nos dirigimos a la interfaz de edición de usuario:
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditarUsuarioPage(
+                                      userId: filteredUsers[index].dni),
+                                ),
+                              );
                             },
                           ),
-                          // Otros detalles del usuario
-                        ),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
+                          // -----------------
+                          SizedBox(width: 30.0),
+                          // -----------------
+                          IconButton(
+                            icon: Icon(Icons.delete,
+                                color: Color.fromARGB(255, 76, 76, 76)),
+                            onPressed: () {
+                              // Agregar lógica de eliminación
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 );
+                //}
+                return Container();
               },
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/registroPage');
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Color(0xFF29DA81),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
+          Container(
+            margin: EdgeInsets.only(top: 16.0, bottom: 30.0),
+            child: ElevatedButton(
+              // --------------------------
+              onPressed: () {
+                Navigator.pushNamed(context, '/registroPage');
+              },
+              // --------------------------
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF29DA81),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                padding: EdgeInsets.all(16.0),
               ),
-              padding: EdgeInsets.all(16.0),
+              // --------------------------
+              child: Row(
+                // Usamos un Row para colocar el icono y el texto horizontalmente.
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.add),
+                  SizedBox(width: 8.0),
+                  Text('Nuevo Usuario',
+                      style: TextStyle(fontSize: 16)), // El texto del botón.
+                ],
+              ),
             ),
-            child: Text('Crear Nuevo Usuario'),
           ),
         ],
       ),
