@@ -54,19 +54,51 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles del Usuario'),
+        title: const Text('Detalles del Usuario'),
         backgroundColor: Color(0xFF29DA81), // Color personalizado
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Card(
+          margin: const EdgeInsets.all(
+              16.0), // Agregamos un margen alrededor de la tarjeta
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment
+                .start, // Alineamos los elementos a la izquierda
             children: <Widget>[
               ListTile(
-                title: Text('Nombre: ${usuario.nombre}'),
-                subtitle: Text('Email: ${usuario['email']}'),
+                title: Text(
+                  usuario['nombre'],
+                  style: const TextStyle(
+                    fontSize: 22, // Tamaño de fuente para el título
+                    fontWeight: FontWeight.bold, // Texto en negrita
+                  ),
+                ),
               ),
-              // Puedes mostrar más detalles del usuario aquí dentro de Card
+              const Divider(height: 1, color: Colors.grey), // Línea divisoria
+              Container(
+                margin: EdgeInsets.only(top: 12, left: 20, right: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '· Email:',
+                      style: TextStyle(
+                        fontSize: 18, // Tamaño de fuente para el título
+                        fontWeight: FontWeight.bold, // Texto en negrita
+                      ),
+                    ),
+                    const SizedBox(width: 8), // Espacio de 8 puntos
+                    Text(
+                      usuario.email,
+                      style: const TextStyle(
+                        fontSize:
+                            16, // Tamaño de fuente para el correo electrónico
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -76,7 +108,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/userList');
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
