@@ -1,6 +1,115 @@
 import 'package:flutter/material.dart';
-import '../views/editar_usuario.dart';
-import 'package:incluye_me/model/user.dart';
+import 'package:postgres/postgres.dart';
+import 'registro.dart';
+import 'mostrar_usuario.dart';
+
+// Crear la conexión como una variable global
+final connection = PostgreSQLConnection(
+  'flora.db.elephantsql.com', // host de la base de datos
+  5432, // puerto de la base de datos
+  'srvvjedp', // nombre de la base de datos
+  username: 'srvvjedp', // nombre de usuario de la base de datos
+  password:
+      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
+);
+
+Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
+  List<Map<String, Map<String, dynamic>>> results = [];
+
+  try {
+    // Verificar si la conexión está cerrada antes de intentar abrirla
+    if (connection.isClosed) {
+      await connection.open();
+      print('Connected to the database');
+    }
+
+    results = await connection.mappedResultsQuery(query);
+  } catch (e) {
+    print('Error: $e');
+  } finally {
+    // No cerrar la conexión aquí
+    print('Query executed');
+  }
+
+  return results;
+}
+
+Future<List<Map<String, Map<String, dynamic>>>> getUserById(
+    String id, bool esEstudiante, PostgreSQLConnection connection) async {
+  final results;
+  if (esEstudiante) {
+    results = await request('SELECT * FROM estudiante WHERE dni = @id');
+  } else {
+    results = await request('SELECT * FROM supervisor WHERE dni = @id');
+  }
+
+  return results;
+}
+
+/*
+//Obtenemos los id de los estudiantes
+Future<List<String>> getEstudiantesIds(PostgreSQLConnection connection) async {
+  final List<String> estudiantesIds = [];
+
+  try {
+    if (connection.isClosed) {
+      await connection.open();
+      print('Connected to the database');
+    }
+    final results = await connection.query('SELECT dni FROM estudiante');
+
+    for (final row in results) {
+      estudiantesIds.add(row[0] as String);
+    }
+  } catch (e) {
+    throw Exception('$e');
+  }
+
+  return estudiantesIds;
+}
+
+//Obtenemos los id del supervisor
+Future<List<String>> getsupervisorIds(PostgreSQLConnection connection) async {
+  final List<String> supervisorIds = [];
+
+  try {
+    if (connection.isClosed) {
+      await connection.open();
+      print('Connected to the database');
+    }
+
+    final results = await connection.query('SELECT dni FROM supervisor');
+
+    for (final row in results) {
+      supervisorIds.add(row[0] as String);
+    }
+  } catch (e) {
+    throw Exception('$e');
+  }
+
+  return supervisorIds;
+}
+
+//Obtenemos los datos de los usuarios
+
+*/
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => UserListPage(),
+        '/registroPage': (context) => HomeScreen(),
+      },
+    );
+  }
+}
 
 class UserListPage extends StatefulWidget {
   @override
@@ -8,21 +117,45 @@ class UserListPage extends StatefulWidget {
 }
 
 class _UserListPageState extends State<UserListPage> {
-  final List<User> users = [
-    User(name: 'Usuario 1', email: 'usuario1@example.com', isTeacher: true),
-    User(name: 'Usuario 2', email: 'usuario2@example.com', isTeacher: false),
-    User(name: 'Usuario 3', email: 'usuario3@example.com', isTeacher: true),
-    // Agrega más usuarios según tus necesidades
-  ];
+  var estudiantes = [];
+  var supervisor = [];
+  var usuarios = [];
 
-  String? selectedFilter = "Todos";
+  String? selectedFilter = "Estudiantes";
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsersIds();
+  }
+
+  Future<void> loadUsersIds() async {
+    estudiantes = await request('SELECT dni FROM estudiante');
+    supervisor = await request('SELECT dni FROM supervisor');
+    //estudiantes = await getEstudiantesIds(connection);
+    //supervisor = await getsupervisorIds(connection);
+    usuarios.addAll(estudiantes);
+    usuarios.addAll(supervisor);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    var filteredUsers = [];
+    bool esEstudiante = true;
+
+    if (selectedFilter == "Supervisor") {
+      filteredUsers = supervisor;
+      esEstudiante = false;
+    } else if (selectedFilter == "Estudiantes") {
+      filteredUsers = estudiantes;
+      esEstudiante = true;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Usuarios'),
-        backgroundColor: Color(0xFF29DA81), // Color personalizado
+        backgroundColor: Color(0xFF29DA81),
         actions: [
           IconButton(
             onPressed: () {
@@ -41,32 +174,11 @@ class _UserListPageState extends State<UserListPage> {
                             text; // Almacena la consulta a medida que se escribe
                       },
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          // Cierra el cuadro de diálogo y realiza la búsqueda
-                          Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query"
-                          List<User> searchResults = users
-                              .where((user) => user.name
-                                  .toLowerCase()
-                                  .contains(query.toLowerCase()))
-                              .toList();
-                          // Filtra la lista de usuarios según "query"
-                          setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
-                            users.clear();
-                            users.addAll(searchResults);
-                          });
-                        },
-                        child: Text('Buscar'),
-                      ),
-                    ],
                   );
                 },
               );
             },
-            icon: Icon(Icons.search), // Icono de lupa
+            icon: Icon(Icons.search),
           ),
           DropdownButton<String?>(
             value: selectedFilter,
@@ -75,7 +187,7 @@ class _UserListPageState extends State<UserListPage> {
                 selectedFilter = newValue;
               });
             },
-            items: <String?>['Todos', 'Profesores', 'Alumnos']
+            items: <String?>['Supervisor', 'Estudiantes']
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
@@ -86,124 +198,83 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       body: Column(
-        // ---------------------------------------------------
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: users.length,
+              itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
-                if (selectedFilter == "Todos" ||
-                    (selectedFilter == "Profesores" &&
-                        users[index].isTeacher) ||
-                    (selectedFilter == "Alumnos" && !users[index].isTeacher)) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return UserDetailsPage(
-                          user: users[index],
-                        );
-                      }));
-                    },
-                    child: Card(
-                      margin: EdgeInsets.only(
-                          top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
-                      child: ListTile(
-                        title: GestureDetector(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 4),
-                              Text(
-                                users[index].name,
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 76, 76, 76),
-                                  fontSize: 18, // Tamaño de fuente más grande
-                                  fontWeight:
-                                      FontWeight.bold, // Texto en negrita
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                            ],
-                          ),
-                        ),
-                        subtitle: Text(users[index].email),
-                        leading: Icon(
-                          Icons.person,
-                          size: 45,
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // ------------------------------------
-                            IconButton(
-                              icon: Icon(Icons.edit,
-                                  color: Color.fromARGB(255, 76, 76, 76)),
-                              onPressed: () {
-                                // Nos dirigimos a la interfaz de edición de usuario:
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditarUsuarioPage(user: users[index]),
-                                  ),
+                return FutureBuilder(
+                  future: getUserById(
+                      filteredUsers[index], esEstudiante, connection),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      final userData = snapshot.data as Map<String, dynamic>;
+                      final userName = userData[
+                          'nombre']; // Reemplaza 'nombre' con el campo que desees mostrar
+
+                      return Card(
+                        margin: EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: GestureDetector(
+                            child: Text(userName),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return UserDetailsPage(
+                                  userId: filteredUsers[index],
                                 );
-                              },
-                            ),
-                            // -----------------
-                            SizedBox(width: 30.0),
-                            // -----------------
-                            IconButton(
-                              icon: Icon(Icons.delete,
-                                  color: Color.fromARGB(255, 76, 76, 76)),
-                              onPressed: () {
-                                // Agregar lógica de eliminación
-                              },
-                            ),
-                          ],
+                              }));
+                            },
+                          ),
+                          // Otros detalles del usuario
                         ),
-                      ),
-                    ),
-                  );
-                }
-                return Container();
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                );
               },
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 16.0, bottom: 30.0),
-            child: ElevatedButton(
-              // --------------------------
-              onPressed: () {
-                Navigator.pushNamed(context, '/registroPage');
-              },
-              // --------------------------
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF29DA81),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: EdgeInsets.all(16.0),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/registroPage');
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Color(0xFF29DA81),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
               ),
-              // --------------------------
-              child: Row(
-                // Usamos un Row para colocar el icono y el texto horizontalmente.
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.add),
-                  SizedBox(width: 8.0),
-                  Text('Nuevo Usuario',
-                      style: TextStyle(fontSize: 16)), // El texto del botón.
-                ],
-              ),
+              padding: EdgeInsets.all(16.0),
             ),
+            child: Text('Crear Nuevo Usuario'),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81), // Color personalizado
+        backgroundColor: Color(0xFF29DA81),
+        currentIndex: 0,
+        onTap: (int index) {
+          if (index == 0) {
+            //reloadUsers();
+          } else if (index == 1) {
+            // Lógica para la pestaña "Tareas"
+          } else if (index == 2) {
+            // Lógica para la pestaña "Gráficos"
+          } else if (index == 3) {
+            // Lógica para la pestaña "Chat"
+          } else if (index == 4) {
+            // Lógica para la pestaña "Perfil"
+          }
+        },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81), // Color personalizado
+            backgroundColor: Color(0xFF29DA81),
             icon: Icon(Icons.people, color: Colors.white),
             label: 'Usuarios',
           ),
@@ -224,70 +295,6 @@ class _UserListPageState extends State<UserListPage> {
             label: 'Perfil',
           ),
         ],
-      ),
-    );
-  }
-}
-
-// -------------------------------------------------------------------
-
-class UserDetailsPage extends StatelessWidget {
-  final User user;
-
-  UserDetailsPage({required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Detalles del Usuario'),
-        backgroundColor: Color(0xFF29DA81), // Color personalizado
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          margin: const EdgeInsets.all(
-              16.0), // Agregamos un margen alrededor de la tarjeta
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment
-                .start, // Alineamos los elementos a la izquierda
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                  user.name,
-                  style: const TextStyle(
-                    fontSize: 22, // Tamaño de fuente para el título
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              const Divider(height: 1, color: Colors.grey), // Línea divisoria
-              Container(
-                margin: EdgeInsets.only(top: 12, left: 20, right: 10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      '· Email:',
-                      style: TextStyle(
-                        fontSize: 18, // Tamaño de fuente para el título
-                        fontWeight: FontWeight.bold, // Texto en negrita
-                      ),
-                    ),
-                    const SizedBox(width: 8), // Espacio de 8 puntos
-                    Text(
-                      user.email,
-                      style: const TextStyle(
-                        fontSize:
-                            16, // Tamaño de fuente para el correo electrónico
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
       ),
     );
   }
