@@ -112,6 +112,18 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     MultiSelectItem("../assets/symbol1.png", "Casa"),
   ];
 
+  Map<int, String> mapaImagenes = {
+    0: '../assets/symbol0.png',
+    1: '../assets/symbol1.png',
+    2: '../assets/symbol2.png',
+    3: '../assets/symbol3.png',
+    4: '../assets/symbol4.png',
+    5: '../assets/symbol5.png',
+    6: '../assets/symbol6.png',
+    7: '../assets/symbol7.png',
+    8: '../assets/symbol8.png',
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,7 +149,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   decoration: InputDecoration(labelText: 'Nombre *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'El nombre es obligatorio';
+                      return 'El nombre es obligatorio ';
                     }
                     return null;
                   },
@@ -636,7 +648,18 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   onConfirm: (values) {
                     if (values.length == 3) {
                       setState(() {
-                        selectedImages = values;
+                        selectedImages.add(mapaImagenes.entries
+                            .firstWhere((entry) => entry.value == values[0])
+                            .key
+                            .toString());
+                        selectedImages.add(mapaImagenes.entries
+                            .firstWhere((entry) => entry.value == values[1])
+                            .key
+                            .toString());
+                        selectedImages.add(mapaImagenes.entries
+                            .firstWhere((entry) => entry.value == values[2])
+                            .key
+                            .toString());
                       });
                     } else {
                       values.clear();
@@ -648,15 +671,15 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     }
                   },
                 ),
-                SizedBox(height: 20), // Espacio entre el menú y otros elementos
+                /*SizedBox(height: 20), // Espacio entre el menú y otros elementos
                 Text(
                   'Imágenes seleccionadas:',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                Row(
+                ),*/
+                /* Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: selectedImages.map((option) {
                     return Image.asset(
@@ -665,7 +688,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       height: 50,
                     );
                   }).toList(),
-                ),
+                ),*/
 
                 Align(
                   alignment: Alignment.center, // Centra el botón en el medio
@@ -710,8 +733,10 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             request(query2);
                           }
 
+                          String prueba = selectedImages.join(",");
+
                           String query =
-                              "INSERT INTO estudiante (dni, genero, nombre, apellidos, fechanacimiento, contraseña, tarjetasanitaria, direcciondomiciliar, numerotelefono, correoelectronico, foto, archivomedico, alergiasintolerancias, informacionadicionalmedico, tipodeletra, minmay, formatodeapp, pantallatactil, dni_1) VALUES ('$_id', '$_genero', '$_nombre', '$_apellidos', '$formattedDate', '$selectedImages', '$_tarjetaSanitaria', '$_direccionDomicilio', '$_numeroTlfAlumno', '$_correoElectronicoAlumno', '$_image', '$_attachedFile', '$_alergias', '$_informacionAdicional', '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_isTactil', '$_idTutor')";
+                              "INSERT INTO estudiante (dni, genero, nombre, apellidos, fechanacimiento, contraseña, tarjetasanitaria, direcciondomiciliar, numerotelefono, correoelectronico, foto, archivomedico, alergiasintolerancias, informacionadicionalmedico, tipodeletra, minmay, formatodeapp, pantallatactil, dnitutorlegal) VALUES ('$_id', '$_genero', '$_nombre', '$_apellidos', '$formattedDate', '$prueba', '$_tarjetaSanitaria', '$_direccionDomicilio', '$_numeroTlfAlumno', '$_correoElectronicoAlumno', '$_image', '$_attachedFile', '$_alergias', '$_informacionAdicional', '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_isTactil', '$_idTutor')";
                           request(query);
                         }
                       }
