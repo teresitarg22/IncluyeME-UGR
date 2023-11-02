@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => StartView(),
         '/registroPage': (context) => HomeScreen(),
         '/principal': (context) => TestPrincipalView(),
+        '/userList': (context) => UserListPage()
       },
     );
   }
