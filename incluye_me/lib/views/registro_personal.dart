@@ -165,35 +165,29 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   },
                 ),
 
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Foto',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Text(
+                      'Foto *',
+                      style: TextStyle(
+                          fontSize: 16.0), // Aumenta el tamaño del texto
                     ),
-                  ),
+                    SizedBox(
+                        width:
+                            15.0), // Agrega espacio horizontal entre el texto y el botón
+                    ElevatedButton(
+                      onPressed: () {
+                        _pickImage(); // Llama a la función para seleccionar una imagen
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF29DA81),
+                      ),
+                      child: Text('Elige una foto'),
+                    ),
+                  ],
                 ),
                 if (_image != null)
                   Image.file(_image!), // Muestra la imagen seleccionada
-                ElevatedButton(
-                  onPressed: () {
-                    _pickImage(); // Llama a la función para seleccionar una imagen
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Seleccionar Foto'),
-                ),
-                if (_imageError !=
-                    null) // Muestra un mensaje de error si el campo está vacío
-                  Text(
-                    _imageError!,
-                    style: TextStyle(color: Colors.red),
-                  ),
                 ..._aulasProfesor.asMap().entries.map((entry) {
                   final int index = entry.key;
                   return Row(
@@ -233,6 +227,19 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   ),
                   child: Text('Añadir Aulas del Profesor'),
                 ),
+
+                Padding(
+                  padding: EdgeInsets.only(
+                      top:
+                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
+                  child: Text(
+                    'Información de seguridad y acceso',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 TextFormField(
                   decoration:
                       InputDecoration(labelText: 'Correo electrónico *'),
@@ -246,18 +253,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     _correoElectronico =
                         value; // Asignar el valor introducido a la variable
                   },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Información de seguridad y acceso',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
                 TextFormField(
                   decoration: InputDecoration(

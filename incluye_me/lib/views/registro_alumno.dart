@@ -7,6 +7,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
 import 'package:postgres/postgres.dart';
+import 'package:convert/convert.dart';
+import 'package:image/image.dart' as img;
 
 // Crear la conexión como una variable global
 final connection = PostgreSQLConnection(
@@ -50,6 +52,9 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   String? _selectedTamanio;
   String? _selectedRelacion;
   String? _selectedImage;
+  var imageBytes;
+  List<int>? imagenPrueba;
+  File? mostrarImagen;
 
   TextEditingController _dateControllerAlumno = TextEditingController();
   DateTime? _selectedDateAlumno;
@@ -148,37 +153,40 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                         value; // Asignar el valor introducido a la variable
                   },
                 ),
-
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Foto',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    Text(
+                      'Foto *',
+                      style: TextStyle(
+                          fontSize: 16.0), // Aumenta el tamaño del texto
                     ),
-                  ),
+                    SizedBox(
+                        width:
+                            15.0), // Agrega espacio horizontal entre el texto y el botón
+                    ElevatedButton(
+                      onPressed: () async {
+                        _pickImage(); // Llama a la función para seleccionar una imagen
+                        String imageQuery =
+                            "SELECT foto FROM estudiante WHERE dni = 'nuevo1'";
+                        imageBytes = await request(imageQuery);
+                        if (imageBytes.first[0] != null) {
+                          imagenPrueba = imageBytes.first[0] as List<int>;
+                        }
+                        img.Image? niIdea = img.decodeImage(imagenPrueba!);
+                        mostrarImagen = new File('hola.pg')
+                          ..writeAsBytesSync(img.encodePng(niIdea!));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF29DA81),
+                      ),
+                      child: Text('Elige una foto'),
+                    ),
+                  ],
                 ),
-                if (_image != null)
-                  Image.file(_image!), // Muestra la imagen seleccionada
-                ElevatedButton(
-                  onPressed: () {
-                    _pickImage(); // Llama a la función para seleccionar una imagen
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Seleccionar Foto'),
-                ),
-                if (_imageError !=
-                    null) // Muestra un mensaje de error si el campo está vacío
-                  Text(
-                    _imageError!,
-                    style: TextStyle(color: Colors.red),
-                  ),
-
+                if (_image != null) Image.file(_image!),
+                if (mostrarImagen != null) Image.file(mostrarImagen!),
+                /*Image.file(_image!),
+                  String sacarimagen = "SELECT foto FROM estudiante WHERE dni = 'nuevo1'",*/
                 DropdownButtonFormField<String>(
                   value: _selectedFont,
                   onChanged: (value) {
@@ -242,7 +250,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     });
                   },
                 ),
-
                 Padding(
                   padding: EdgeInsets.only(
                       top:
@@ -262,7 +269,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                         value; // Asignar el valor introducido a la variable
                   },
                 ),
-
                 MultiSelectDialogField(
                   items: multiSelectImagenes,
                   initialValue: selectedImages,
@@ -300,8 +306,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        String formattedDate = DateFormat('yyyy-MM-dd')
-                            .format(_selectedDateAlumno!);
 
                         /* String checkQuery1 =
                             "SELECT * FROM estudiante WHERE dni = '$_id'";
@@ -330,9 +334,12 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
 
                         String imagenesContrasenia = selectedImages.join(",");
 
-                        /* String query =
-                              "INSERT INTO estudiante (dni, genero, nombre, apellidos, fechanacimiento, contraseña, tarjetasanitaria, direcciondomiciliar, numerotelefono, correoelectronico, foto, archivomedico, alergiasintolerancias, informacionadicionalmedico, tipodeletra, minmay, formatodeapp, pantallatactil, dnitutorlegal) VALUES ('$_id', '$_genero', '$_nombre', '$_apellidos', '$formattedDate', '$imagenesContrasenia', '$_tarjetaSanitaria', '$_direccionDomicilio', '$_numeroTlfAlumno', '$_correoElectronicoAlumno', '$_image', '$_attachedFile', '$_alergias', '$_informacionAdicional', '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_isTactil', '$_idTutor')";
-                          request(query);*/
+                        List<int> imageBytes = _image!.readAsBytesSync();
+                        String imageHex = hex.encode(imageBytes);
+
+                        String query =
+                            "INSERT INTO estudiante (dni, genero, nombre, apellidos, contraseña, tarjetasanitaria, direcciondomiciliar, numerotelefono, correoelectronico, foto, archivomedico, alergiasintolerancias, informacionadicionalmedico, tipodeletra, minmay, formatodeapp, pantallatactil, dnitutorlegal) VALUES ('nuevo1', 'ninguno', '$_nombre', '$_apellidos', '$imagenesContrasenia', '090879778', '56788', '879798', '546546', E'\\\\x$imageHex', '$_attachedFile', 'Si', 'NO', '$_tipoLetra', '$_mayMin', '$selectedOptions', 'true', 'asdas856895')";
+                        request(query);
                         //  }
                       }
                     },
