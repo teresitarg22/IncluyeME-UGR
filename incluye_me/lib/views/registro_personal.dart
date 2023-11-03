@@ -13,7 +13,8 @@ final connection = PostgreSQLConnection(
   5432, // puerto de la base de datos
   '', // nombre de la base de datos
   username: 'srvvjedp', // nombre de usuario de la base de datos
-  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
+  password:
+      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
 );
 
 Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
@@ -89,7 +90,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
       []; //Lista para almacenar la experiencia laboral
   List<String> _aulasProfesor = [];
 
-  List<String> nacionalidades = [
+  /*List<String> nacionalidades = [
     'España',
     'Francia',
     'Italia',
@@ -98,9 +99,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
     'Reino Unido',
     'Irlanda',
     'Otro'
-  ];
+  ];*/
 
-  Map<String, String> banderas = {
+/*  Map<String, String> banderas = {
     'España': 'assets/espana.png',
     'Francia': 'assets/francia.png',
     'Italia': 'assets/italia.png',
@@ -109,7 +110,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
     'Irlanda': 'assets/irlanda.png',
     'Portugal': 'assets/portugal.png',
     'Otro': 'assets/desconocido.png'
-  };
+  };*/
 
   @override
   void initState() {
@@ -163,140 +164,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         value; // Asignar el valor introducido a la variable
                   },
                 ),
-                TextFormField(
-                  controller: _dateController,
-                  decoration: InputDecoration(
-                    labelText: 'Fecha de Nacimiento *',
-                  ),
-                  validator: (value) {
-                    if (_selectedDate == null) {
-                      return 'La fecha de nacimiento es obligatoria';
-                    }
-                    return null;
-                  },
-                  onTap: () {
-                    _selectDate(context);
-                  },
-                  readOnly: true,
-                ),
-                DropdownButtonFormField<String>(
-                  value: _selectedGenderProf,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGenderProf = value;
-                    });
-                  },
-                  items: ['Hombre', 'Mujer', 'Otro']
-                      .map((gender) => DropdownMenuItem<String>(
-                            value: gender,
-                            child: Text(gender),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(labelText: 'Género *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El género es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _genero =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
 
-                if (_selectedGenderProf == 'Otro')
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Género *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El genero es obligatorio';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _genero =
-                          value; // Reescribir el valor introducido a la variable
-                    },
-                  ),
-
-                Row(
-                  children: [
-                    Text('Nacionalidad:'),
-                    SizedBox(
-                        width:
-                            20), // Espacio entre el texto y el botón desplegable
-                    DropdownButton<String>(
-                      value: _selectedNacionalidad,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedNacionalidad = value;
-                          _nacionalidad = value;
-                        });
-                      },
-                      items: nacionalidades.map((nacionalidad) {
-                        return DropdownMenuItem<String>(
-                          value: nacionalidad,
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                banderas[
-                                    nacionalidad]!, // Obtiene la ruta de la bandera
-                                width: 32, // Ajusta el tamaño de la bandera
-                                height: 20,
-                              ),
-                              SizedBox(
-                                  width:
-                                      8), // Espacio entre la bandera y el texto
-                              Text(nacionalidad), // Nombre de la nacionalidad
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    if (_selectedNacionalidad == 'Otro')
-                      Expanded(
-                        child: TextField(
-                          onChanged: (value) {
-                            setState(() {
-                              _otherNacionalidad = value;
-                              _nacionalidad = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Introduce tu nacionalidad',
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Documento de Identificación *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El documento de identificación es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _id = value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Número de Seguridad Social *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El número de seguridad social es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _tarjetaSanitaria =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
                 Padding(
                   padding: EdgeInsets.only(
                       top:
@@ -326,278 +194,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     _imageError!,
                     style: TextStyle(color: Colors.red),
                   ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Información académica',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                DropdownButtonFormField<String>(
-                  value: _selectedStudyLevel,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedStudyLevel = value;
-                    });
-                  },
-                  items: [
-                    'Educación Preescolar',
-                    'Educación Primaria',
-                    'Educación Secundaria',
-                    'Educación Técnica',
-                    'Licenciatura',
-                    'Maestría',
-                    'Doctorado',
-                    'Otro'
-                  ]
-                      .map((studyLevel) => DropdownMenuItem<String>(
-                            value: studyLevel,
-                            child: Text(studyLevel),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(labelText: 'Nivel de estudios *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El nivel de estudios es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _nivelEstudios =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-
-                if (_selectedStudyLevel == 'Otro')
-                  TextFormField(
-                    decoration:
-                        InputDecoration(labelText: 'Nivel de estudios *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El nivel de estudios es obligatorio';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _nivelEstudios =
-                          value; // Asignar el valor introducido a la variable
-                    },
-                  ),
-
-                // Mapear la lista de títulos académicos en campos de entrada
-                ..._titulosAcademicos.asMap().entries.map((entry) {
-                  final int index = entry.key;
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          initialValue:
-                              entry.value, // Mostrar el título existente
-                          decoration:
-                              InputDecoration(labelText: 'Título Académico '),
-                              onChanged: (value) {
-                            // Guardar el valor introducido en _aulasProfesor
-                            setState(() {
-                              _titulosAcademicos[index] = value;
-                            });
-                          },
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            _titulosAcademicos.removeAt(
-                                index); // Eliminar el título académico
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                }).toList(),
-
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _titulosAcademicos
-                          .add(''); // Agregar un nuevo campo vacío
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Añadir Título Académico'),
-                ),
-                // Mapear la lista de certificados académicos adicionales en campos de entrada
-                ..._certificadosAdicionales.asMap().entries.map((entry) {
-                  final int index = entry.key;
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          initialValue:
-                              entry.value, // Mostrar el título existente
-                          decoration: InputDecoration(
-                              labelText: 'Certificados adicionales '),
-                              onChanged: (value) {
-                            // Guardar el valor introducido en _aulasProfesor
-                            setState(() {
-                              _certificadosAdicionales[index] = value;
-                            });
-                          },
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            _certificadosAdicionales.removeAt(
-                                index); // Eliminar el título académico
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                }).toList(),
-
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _certificadosAdicionales
-                          .add(''); // Agregar un nuevo campo vacío
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Añadir Certificado Adicional'),
-                ),
-                // Mapear la lista de experiencia laboral en campos de entrada
-                ..._experienciaLaboral.asMap().entries.map((entry) {
-                  final int index = entry.key;
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          initialValue:
-                              entry.value, // Mostrar la experiencia laboral
-                          decoration: InputDecoration(
-                              labelText: 'Experiencia laboral '),
-                              onChanged: (value) {
-                            // Guardar el valor introducido en _aulasProfesor
-                            setState(() {
-                              _experienciaLaboral[index] = value;
-                            });
-                          },
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            _experienciaLaboral.removeAt(
-                                index); // Eliminar la experiencia laboral
-                          });
-                        },
-                      ),
-                    ],
-                  );
-                }).toList(),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _experienciaLaboral
-                          .add(''); // Agregar un nuevo campo vacío
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Añadir Experiencia Laboral'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _pickFile(); // Abre el selector de archivos
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Añadir CV'),
-                ),
-                if (_attachedFile != null)
-                  Text('Archivo adjunto: ${_attachedFile!.path}'),
-
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Información adicional '),
-                  onSaved: (value) {
-                    _informacionAdicional =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Información de empleo',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Puesto dentro del centro *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El puesto dentro del centro es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _puesto =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Departamento *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El departamento es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _departamento =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  controller: _dateControllerContratacion,
-                  decoration: InputDecoration(
-                    labelText: 'Fecha de contratación *',
-                  ),
-                  validator: (value) {
-                    if (_selectedDateContratacion == null) {
-                      return 'La fecha de contratación es obligatoria';
-                    }
-                    return null;
-                  },
-                  onTap: () {
-                    _selectDateContratacion(context);
-                  },
-                  readOnly: false, // Permitir la edición del campo
-                ),
                 ..._aulasProfesor.asMap().entries.map((entry) {
                   final int index = entry.key;
                   return Row(
@@ -637,33 +233,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   ),
                   child: Text('Añadir Aulas del Profesor'),
                 ),
-
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Información de contacto',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Número de teléfono *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El número de teléfono es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _numeroTlf =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
                 TextFormField(
                   decoration:
                       InputDecoration(labelText: 'Correo electrónico *'),
@@ -678,21 +247,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         value; // Asignar el valor introducido a la variable
                   },
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Número de teléfono de emergencia *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El número de teléfono de emergencia es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _tlfEmergencia =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-
                 Padding(
                   padding: EdgeInsets.only(
                       top:
