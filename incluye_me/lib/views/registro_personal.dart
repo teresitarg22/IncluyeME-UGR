@@ -45,17 +45,12 @@ class ProfesorRegistration extends StatefulWidget {
 
 class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? _selectedGenderProf;
-  String? _selectedStudyLevel;
-  String? _passwd = null;
-  String? _confirmPasswd = null;
+  String? _passwd;
+  String? _confirmPasswd;
   bool? _isAdmin = false;
   bool _showPassword = false;
   bool _showConfirmPassword = false;
-  String? _selectedNacionalidad;
 
-  TextEditingController _dateController = TextEditingController();
-  TextEditingController _dateControllerContratacion = TextEditingController();
   DateTime? _selectedDate;
   DateTime? _selectedDateContratacion;
   String? _otherNacionalidad; // Nueva
@@ -89,28 +84,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   List<String> _experienciaLaboral =
       []; //Lista para almacenar la experiencia laboral
   List<String> _aulasProfesor = [];
-
-  /*List<String> nacionalidades = [
-    'España',
-    'Francia',
-    'Italia',
-    'Portugal',
-    'Estados Unidos',
-    'Reino Unido',
-    'Irlanda',
-    'Otro'
-  ];*/
-
-/*  Map<String, String> banderas = {
-    'España': 'assets/espana.png',
-    'Francia': 'assets/francia.png',
-    'Italia': 'assets/italia.png',
-    'Reino Unido': 'assets/uk.png',
-    'Estados Unidos': 'assets/eeuu.png',
-    'Irlanda': 'assets/irlanda.png',
-    'Portugal': 'assets/portugal.png',
-    'Otro': 'assets/desconocido.png'
-  };*/
 
   @override
   void initState() {
@@ -336,7 +309,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   onChanged: (bool? value) {
                     setState(() {
                       _isAdmin =
-                          value; // Actualiza el valor de _isAdmin al marcar/desmarcar
+                          value!; // Actualiza el valor de _isAdmin al marcar/desmarcar
                     });
                   },
                 ),
@@ -348,14 +321,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       // Hacer la función asíncrona
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(_selectedDate!);
 
                         // Verificar si el correo electrónico o el DNI ya existen
                         String checkQuery =
-                            "SELECT * FROM supervisor WHERE dni = '$_id'";
+                            "SELECT * FROM personal WHERE nombre = '$_nombre' AND apellidos = '$_apellidos'";
                         String checkQuery2 =
-                            "SELECT * FROM supervisor WHERE correoelectronico = '$_correoElectronico'";
+                            "SELECT * FROM personal WHERE correo = '$_correoElectronico'";
                         var result = await request(checkQuery);
                         var result2 = await request(checkQuery2);
                         if (result.isNotEmpty) {
@@ -398,9 +369,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           );
                         } else {
                           String query =
-                              "INSERT INTO supervisor (dni, genero, nombre, apellidos, fechanacimiento, contraseña, tarjetasanitaria, direcciondomiciliar, nacionalidad, numerotelefono, numerotelefonoemergencia, correoelectronico, foto, nivelestudios, tituloacademico, experiencialaboralprevia, certificacionesadicionales, curriculumvitae, informacionacademicaadicional, puesto, fechacontratacion, departamento, admin) VALUES ('$_id', '$_genero', '$_nombre', '$_apellidos', '$formattedDate', '$_passwd', '$_tarjetaSanitaria', '$_direccionDomicilio', '$_nacionalidad', '$_numeroTlf', '$_tlfEmergencia', '$_correoElectronico', '$_image', '$_nivelEstudios', '$_titulosAcademicos', '$_experienciaLaboral', '$_certificadosAdicionales', '$_attachedFile', '$_informacionAdicional', '$_puesto', '$_selectedDateContratacion', '$_departamento', '$_isAdmin')";
+                              "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$_nombre', '$_apellidos', '$_passwd', '$_correoElectronico', '$_image', '$_isAdmin')";
                           request(query);
-                          if (_aulasProfesor.isNotEmpty) {
+                          /*if (_aulasProfesor.isNotEmpty) {
                             for (var aula in _aulasProfesor) {
                               // Verificar si el aula ya existe
                               String checkAulaQuery =
@@ -417,7 +388,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                                   "INSERT INTO imparte_en (nombre, dni) VALUES ('$aula', '$_id')";
                               await request(insertAulaProfesorQuery);
                             }
-                          }
+                          }*/
                         }
                       }
                     },
@@ -434,48 +405,6 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
         ),
       ),
     );
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = (await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    ))!;
-
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        _dateController.text = DateFormat('dd-MM-yyyy').format(picked);
-      });
-    }
-  }
-
-  Future<void> _selectDateContratacion(BuildContext context) async {
-    final DateTime picked = (await showDatePicker(
-      context: context,
-      initialDate: _selectedDateContratacion ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    ))!;
-
-    if (picked != null && picked != _selectedDateContratacion) {
-      setState(() {
-        _selectedDateContratacion = picked;
-        _dateControllerContratacion.text =
-            DateFormat('dd-MM-yyyy').format(picked);
-      });
-    }
-  }
-
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      setState(() {
-        _attachedFile = File(result.files.single.path!);
-      });
-    }
   }
 
   Future<void> _pickImage() async {

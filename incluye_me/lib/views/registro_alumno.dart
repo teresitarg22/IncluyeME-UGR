@@ -50,15 +50,11 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _selectedFont;
   String? _selectedTamanio;
-  String? _selectedRelacion;
   String? _selectedImage;
   var imageBytes;
   List<int>? imagenPrueba;
   File? mostrarImagen;
 
-  TextEditingController _dateControllerAlumno = TextEditingController();
-  DateTime? _selectedDateAlumno;
-  //TextEditingController _historialMedicoController = TextEditingController();
   File? _attachedFile;
   File? _image;
   String? _imageError;
@@ -68,6 +64,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   String? _tipoLetra;
   String? _mayMin;
   String? _correoElectronicoAlumno;
+  String? _contraseniaTexto;
+  bool _sabeLeer = false;
 
   List<String> availableFonts = GoogleFonts.asMap().keys.toList();
   List<String> selectedOptions = []; //FORMATO DE LA APP.
@@ -166,15 +164,15 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     ElevatedButton(
                       onPressed: () async {
                         _pickImage(); // Llama a la función para seleccionar una imagen
-                        String imageQuery =
-                            "SELECT foto FROM estudiante WHERE dni = 'nuevo1'";
+                        /* String imageQuery =
+                            "SELECT foto FROM estudiante WHERE nombre = '$_nombre' and apellidos = '$_apellidos'";
                         imageBytes = await request(imageQuery);
                         if (imageBytes.first[0] != null) {
                           imagenPrueba = imageBytes.first[0] as List<int>;
                         }
                         img.Image? niIdea = img.decodeImage(imagenPrueba!);
                         mostrarImagen = new File('hola.pg')
-                          ..writeAsBytesSync(img.encodePng(niIdea!));
+                          ..writeAsBytesSync(img.encodePng(niIdea!));*/
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Color(0xFF29DA81),
@@ -187,6 +185,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                 if (mostrarImagen != null) Image.file(mostrarImagen!),
                 /*Image.file(_image!),
                   String sacarimagen = "SELECT foto FROM estudiante WHERE dni = 'nuevo1'",*/
+
                 DropdownButtonFormField<String>(
                   value: _selectedFont,
                   onChanged: (value) {
@@ -219,7 +218,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       _selectedTamanio = value;
                     });
                   },
-                  items: ['Mayuscula', 'Miniscula']
+                  items: ['Mayúscula', 'Minúscula']
                       .map((tamanio) => DropdownMenuItem<String>(
                             value: tamanio,
                             child: Text(tamanio),
@@ -255,51 +254,92 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
                   child: Text(
-                    'Información de contacto del alumno',
+                    'Información de inicio de sesión del alumno',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Correo electrónico '),
-                  onSaved: (value) {
-                    _correoElectronicoAlumno =
-                        value; // Asignar el valor introducido a la variable
+                CheckboxListTile(
+                  title: Text('Sabe leer y escribir'),
+                  value:
+                      _sabeLeer, // Valor de la casilla de verificación (true o false)
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _sabeLeer =
+                          value!; // Actualiza el valor de _sabeLeer al marcar/desmarcar
+                    });
                   },
                 ),
-                MultiSelectDialogField(
-                  items: multiSelectImagenes,
-                  initialValue: selectedImages,
-                  title: Text('Selecciona imágenes'),
-                  buttonText: Text('Imágenes seleccionadas'),
-                  onConfirm: (values) {
-                    if (values.length == 3) {
-                      setState(() {
-                        selectedImages.add(mapaImagenes.entries
-                            .firstWhere((entry) => entry.value == values[0])
-                            .key
-                            .toString());
-                        selectedImages.add(mapaImagenes.entries
-                            .firstWhere((entry) => entry.value == values[1])
-                            .key
-                            .toString());
-                        selectedImages.add(mapaImagenes.entries
-                            .firstWhere((entry) => entry.value == values[2])
-                            .key
-                            .toString());
-                      });
-                    } else {
-                      values.clear();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('TIENES QUE SELECCIONAR 3 ELEMENTOS'),
-                        ),
-                      );
-                    }
-                  },
-                ),
+                _sabeLeer
+                    ? Column(
+                        children: <Widget>[
+                          TextFormField(
+                            decoration: InputDecoration(
+                                labelText: 'Correo electrónico '),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'El nombre es obligatorio ';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _correoElectronicoAlumno =
+                                  value; // Asignar el valor introducido a la variable
+                            },
+                          ),
+                          TextFormField(
+                            decoration:
+                                InputDecoration(labelText: 'Contraseña texto '),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'El nombre es obligatorio ';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _contraseniaTexto =
+                                  value; // Asignar el valor introducido a la variable
+                            },
+                          ),
+                        ],
+                      )
+                    : MultiSelectDialogField(
+                        items: multiSelectImagenes,
+                        initialValue: selectedImages,
+                        title: Text('Selecciona imágenes'),
+                        buttonText: Text('Imágenes seleccionadas'),
+                        onConfirm: (values) {
+                          if (values.length == 3) {
+                            setState(() {
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[0])
+                                  .key
+                                  .toString());
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[1])
+                                  .key
+                                  .toString());
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[2])
+                                  .key
+                                  .toString());
+                            });
+                          } else {
+                            values.clear();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('TIENES QUE SELECCIONAR 3 ELEMENTOS'),
+                              ),
+                            );
+                          }
+                        },
+                      ),
                 Align(
                   alignment: Alignment.center, // Centra el botón en el medio
                   child: ElevatedButton(
@@ -307,18 +347,18 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
 
-                        /* String checkQuery1 =
-                            "SELECT * FROM estudiante WHERE dni = '$_id'";
-                        var result1 = await request(checkQuery1);*/
+                        String checkQuery1 =
+                            "SELECT * FROM estudiante WHERE nombre = '$_nombre' and apellidos = '$_apellidos'";
+                        var result1 = await request(checkQuery1);
 
-                        /*if (result1.isNotEmpty) {
+                        if (result1.isNotEmpty) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text('Error'),
                                 content: Text(
-                                    'Ya existe una cuenta asociada a ese DNI.'),
+                                    'Ya existe una cuenta asociada a ese nombre.'),
                                 actions: [
                                   TextButton(
                                     child: Text('OK'),
@@ -330,17 +370,16 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                               );
                             },
                           );
-                        } */ //else {
+                        } else {
+                          String imagenesContrasenia = selectedImages.join(",");
 
-                        String imagenesContrasenia = selectedImages.join(",");
+                          List<int> imageBytes = _image!.readAsBytesSync();
+                          String imageHex = hex.encode(imageBytes);
 
-                        List<int> imageBytes = _image!.readAsBytesSync();
-                        String imageHex = hex.encode(imageBytes);
-
-                        String query =
-                            "INSERT INTO estudiante (dni, genero, nombre, apellidos, contraseña, tarjetasanitaria, direcciondomiciliar, numerotelefono, correoelectronico, foto, archivomedico, alergiasintolerancias, informacionadicionalmedico, tipodeletra, minmay, formatodeapp, pantallatactil, dnitutorlegal) VALUES ('nuevo1', 'ninguno', '$_nombre', '$_apellidos', '$imagenesContrasenia', '090879778', '56788', '879798', '546546', E'\\\\x$imageHex', '$_attachedFile', 'Si', 'NO', '$_tipoLetra', '$_mayMin', '$selectedOptions', 'true', 'asdas856895')";
-                        request(query);
-                        //  }
+                          String query =
+                              "INSERT INTO estudiante (nombre, apellidos, contrasenia_iconos, contrasenia, correo, foto, tipo_letra, maymin, formato, sabe_leer) VALUES ('$_nombre', '$_apellidos', '$imagenesContrasenia', '$_contraseniaTexto', '$_correoElectronicoAlumno',  E'\\\\x$imageHex',  '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_sabeLeer')";
+                          request(query);
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -356,22 +395,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
         ),
       ),
     );
-  }
-
-  Future<void> _selectDateAlumno(BuildContext context) async {
-    final DateTime picked = (await showDatePicker(
-      context: context,
-      initialDate: _selectedDateAlumno ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    ))!;
-
-    if (picked != null && picked != _selectedDateAlumno) {
-      setState(() {
-        _selectedDateAlumno = picked;
-        _dateControllerAlumno.text = DateFormat('dd-MM-yyyy').format(picked);
-      });
-    }
   }
 
   Future<void> _pickFile() async {
