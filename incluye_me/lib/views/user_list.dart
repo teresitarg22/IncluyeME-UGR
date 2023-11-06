@@ -77,7 +77,7 @@ class _UserListPageState extends State<UserListPage> {
 
   Future<void> loadUsersIds() async {
     estudiantes = await request('SELECT * FROM estudiante');
-    supervisor = await request('SELECT * FROM supervisor');
+    supervisor = await request('SELECT * FROM personal');
     usuarios.addAll(estudiantes);
     usuarios.addAll(supervisor);
     setState(() {});
@@ -89,10 +89,10 @@ class _UserListPageState extends State<UserListPage> {
     bool esEstudiante = true;
     String user = "estudiante";
 
-    if (selectedFilter == "Supervisor") {
+    if (selectedFilter == "personal") {
       filteredUsers = supervisor;
       esEstudiante = false;
-      user = "supervisor";
+      user = "personal";
     } else if (selectedFilter == "Estudiantes") {
       filteredUsers = estudiantes;
       esEstudiante = true;
@@ -134,9 +134,9 @@ class _UserListPageState extends State<UserListPage> {
                                       user['estudiante']['nombre']
                                           .toLowerCase()
                                           .contains(query.toLowerCase())) ||
-                                  (user['supervisor'] != null &&
-                                      user['supervisor']['nombre'] != null &&
-                                      user['supervisor']['nombre']
+                                  (user['personal'] != null &&
+                                      user['personal']['nombre'] != null &&
+                                      user['personal']['nombre']
                                           .toLowerCase()
                                           .contains(query.toLowerCase())))
                               .toList();
@@ -164,7 +164,7 @@ class _UserListPageState extends State<UserListPage> {
                 selectedFilter = newValue;
               });
             },
-            items: <String?>['Estudiantes', 'Supervisor']
+            items: <String?>['Estudiantes', 'personal']
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
@@ -211,8 +211,7 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle:
-                          Text(filteredUsers[index][user]['correoelectronico']),
+                      subtitle: Text(filteredUsers[index][user]['correo']),
                       leading: Icon(
                         Icons.person,
                         size: 45,
