@@ -1,42 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:intl/intl.dart';
-import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-
-import 'package:postgres/postgres.dart';
-
-final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  '', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
-);
-
-Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
-  List<Map<String, Map<String, dynamic>>> results = [];
-
-  try {
-    // Verificar si la conexión está cerrada antes de intentar abrirla
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    results = await connection.mappedResultsQuery(query);
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    // No cerrar la conexión aquí
-    print('Query executed');
-  }
-
-  return results;
-}
+import '../controllers/registro_controller.dart';
 
 class ProfesorRegistration extends StatefulWidget {
   @override
@@ -59,6 +24,8 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _correoElectronico;
 
   List<String> _aulasProfesor = [];
+
+  RegistroController _controlador = RegistroController();
 
   @override
   void initState() {
@@ -298,14 +265,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
 
-                        // Verificar si el correo electrónico o el DNI ya existen
-                        String checkQuery =
-                            "SELECT * FROM personal WHERE nombre = '$_nombre' AND apellidos = '$_apellidos'";
-                        String checkQuery2 =
-                            "SELECT * FROM personal WHERE correo = '$_correoElectronico'";
-                        var result = await request(checkQuery);
-                        var result2 = await request(checkQuery2);
-                        if (result.isNotEmpty) {
+                        var comprobacion1 = await _controlador
+                            .comprobarPersonalController(_nombre!, _apellidos!);
+                        var comprobacion2 = await _controlador
+                            .comprobarPersonalCorreoController(
+                                _correoElectronico!);
+                        if (comprobacion1.isNotEmpty) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -324,7 +289,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               );
                             },
                           );
-                        } else if (result2.isNotEmpty) {
+                        } else if (comprobacion2.isNotEmpty) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -344,27 +309,14 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                             },
                           );
                         } else {
-                          String query =
-                              "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$_nombre', '$_apellidos', '$_passwd', '$_correoElectronico', '$_image', '$_isAdmin')";
-                          request(query);
-                          if (_aulasProfesor.isNotEmpty) {
-                            for (var aula in _aulasProfesor) {
-                              // Verificar si el aula ya existe
-                              String checkAulaQuery =
-                                  "SELECT * FROM aula WHERE nombre = '$aula'";
-                              var aulaResult = await request(checkAulaQuery);
-                              // Si el aula no existe, insertarla
-                              if (aulaResult.isEmpty) {
-                                String insertAulaQuery =
-                                    "INSERT INTO aula (nombre) VALUES ('$aula')";
-                                await request(insertAulaQuery);
-                              }
-
-                              String insertAulaProfesorQuery =
-                                  "INSERT INTO imparte_en (nombre_aula, nombre_personal, apellidos_personal) VALUES ('$aula', '$_nombre', '$_apellidos')";
-                              await request(insertAulaProfesorQuery);
-                            }
-                          }
+                          await _controlador.handleRegisterProfesor(
+                              _nombre!,
+                              _apellidos!,
+                              _correoElectronico!,
+                              _passwd!,
+                              _image,
+                              _isAdmin!,
+                              _aulasProfesor);
 
                           // Mostrar un cuadro de diálogo
                           showDialog(
@@ -378,10 +330,8 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                                   TextButton(
                                     child: Text('Aceptar'),
                                     onPressed: () {
-                                      // Cerrar el cuadro de diálogo
-                                      Navigator.of(context).pop();
-                                      // Navegar a la página userList
-                                      Navigator.pushNamed(context, '/userList');
+                                      _controlador
+                                          .llevarMostrarUsuarios(context);
                                     },
                                   ),
                                 ],

@@ -1,45 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
-import 'package:postgres/postgres.dart';
 import 'package:convert/convert.dart';
 import 'package:image/image.dart' as img;
-
-// Crear la conexión como una variable global
-final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
-);
-
-Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
-  List<Map<String, Map<String, dynamic>>> results = [];
-
-  try {
-    // Verificar si la conexión está cerrada antes de intentar abrirla
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    results = await connection.mappedResultsQuery(query);
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    // No cerrar la conexión aquí
-    print('Query executed');
-  }
-
-  return results;
-}
+import '../controllers/registro_controller.dart';
 
 class AlumnoRegistration extends StatefulWidget {
   @override
@@ -55,10 +22,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   List<int>? imagenPrueba;
   File? mostrarImagen;
 
-  File? _attachedFile;
   File? _image;
-  String? _imageError;
-
   String? _nombre;
   String? _apellidos;
   String? _tipoLetra;
@@ -69,6 +33,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   bool _showPassword = false;
   bool _showConfirmPassword = false;
   bool _sabeLeer = false;
+  RegistroController controlador = RegistroController();
 
   List<String> availableFonts = GoogleFonts.asMap().keys.toList();
   List<String> selectedOptions = []; //FORMATO DE LA APP.
@@ -401,11 +366,11 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
 
-                        String checkQuery1 =
-                            "SELECT * FROM estudiante WHERE nombre = '$_nombre' and apellidos = '$_apellidos'";
-                        var result1 = await request(checkQuery1);
+                        var comprobacion =
+                            await controlador.comprobarEstudianteController(
+                                _nombre!, _apellidos!);
 
-                        if (result1.isNotEmpty) {
+                        if (comprobacion.isNotEmpty) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -425,14 +390,21 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             },
                           );
                         } else {
-                          String imagenesContrasenia = selectedImages.join(",");
-
                           List<int> imageBytes = _image!.readAsBytesSync();
                           String imageHex = hex.encode(imageBytes);
 
-                          String query =
-                              "INSERT INTO estudiante (nombre, apellidos, contrasenia_iconos, contrasenia, correo, foto, tipo_letra, maymin, formato, sabe_leer) VALUES ('$_nombre', '$_apellidos', '$imagenesContrasenia', '$_passwd', '$_correoElectronicoAlumno',  E'\\\\x$imageHex',  '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_sabeLeer')";
-                          request(query);
+                          await controlador.handleRegister(
+                            _nombre!,
+                            _apellidos!,
+                            selectedImages.join(","),
+                            _passwd,
+                            _correoElectronicoAlumno!,
+                            imageHex,
+                            _tipoLetra!,
+                            _mayMin!,
+                            selectedOptions.join(","),
+                            _sabeLeer,
+                          );
 
                           // Mostrar un cuadro de diálogo
                           showDialog(
@@ -446,10 +418,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                                   TextButton(
                                     child: Text('Aceptar'),
                                     onPressed: () {
-                                      // Cerrar el cuadro de diálogo
-                                      Navigator.of(context).pop();
-                                      // Navegar a la página userList
-                                      Navigator.pushNamed(context, '/userList');
+                                      controlador
+                                          .llevarMostrarUsuarios(context);
                                     },
                                   ),
                                 ],
@@ -474,15 +444,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     );
   }
 
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      setState(() {
-        _attachedFile = File(result.files.single.path!);
-      });
-    }
-  }
-
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
     final pickedImage =
@@ -490,8 +451,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
-        _imageError =
-            null; // Resetea el mensaje de error cuando se selecciona una imagen
       });
     }
   }
