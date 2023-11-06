@@ -36,10 +36,10 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 // -----------------------------------------------------
 
 class UserDetailsPage extends StatefulWidget {
-  final String userId;
+  final String nombre;
   final bool esEstudiante;
 
-  UserDetailsPage({required this.userId, required this.esEstudiante});
+  UserDetailsPage({required this.nombre, required this.esEstudiante});
   @override
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
@@ -56,10 +56,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   Future<void> fetchUserData() async {
     if (widget.esEstudiante) {
       usuario = await request(
-          "SELECT * FROM estudiante WHERE dni = ${widget.userId}");
+          "SELECT * FROM estudiante WHERE nombre = ${widget.nombre}");
     } else {
       usuario = await request(
-          "SELECT * FROM supervisor WHERE dni = ${widget.userId}");
+          "SELECT * FROM personal WHERE nombre = ${widget.nombre}");
     }
   }
 

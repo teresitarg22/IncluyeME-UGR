@@ -63,6 +63,7 @@ class UserListPage extends StatefulWidget {
 }
 
 class _UserListPageState extends State<UserListPage> {
+  final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
   var supervisor = [];
   var usuarios = [];
@@ -89,7 +90,7 @@ class _UserListPageState extends State<UserListPage> {
     bool esEstudiante = true;
     String user = "estudiante";
 
-    if (selectedFilter == "personal") {
+    if (selectedFilter == "Personal") {
       filteredUsers = supervisor;
       esEstudiante = false;
       user = "personal";
@@ -164,7 +165,7 @@ class _UserListPageState extends State<UserListPage> {
                 selectedFilter = newValue;
               });
             },
-            items: <String?>['Estudiantes', 'personal']
+            items: <String?>['Estudiantes', 'Personal']
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
@@ -185,7 +186,7 @@ class _UserListPageState extends State<UserListPage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
-                        userId: filteredUsers[index][user]['dni'],
+                        nombre: filteredUsers[index][user]['nombre'],
                         esEstudiante: esEstudiante,
                       );
                     }));
@@ -228,8 +229,8 @@ class _UserListPageState extends State<UserListPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => EditUserPage(
-                                        userId: filteredUsers[index][user]
-                                            ['dni'],
+                                        nombre: filteredUsers[index][user]
+                                            ['nombre'],
                                         isStudent: esEstudiante)),
                               );
                             },
@@ -238,12 +239,52 @@ class _UserListPageState extends State<UserListPage> {
                           SizedBox(width: 30.0),
                           // -----------------
                           IconButton(
-                            icon: Icon(Icons.delete,
-                                color: Color.fromARGB(255, 76, 76, 76)),
-                            onPressed: () {
-                              // Agregar lógica de eliminación
-                            },
-                          ),
+                              icon: Icon(Icons.delete,
+                                  color: Color.fromARGB(255, 76, 76, 76)),
+                              onPressed: () async {
+                                // Mostrar un diálogo de confirmación
+                                bool confirmar = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Confirmar Eliminación'),
+                                      content: Text(
+                                          '¿Seguro que quiere eliminar al usuario?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text('Sí'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(
+                                                true); // Confirma la eliminación
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(
+                                                false); // Cancela la eliminación
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+
+                                if (confirmar) {
+                                  // Realizar la actualización en la base de datos
+                                  String updateQuery =
+                                      "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][user]['nombre']}' and apellidos = '${filteredUsers[index][user]['apellidos']}'";
+                                  // Luego, ejecuta la consulta en tu base de datos PostgreSQL
+                                  request(updateQuery);
+
+                                  //Actualizar la vista
+                                  setState(() {
+                                    // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
+                                    // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
+                                    filteredUsers.removeAt(index);
+                                  });
+                                }
+                              }),
                         ],
                       ),
                     ),

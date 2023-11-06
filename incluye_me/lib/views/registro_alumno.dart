@@ -64,7 +64,10 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   String? _tipoLetra;
   String? _mayMin;
   String? _correoElectronicoAlumno;
-  String? _contraseniaTexto;
+  String? _passwd;
+  String? _confirmPasswd;
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
   bool _sabeLeer = false;
 
   List<String> availableFonts = GoogleFonts.asMap().keys.toList();
@@ -254,7 +257,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
                   child: Text(
-                    'Información de inicio de sesión del alumno',
+                    'Información de seguridad y acceso',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -290,18 +293,69 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             },
                           ),
                           TextFormField(
-                            decoration:
-                                InputDecoration(labelText: 'Contraseña texto '),
+                            decoration: InputDecoration(
+                              labelText: 'Contraseña *',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _showPassword = !_showPassword;
+                                  });
+                                },
+                              ),
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'El nombre es obligatorio ';
+                                return 'La contraseña es obligatoria';
                               }
+
+                              _passwd = value;
+
+                              if (_confirmPasswd != null &&
+                                  _confirmPasswd != _passwd)
+                                return 'Las contraseñas deben ser iguales';
+
                               return null;
                             },
-                            onSaved: (value) {
-                              _contraseniaTexto =
-                                  value; // Asignar el valor introducido a la variable
+                            obscureText:
+                                !_showPassword, // Mostrar u ocultar la contraseña según el estado
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Confirmar contraseña *',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _showConfirmPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _showConfirmPassword =
+                                        !_showConfirmPassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'La confirmación de contraseña es obligatoria';
+                              }
+
+                              _confirmPasswd = value;
+
+                              if (_passwd != null && _confirmPasswd != _passwd)
+                                return 'Las contraseñas deben ser iguales';
+
+                              return null;
                             },
+                            obscureText: !_showConfirmPassword,
                           ),
                         ],
                       )
@@ -377,8 +431,31 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                           String imageHex = hex.encode(imageBytes);
 
                           String query =
-                              "INSERT INTO estudiante (nombre, apellidos, contrasenia_iconos, contrasenia, correo, foto, tipo_letra, maymin, formato, sabe_leer) VALUES ('$_nombre', '$_apellidos', '$imagenesContrasenia', '$_contraseniaTexto', '$_correoElectronicoAlumno',  E'\\\\x$imageHex',  '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_sabeLeer')";
+                              "INSERT INTO estudiante (nombre, apellidos, contrasenia_iconos, contrasenia, correo, foto, tipo_letra, maymin, formato, sabe_leer) VALUES ('$_nombre', '$_apellidos', '$imagenesContrasenia', '$_passwd', '$_correoElectronicoAlumno',  E'\\\\x$imageHex',  '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_sabeLeer')";
                           request(query);
+
+                          // Mostrar un cuadro de diálogo
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Registro exitoso'),
+                                content: Text(
+                                    'El registro se ha completado con éxito.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Aceptar'),
+                                    onPressed: () {
+                                      // Cerrar el cuadro de diálogo
+                                      Navigator.of(context).pop();
+                                      // Navegar a la página userList
+                                      Navigator.pushNamed(context, '/userList');
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       }
                     },

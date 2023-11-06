@@ -51,38 +51,13 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   bool _showPassword = false;
   bool _showConfirmPassword = false;
 
-  DateTime? _selectedDate;
-  DateTime? _selectedDateContratacion;
-  String? _otherNacionalidad; // Nueva
-
-  //TextEditingController _cvController =
-  //TextEditingController(); //CREO QUE NO SE UTILIZA
-  File? _attachedFile;
-
   File? _image;
   String? _imageError;
 
   String? _nombre;
   String? _apellidos;
-  String? _genero;
-  String? _nacionalidad;
-  String? _id;
-  String? _tarjetaSanitaria;
-  String? _direccionDomicilio;
-  String? _nivelEstudios;
-  String? _informacionAdicional;
-  String? _puesto;
-  String? _departamento;
-  String? _numeroTlf;
   String? _correoElectronico;
-  String? _tlfEmergencia;
 
-  List<String> _titulosAcademicos =
-      []; // Lista para almacenar los títulos académicos
-  List<String> _certificadosAdicionales =
-      []; // Lista para almacenar los certificados adicionales
-  List<String> _experienciaLaboral =
-      []; //Lista para almacenar la experiencia laboral
   List<String> _aulasProfesor = [];
 
   @override
@@ -161,6 +136,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                 ),
                 if (_image != null)
                   Image.file(_image!), // Muestra la imagen seleccionada
+
                 ..._aulasProfesor.asMap().entries.map((entry) {
                   final int index = entry.key;
                   return Row(
@@ -336,7 +312,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               return AlertDialog(
                                 title: Text('Error'),
                                 content: Text(
-                                    'Ya existe una cuenta asociada a ese DNI.'),
+                                    'Ya existe una cuenta asociada a ese nombre .'),
                                 actions: [
                                   TextButton(
                                     child: Text('OK'),
@@ -371,7 +347,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           String query =
                               "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$_nombre', '$_apellidos', '$_passwd', '$_correoElectronico', '$_image', '$_isAdmin')";
                           request(query);
-                          /*if (_aulasProfesor.isNotEmpty) {
+                          if (_aulasProfesor.isNotEmpty) {
                             for (var aula in _aulasProfesor) {
                               // Verificar si el aula ya existe
                               String checkAulaQuery =
@@ -385,10 +361,33 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               }
 
                               String insertAulaProfesorQuery =
-                                  "INSERT INTO imparte_en (nombre, dni) VALUES ('$aula', '$_id')";
+                                  "INSERT INTO imparte_en (nombre_aula, nombre_personal, apellidos_personal) VALUES ('$aula', '$_nombre', '$_apellidos')";
                               await request(insertAulaProfesorQuery);
                             }
-                          }*/
+                          }
+
+                          // Mostrar un cuadro de diálogo
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Registro exitoso'),
+                                content: Text(
+                                    'El registro se ha completado con éxito.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Aceptar'),
+                                    onPressed: () {
+                                      // Cerrar el cuadro de diálogo
+                                      Navigator.of(context).pop();
+                                      // Navegar a la página userList
+                                      Navigator.pushNamed(context, '/userList');
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       }
                     },
