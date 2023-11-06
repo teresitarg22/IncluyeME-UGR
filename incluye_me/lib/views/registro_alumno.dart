@@ -398,7 +398,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             _apellidos!,
                             selectedImages.join(","),
                             _passwd,
-                            _correoElectronicoAlumno!,
+                            _correoElectronicoAlumno,
                             imageHex,
                             _tipoLetra!,
                             _mayMin!,

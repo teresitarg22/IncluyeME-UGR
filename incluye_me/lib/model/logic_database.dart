@@ -40,7 +40,7 @@ class LogicDatabase {
       String nombre,
       String apellidos,
       String? imagenesContrasenia,
-      String correo,
+      String? correo,
       String? contrasena,
       var imageHex,
       String tipoLetra,

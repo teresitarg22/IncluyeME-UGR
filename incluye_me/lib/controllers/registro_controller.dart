@@ -9,7 +9,7 @@ class RegistroController {
       String apellidos,
       String? imagenesContrasenia,
       String? passwd,
-      String correoElectronicoAlumno,
+      String? correoElectronicoAlumno,
       String imageHex,
       String tipoLetra,
       String mayMin,
