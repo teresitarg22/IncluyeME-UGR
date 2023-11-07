@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 
-// Crear la conexión como una variable global
+// -------------------------- DATA BASE --------------------------
+
+// Create the connection as a global variable
 final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
+  'flora.db.elephantsql.com', // database host
+  5432, // database port
+  'srvvjedp', // database name
+  username: 'srvvjedp', // database username
+  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
 );
 
 Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   List<Map<String, Map<String, dynamic>>> results = [];
 
   try {
-    // Verificar si la conexión está cerrada antes de intentar abrirla
+    // Check if the connection is closed before attempting to open it
     if (connection.isClosed) {
       await connection.open();
       print('Connected to the database');
@@ -25,35 +26,91 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
   } catch (e) {
     print('Error: $e');
   } finally {
-    // No cerrar la conexión aquí
+    // Do not close the connection here
     print('Query executed');
   }
 
   return results;
 }
 
-class UserDetailsPage extends StatelessWidget {
-  String userId;
+// -----------------------------------------------------
 
-  UserDetailsPage({required this.userId});
+class UserDetailsPage extends StatefulWidget {
+  final String userId;
+  final bool esEstudiante;
+
+  UserDetailsPage({required this.userId, required this.esEstudiante});
+  @override
+  _UserDetailsPageState createState() => _UserDetailsPageState();
+}
+
+class _UserDetailsPageState extends State<UserDetailsPage> {
+  var usuario = <Map<String, Map<String, dynamic>>>[];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    if (widget.esEstudiante) {
+      usuario = await request(
+          "SELECT * FROM estudiante WHERE dni = ${widget.userId}");
+    } else {
+      usuario = await request(
+          "SELECT * FROM supervisor WHERE dni = ${widget.userId}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles del Usuario'),
+        title: const Text('Detalles del Usuario'),
         backgroundColor: Color(0xFF29DA81), // Color personalizado
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Card(
+          margin: const EdgeInsets.all(
+              16.0), // Agregamos un margen alrededor de la tarjeta
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment
+                .start, // Alineamos los elementos a la izquierda
             children: <Widget>[
               ListTile(
-                title: Text('Nombre: ${userId}'),
-                subtitle: Text('Email: ${userId}'),
+                title: Text(
+                    'Nombre: ${usuario.isNotEmpty ? usuario[0]['nombre'] : ''}',
+                    style: const TextStyle(
+                      fontSize: 22, // Tamaño de fuente para el título
+                      fontWeight: FontWeight.bold, // Texto en negrita
+                    )),
               ),
-              // Puedes mostrar más detalles del usuario aquí dentro de Card
+              const Divider(height: 1, color: Colors.grey), // Línea divisoria
+              Container(
+                margin: EdgeInsets.only(top: 12, left: 20, right: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '· Email:',
+                      style: TextStyle(
+                        fontSize: 18, // Tamaño de fuente para el título
+                        fontWeight: FontWeight.bold, // Texto en negrita
+                      ),
+                    ),
+                    const SizedBox(width: 8), // Espacio de 8 puntos
+                    Text(
+                      'Email: ${usuario.isNotEmpty ? usuario[0]['email'] : ''}',
+                      style: const TextStyle(
+                        fontSize:
+                            16, // Tamaño de fuente para el correo electrónico
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -63,7 +120,7 @@ class UserDetailsPage extends StatelessWidget {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/userList');
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
