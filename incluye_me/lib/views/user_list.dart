@@ -231,7 +231,7 @@ class _UserListPageState extends State<UserListPage> {
                                     builder: (context) => EditUserPage(
                                         nombre: filteredUsers[index][user]
                                             ['nombre'],
-                                        isStudent: esEstudiante)),
+                                        esEstudiante: esEstudiante)),
                               );
                             },
                           ),
