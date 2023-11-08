@@ -38,31 +38,48 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 
 // -----------------------------------------------------
 
-void main() {
-  runApp(MyApp());
-}
+Future<bool> esAdmin(String user) async {
+  var value = await request("SELECT * FROM personal WHERE nombre = '$user'");
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => UserListPage(),
-        '/registroPage': (context) => HomeScreen(),
-      },
-    );
+  if (value != null && value.isNotEmpty) {
+    var personalData = value[0]['personal'];
+
+    if (personalData != null && personalData['isAdmin'] == 'Administrador') {
+      return true;
+    }
   }
+
+  return false;
 }
 
-// -----------------------------------------------------
+Future<bool> esEstudiante(var user) async {
+  var value = await request(
+      "SELECT * FROM estudiante WHERE nombre = '${user['nombre']}'");
 
+  if (value != null && value.isNotEmpty) {
+    var estudianteData = value[0]['estudiante'];
+
+    if (estudianteData != null && estudianteData['nombre'] == user['nombre']) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+//---------------------------------------------------------------------------------------
 class UserListPage extends StatefulWidget {
+  final String user;
+
+  UserListPage({required this.user});
+
   @override
-  _UserListPageState createState() => _UserListPageState();
+  _UserListPageState createState() => _UserListPageState(user: user);
 }
 
 class _UserListPageState extends State<UserListPage> {
+  bool isAdmin = false;
+  final String user;
   final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
   var supervisor = [];
@@ -70,10 +87,20 @@ class _UserListPageState extends State<UserListPage> {
 
   String? selectedFilter = "Estudiantes";
 
+  _UserListPageState({required this.user});
+
   @override
   void initState() {
     super.initState();
     loadUsersIds();
+    initializeAdminStatus();
+  }
+
+  Future<void> initializeAdminStatus() async {
+    bool adminStatus = await esAdmin(user);
+    setState(() {
+      isAdmin = adminStatus;
+    });
   }
 
   Future<void> loadUsersIds() async {
@@ -86,6 +113,11 @@ class _UserListPageState extends State<UserListPage> {
 
   @override
   Widget build(BuildContext context) {
+    return isAdmin ? buildAdminUI() : buildNonAdminUI();
+  }
+
+  // Lógica para construir la interfaz de administrador
+  Widget buildAdminUI() {
     var filteredUsers = [];
     bool esEstudiante = true;
     String user = "estudiante";
@@ -343,7 +375,174 @@ class _UserListPageState extends State<UserListPage> {
           } else if (index == 3) {
             // Lógica para la pestaña "Chat"
           } else if (index == 4) {
-            // Lógica para la pestaña "Perfil"
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserDetailsPage(
+                nombre: widget.user,
+                esEstudiante: false,
+              );
+            }));
+          }
+        },
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Color(0xFF29DA81),
+            icon: Icon(Icons.people, color: Colors.white),
+            label: 'Usuarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment, color: Colors.white),
+            label: 'Tareas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart, color: Colors.white),
+            label: 'Gráficos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat, color: Colors.white),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.white),
+            label: 'Perfil',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Lógica para construir la interfaz no administrador
+  Widget buildNonAdminUI() {
+    var filteredUsers = [];
+    bool esEstudiante = true;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Lista de Alumnos'),
+        backgroundColor: Color(0xFF29DA81),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Abre un cuadro de diálogo para la búsqueda
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  String query =
+                      ''; // Variable para almacenar la consulta de búsqueda
+
+                  return AlertDialog(
+                    title: Text('Buscar por Nombre'),
+                    content: TextField(
+                      onChanged: (text) {
+                        query =
+                            text; // Almacena la consulta a medida que se escribe
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Cierra el cuadro de diálogo y realiza la búsqueda
+                          Navigator.of(context).pop();
+                          // Lógica de búsqueda con "query"
+                          var searchResults = estudiantes
+                              .where((user) =>
+                                  user['nombre'] != null &&
+                                  user['nombre']
+                                      .toLowerCase()
+                                      .contains(query.toLowerCase()))
+                              .toList();
+                          // Filtra la lista de usuarios según "query"
+                          setState(() {
+                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
+                            filteredUsers.clear();
+                            filteredUsers.addAll(searchResults
+                                .cast<Map<String, Map<String, dynamic>>>());
+                          });
+                        },
+                        child: Text('Buscar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: Icon(Icons.search), // Icono de lupa
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredUsers.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return UserDetailsPage(
+                        nombre: filteredUsers[index]['estudiante']['nombre'],
+                        esEstudiante: esEstudiante,
+                      );
+                    }));
+                  },
+                  child: Card(
+                    margin: EdgeInsets.only(
+                        top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
+                    child: ListTile(
+                      title: GestureDetector(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4),
+                            Text(
+                              filteredUsers[index]['estudiante']['nombre'],
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 76, 76, 76),
+                                fontSize: 18, // Tamaño de fuente más grande
+                                fontWeight: FontWeight.bold, // Texto en negrita
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                          ],
+                        ),
+                      ),
+                      subtitle:
+                          Text(filteredUsers[index]['estudiante']['correo']),
+                      leading: Icon(
+                        Icons.person,
+                        size: 45,
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                      ),
+                    ),
+                  ),
+                );
+                return Container();
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFF29DA81),
+        currentIndex: 0,
+        onTap: (int index) {
+          if (index == 0) {
+            Navigator.pushNamed(context, '/userList');
+          } else if (index == 1) {
+            // Lógica para la pestaña "Tareas"
+          } else if (index == 2) {
+            // Lógica para la pestaña "Gráficos"
+          } else if (index == 3) {
+            // Lógica para la pestaña "Chat"
+          } else if (index == 4) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserDetailsPage(
+                nombre: widget.user,
+                esEstudiante: false,
+              );
+            }));
           }
         },
         items: const <BottomNavigationBarItem>[

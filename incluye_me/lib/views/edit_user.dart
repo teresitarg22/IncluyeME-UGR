@@ -43,8 +43,10 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 class EditUserPage extends StatefulWidget {
   final String nombre;
   final bool esEstudiante;
+  final String user;
 
-  EditUserPage({required this.nombre, required this.esEstudiante});
+  EditUserPage(
+      {required this.nombre, required this.esEstudiante, required this.user});
 
   @override
   _EditUserPageState createState() => _EditUserPageState();
@@ -273,7 +275,12 @@ class _EditUserPageState extends State<EditUserPage> {
           } else if (index == 3) {
             // Lógica para la pestaña "Chat"
           } else if (index == 4) {
-            // Lógica para la pestaña "Perfil"
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserDetailsPage(
+                nombre: widget.user,
+                esEstudiante: false,
+              );
+            }));
           }
         },
         items: const <BottomNavigationBarItem>[

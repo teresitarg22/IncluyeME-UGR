@@ -10,6 +10,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  String user = "Carla";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => StartView(),
         '/registroPage': (context) => HomeScreen(),
-        '/userList': (context) => UserListPage()
+        '/userList': (context) => UserListPage(
+              user: user,
+            )
       },
     );
   }
