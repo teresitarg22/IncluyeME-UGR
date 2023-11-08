@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/model/pruebas_database.dart';
 
 import '../model/database.dart';
 
@@ -127,20 +128,34 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     );
   }
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     setState(() {
       _errorMessage = null;
       _passwordErrorMessage = null;
     });
 
     final email = _emailController.text;
-
     final password = _passwordController.text;
 
-    final user = MockDatabase.getUserByEmail(email);
+    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
+      if (value == true) {
+        _showSuccessDialog(),
+        Navigator.pushNamed(context, '/userList'),
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.pop(context);
+          Navigator.pushNamed(context, '/userList');
+        })
+      } else {
+        setState(() {
+          _passwordErrorMessage = 'Contraseña incorrecta o email no registrado';
+        })
+      }
+    });
 
-    final password_test = '12345';
 
+
+
+    /*
     if (user == null) {
       setState(() {
         _errorMessage = 'Email no registrado.';
@@ -157,5 +172,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
         Navigator.pushNamed(context, '/userList');
       });
     }
+
+    */
   }
 }

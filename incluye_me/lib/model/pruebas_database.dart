@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
 void main() {
@@ -10,10 +12,14 @@ void main() {
   print('Pide solo los campos de la tabla estudiante');
   print('--------------------------------------------------');
 
+
+  DataBaseDriver().connect().request("SELECT * FROM personal").then((value) =>
+      print(value)
+  );
   
-  DataBaseDriver().connect().request("SELECT * FROM personal ").then((value) => {
-    for (var i = 0; i < value.length; i++) print(value[i])
-  });
+  DataBaseDriver().connect().verifyPassword("profesor1@email.com", "12345").then((value) => print(value));
+
+  
 
 
 
@@ -74,6 +80,20 @@ class DataBaseDriver {
     return await request("SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
   }
 
+  Future<bool> verifyPassword(String email, String password) async {
+    print("-------------$email----------");
+    print("-------------$password----------");
+
+    var result = await request("SELECT contrasenia FROM personal WHERE correo = '$email'");
+
+    if (result.isEmpty) {
+      return false;
+    }
+
+    var passwd = result[0]['personal']?["contrasenia"];
+
+    return passwd == password;
+  }
 
 
 
