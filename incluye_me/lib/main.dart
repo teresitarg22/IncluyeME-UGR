@@ -6,7 +6,7 @@ import 'views/user_list.dart';
 // -------------------------------------------------------------------
 
 void main() {
-  runApp(MyApp());
+  runApp(MyTest());
 }
 
 class MyApp extends StatelessWidget {
@@ -24,6 +24,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+class MyTest extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => UserListPage(),
+        '/registroPage': (context) => HomeScreen(),
+        '/userList': (context) => UserListPage(),
+      },
+    );
+  }
+}
 // -------------------------------------------------------------------
 
 
