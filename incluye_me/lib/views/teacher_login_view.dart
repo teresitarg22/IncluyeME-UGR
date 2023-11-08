@@ -152,9 +152,9 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     } else {
       _showSuccessDialog();
 
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/userList');
+        Navigator.pushNamed(context, '/userList', arguments: 'Carla');
       });
     }
   }

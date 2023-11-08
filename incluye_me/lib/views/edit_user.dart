@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:incluye_me/model/user.dart';
+import './mostrar_usuario.dart';
 
 // -------------------------- DATA BASE --------------------------
 
@@ -267,7 +268,7 @@ class _EditUserPageState extends State<EditUserPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pushNamed(context, '/userList');
+            Navigator.pushNamed(context, '/userList', arguments: widget.user);
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
@@ -279,6 +280,7 @@ class _EditUserPageState extends State<EditUserPage> {
               return UserDetailsPage(
                 nombre: widget.user,
                 esEstudiante: false,
+                user: widget.user,
               );
             }));
           }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:postgres/postgres.dart';
+import '../model/estudiante.dart';
+import '../model/user.dart';
+import '../model/logic_database.dart';
 
 // -------------------------- DATA BASE --------------------------
 
@@ -38,28 +42,63 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 class UserDetailsPage extends StatefulWidget {
   final String nombre;
   final bool esEstudiante;
+  final String user;
 
-  UserDetailsPage({required this.nombre, required this.esEstudiante});
+  UserDetailsPage(
+      {required this.nombre, required this.esEstudiante, required this.user});
   @override
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
-  var usuario = <Map<String, Map<String, dynamic>>>[];
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey();
+  var resultado = [];
+  User? user;
 
   @override
   void initState() {
     super.initState();
-    fetchUserData();
+    buscarDatosUsuario();
   }
 
-  Future<void> fetchUserData() async {
-    if (widget.esEstudiante) {
-      usuario = await request(
-          "SELECT * FROM estudiante WHERE nombre = ${widget.nombre}");
+  Future<void> buscarDatosUsuario() async {
+    if (widget.esEstudiante == true) {
+      resultado = await request(
+          'SELECT * FROM estudiante WHERE nombre = \'${widget.nombre}\'');
+
+      if (resultado.isNotEmpty) {
+        setState(() {
+          final detalles = resultado[0]['estudiante'];
+
+          user = Estudiante(
+              nombre: detalles['nombre'],
+              apellidos: detalles['apellidos'],
+              correo: detalles['correo'],
+              foto: "",
+              contrasenia: detalles['contrasenia'],
+              tipo_letra: detalles['tipo_letra'] ?? '',
+              maymin: detalles['maymin'] ?? '',
+              formato: detalles['formato'] ?? '',
+              contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
+              sabeLeer: detalles['sabeLeer'] ?? false);
+        });
+      }
     } else {
-      usuario = await request(
-          "SELECT * FROM personal WHERE nombre = ${widget.nombre}");
+      resultado = await request(
+          'SELECT * FROM personal WHERE nombre = \'${widget.nombre}\'');
+
+      if (resultado.isNotEmpty) {
+        setState(() {
+          final detalles = resultado[0]['personal'];
+
+          user = User(
+              nombre: detalles['nombre'],
+              apellidos: detalles['apellidos'],
+              correo: detalles['correo'],
+              foto: "",
+              contrasenia: detalles['contrasenia']);
+        });
+      }
     }
   }
 
@@ -68,51 +107,264 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles del Usuario'),
-        backgroundColor: Color(0xFF29DA81), // Color personalizado
+        backgroundColor: Color(0xFF29DA81),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(5.0),
         child: Card(
-          margin: const EdgeInsets.all(
-              16.0), // Agregamos un margen alrededor de la tarjeta
+          margin: const EdgeInsets.all(5.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment
-                .start, // Alineamos los elementos a la izquierda
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                    'Nombre: ${usuario.isNotEmpty ? usuario[0]['nombre'] : ''}',
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  title: Text(
+                    '${user?.nombre}',
                     style: const TextStyle(
-                      fontSize: 22, // Tamaño de fuente para el título
-                      fontWeight: FontWeight.bold, // Texto en negrita
-                    )),
-              ),
-              const Divider(height: 1, color: Colors.grey), // Línea divisoria
-              Container(
-                margin: EdgeInsets.only(top: 12, left: 20, right: 10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      '· Email:',
-                      style: TextStyle(
-                        fontSize: 18, // Tamaño de fuente para el título
-                        fontWeight: FontWeight.bold, // Texto en negrita
-                      ),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 77, 131, 105),
                     ),
-                    const SizedBox(width: 8), // Espacio de 8 puntos
-                    Text(
-                      'Email: ${usuario.isNotEmpty ? usuario[0]['email'] : ''}',
-                      style: const TextStyle(
-                        fontSize:
-                            16, // Tamaño de fuente para el correo electrónico
-                      ),
-                    ),
-                  ],
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              )
-            ],
-          ),
+                /*user?.foto != null
+              ? Image.memory(
+                 Uint8List.fromList(
+                    // Convierte la cadena Base64 a Uint8List
+                    base64.decode(user!.foto!),
+                  ),
+                  width: 100, // ajusta el ancho según tus necesidades
+                  height: 100, // ajusta la altura según tus necesidades
+                )
+              : const Text('Sin foto'),*/
+                const Divider(height: 1, color: Colors.grey), // Línea divisoria
+                Container(
+                  //margin: EdgeInsets.only(top: 12, left: 20, right: 10),
+                  width: double.infinity,
+                  padding: EdgeInsets.all(10),
+                  child: Row(children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Información personal',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 77, 131, 105),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Text(
+                              'Nombre:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              '${user?.nombre}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Text(
+                              'Apellido:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '${user?.apellidos}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Text(
+                              'Email:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '${user?.correo}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Autentificación',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 77, 131, 105),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Text(
+                              'Contraseña:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.esEstudiante
+                                  ? '${(user as Estudiante?)?.contrasenia ?? ''}'
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              widget.esEstudiante ? 'Contraseña de iconos' : "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.esEstudiante
+                                  ? '${(user as Estudiante?)?.contrasenia_iconos ?? ''}'
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          widget.esEstudiante ? 'Accesibilidad' : "",
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 77, 131, 105),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Text(
+                              widget.esEstudiante ? 'Tipo de letra:' : "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.esEstudiante
+                                  ? '${(user as Estudiante?)?.tipo_letra ?? ''}'
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              widget.esEstudiante
+                                  ? 'Mayúsculas y minúsculas:'
+                                  : "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.esEstudiante
+                                  ? '${(user as Estudiante?)?.maymin ?? ''}'
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              widget.esEstudiante ? 'Formato:' : "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.esEstudiante
+                                  ? '${(user as Estudiante?)?.formato ?? ''}'
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              widget.esEstudiante ? 'Sabe Leer:' : "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.esEstudiante
+                                  ? ((user as Estudiante?)?.sabeLeer ?? false)
+                                      ? 'Sí'
+                                      : 'No'
+                                  : '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                      ],
+                    ),
+                  ]),
+                ),
+              ]),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -120,7 +372,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pushNamed(context, '/userList');
+            Navigator.pushNamed(context, '/userList', arguments: widget.user);
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
@@ -128,7 +380,13 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           } else if (index == 3) {
             // Lógica para la pestaña "Chat"
           } else if (index == 4) {
-            // Lógica para la pestaña "Perfil"
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserDetailsPage(
+                nombre: widget.user,
+                esEstudiante: false,
+                user: widget.user,
+              );
+            }));
           }
         },
         items: const <BottomNavigationBarItem>[

@@ -41,10 +41,10 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 Future<bool> esAdmin(String user) async {
   var value = await request("SELECT * FROM personal WHERE nombre = '$user'");
 
-  if (value != null && value.isNotEmpty) {
+  if (value.isNotEmpty) {
     var personalData = value[0]['personal'];
 
-    if (personalData != null && personalData['isAdmin'] == 'Administrador') {
+    if (personalData != null && personalData['es_admin'] == true) {
       return true;
     }
   }
@@ -52,11 +52,11 @@ Future<bool> esAdmin(String user) async {
   return false;
 }
 
-Future<bool> esEstudiante(var user) async {
+Future<bool> esUsuarioEstudiante(var user) async {
   var value = await request(
-      "SELECT * FROM estudiante WHERE nombre = '${user['nombre']}'");
+      "SELECT * FROM estudiante WHERE nombre = '${user['nombre']}' and apellidos = '${user['apellidos']}'");
 
-  if (value != null && value.isNotEmpty) {
+  if (value.isNotEmpty) {
     var estudianteData = value[0]['estudiante'];
 
     if (estudianteData != null && estudianteData['nombre'] == user['nombre']) {
@@ -78,8 +78,8 @@ class UserListPage extends StatefulWidget {
 }
 
 class _UserListPageState extends State<UserListPage> {
-  bool isAdmin = false;
-  final String user;
+  late bool isAdmin = false;
+  late String user;
   final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
   var supervisor = [];
@@ -92,15 +92,18 @@ class _UserListPageState extends State<UserListPage> {
   @override
   void initState() {
     super.initState();
-    loadUsersIds();
-    initializeAdminStatus();
+    user = widget.user;
+    initializeData();
+  }
+
+  Future<void> initializeData() async {
+    await loadUsersIds();
+    await initializeAdminStatus();
   }
 
   Future<void> initializeAdminStatus() async {
     bool adminStatus = await esAdmin(user);
-    setState(() {
-      isAdmin = adminStatus;
-    });
+    setState(() => isAdmin = adminStatus);
   }
 
   Future<void> loadUsersIds() async {
@@ -120,16 +123,16 @@ class _UserListPageState extends State<UserListPage> {
   Widget buildAdminUI() {
     var filteredUsers = [];
     bool esEstudiante = true;
-    String user = "estudiante";
+    String tipo = "estudiante";
 
     if (selectedFilter == "Personal") {
       filteredUsers = supervisor;
       esEstudiante = false;
-      user = "personal";
+      tipo = "personal";
     } else if (selectedFilter == "Estudiantes") {
       filteredUsers = estudiantes;
       esEstudiante = true;
-      user = "estudiante";
+      tipo = "estudiante";
     }
 
     return Scaffold(
@@ -213,13 +216,24 @@ class _UserListPageState extends State<UserListPage> {
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
+                esUsuarioEstudiante(filteredUsers[index][tipo])
+                    .then((valorEsEstudiante) {
+                  esEstudiante = valorEsEstudiante;
+                  if (esEstudiante) {
+                    tipo = "estudiante";
+                  } else {
+                    tipo = "personal";
+                  }
+                });
+
                 return InkWell(
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
-                        nombre: filteredUsers[index][user]['nombre'],
+                        nombre: filteredUsers[index][tipo]['nombre'],
                         esEstudiante: esEstudiante,
+                        user: widget.user,
                       );
                     }));
                   },
@@ -233,7 +247,7 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              filteredUsers[index][user]['nombre'],
+                              filteredUsers[index][tipo]['nombre'],
                               style: TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande
@@ -244,7 +258,7 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle: Text(filteredUsers[index][user]['correo']),
+                      subtitle: Text(filteredUsers[index][tipo]['correo']),
                       leading: Icon(
                         Icons.person,
                         size: 45,
@@ -261,9 +275,11 @@ class _UserListPageState extends State<UserListPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => EditUserPage(
-                                        nombre: filteredUsers[index][user]
-                                            ['nombre'],
-                                        esEstudiante: esEstudiante)),
+                                          nombre: filteredUsers[index][tipo]
+                                              ['nombre'],
+                                          esEstudiante: esEstudiante,
+                                          user: widget.user,
+                                        )),
                               );
                             },
                           ),
@@ -309,7 +325,7 @@ class _UserListPageState extends State<UserListPage> {
                                   if (confirmar) {
                                     // Realizar la actualización en la base de datos
                                     String updateQuery =
-                                        "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][user]['nombre']}' and apellidos = '${filteredUsers[index][user]['apellidos']}'";
+                                        "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][tipo]['nombre']}' and apellidos = '${filteredUsers[index][tipo]['apellidos']}'";
                                     // Luego, ejecuta la consulta en tu base de datos PostgreSQL
                                     request(updateQuery);
 
@@ -367,7 +383,7 @@ class _UserListPageState extends State<UserListPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pushNamed(context, '/userList');
+            Navigator.pushNamed(context, '/userList', arguments: widget.user);
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
@@ -379,6 +395,7 @@ class _UserListPageState extends State<UserListPage> {
               return UserDetailsPage(
                 nombre: widget.user,
                 esEstudiante: false,
+                user: widget.user,
               );
             }));
           }
@@ -412,7 +429,7 @@ class _UserListPageState extends State<UserListPage> {
 
   // Lógica para construir la interfaz no administrador
   Widget buildNonAdminUI() {
-    var filteredUsers = [];
+    var filteredUsers = estudiantes;
     bool esEstudiante = true;
 
     return Scaffold(
@@ -482,6 +499,7 @@ class _UserListPageState extends State<UserListPage> {
                       return UserDetailsPage(
                         nombre: filteredUsers[index]['estudiante']['nombre'],
                         esEstudiante: esEstudiante,
+                        user: widget.user,
                       );
                     }));
                   },
@@ -529,7 +547,7 @@ class _UserListPageState extends State<UserListPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pushNamed(context, '/userList');
+            Navigator.pushNamed(context, '/userList', arguments: widget.user);
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
@@ -541,6 +559,7 @@ class _UserListPageState extends State<UserListPage> {
               return UserDetailsPage(
                 nombre: widget.user,
                 esEstudiante: false,
+                user: widget.user,
               );
             }));
           }
