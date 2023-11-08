@@ -36,10 +36,10 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 // -----------------------------------------------------
 
 class UserDetailsPage extends StatefulWidget {
-  final String userId;
+  final String nombre;
   final bool esEstudiante;
 
-  UserDetailsPage({required this.userId, required this.esEstudiante});
+  UserDetailsPage({required this.nombre, required this.esEstudiante});
   @override
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
@@ -56,10 +56,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   Future<void> fetchUserData() async {
     if (widget.esEstudiante) {
       usuario = await request(
-          "SELECT * FROM estudiante WHERE dni = ${widget.userId}");
+          "SELECT * FROM estudiante WHERE nombre = ${widget.nombre}");
     } else {
       usuario = await request(
-          "SELECT * FROM supervisor WHERE dni = ${widget.userId}");
+          "SELECT * FROM personal WHERE nombre = ${widget.nombre}");
     }
   }
 
@@ -67,21 +67,50 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles del Usuario'),
+        title: const Text('Detalles del Usuario'),
         backgroundColor: Color(0xFF29DA81), // Color personalizado
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Card(
+          margin: const EdgeInsets.all(
+              16.0), // Agregamos un margen alrededor de la tarjeta
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment
+                .start, // Alineamos los elementos a la izquierda
             children: <Widget>[
               ListTile(
                 title: Text(
-                    'Nombre: ${usuario.isNotEmpty ? usuario[0]['nombre'] : ''}'),
-                subtitle: Text(
-                    'Email: ${usuario.isNotEmpty ? usuario[0]['email'] : ''}'),
+                    'Nombre: ${usuario.isNotEmpty ? usuario[0]['nombre'] : ''}',
+                    style: const TextStyle(
+                      fontSize: 22, // Tamaño de fuente para el título
+                      fontWeight: FontWeight.bold, // Texto en negrita
+                    )),
               ),
-              // Puedes mostrar más detalles del usuario aquí dentro de Card
+              const Divider(height: 1, color: Colors.grey), // Línea divisoria
+              Container(
+                margin: EdgeInsets.only(top: 12, left: 20, right: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '· Email:',
+                      style: TextStyle(
+                        fontSize: 18, // Tamaño de fuente para el título
+                        fontWeight: FontWeight.bold, // Texto en negrita
+                      ),
+                    ),
+                    const SizedBox(width: 8), // Espacio de 8 puntos
+                    Text(
+                      'Email: ${usuario.isNotEmpty ? usuario[0]['email'] : ''}',
+                      style: const TextStyle(
+                        fontSize:
+                            16, // Tamaño de fuente para el correo electrónico
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),

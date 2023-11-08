@@ -63,7 +63,7 @@ class UserListPage extends StatefulWidget {
 }
 
 class _UserListPageState extends State<UserListPage> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
   var supervisor = [];
   var usuarios = [];
@@ -77,8 +77,8 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> loadUsersIds() async {
-    estudiantes = await request('SELECT * FROM estudiante where activo = true');
-    supervisor = await request('SELECT * FROM supervisor where activo = true');
+    estudiantes = await request('SELECT * FROM estudiante');
+    supervisor = await request('SELECT * FROM personal');
     usuarios.addAll(estudiantes);
     usuarios.addAll(supervisor);
     setState(() {});
@@ -90,10 +90,10 @@ class _UserListPageState extends State<UserListPage> {
     bool esEstudiante = true;
     String user = "estudiante";
 
-    if (selectedFilter == "Supervisor") {
+    if (selectedFilter == "Personal") {
       filteredUsers = supervisor;
       esEstudiante = false;
-      user = "supervisor";
+      user = "personal";
     } else if (selectedFilter == "Estudiantes") {
       filteredUsers = estudiantes;
       esEstudiante = true;
@@ -135,9 +135,9 @@ class _UserListPageState extends State<UserListPage> {
                                       user['estudiante']['nombre']
                                           .toLowerCase()
                                           .contains(query.toLowerCase())) ||
-                                  (user['supervisor'] != null &&
-                                      user['supervisor']['nombre'] != null &&
-                                      user['supervisor']['nombre']
+                                  (user['personal'] != null &&
+                                      user['personal']['nombre'] != null &&
+                                      user['personal']['nombre']
                                           .toLowerCase()
                                           .contains(query.toLowerCase())))
                               .toList();
@@ -165,7 +165,7 @@ class _UserListPageState extends State<UserListPage> {
                 selectedFilter = newValue;
               });
             },
-            items: <String?>['Estudiantes', 'Supervisor']
+            items: <String?>['Estudiantes', 'Personal']
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
@@ -186,7 +186,7 @@ class _UserListPageState extends State<UserListPage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
-                        userId: filteredUsers[index][user]['dni'],
+                        nombre: filteredUsers[index][user]['nombre'],
                         esEstudiante: esEstudiante,
                       );
                     }));
@@ -212,8 +212,7 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle:
-                          Text(filteredUsers[index][user]['correoelectronico']),
+                      subtitle: Text(filteredUsers[index][user]['correo']),
                       leading: Icon(
                         Icons.person,
                         size: 45,
@@ -230,9 +229,9 @@ class _UserListPageState extends State<UserListPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => EditUserPage(
-                                        userId: filteredUsers[index][user]
-                                            ['dni'],
-                                        isStudent: esEstudiante)),
+                                        nombre: filteredUsers[index][user]
+                                            ['nombre'],
+                                        esEstudiante: esEstudiante)),
                               );
                             },
                           ),
@@ -240,57 +239,57 @@ class _UserListPageState extends State<UserListPage> {
                           SizedBox(width: 30.0),
                           // -----------------
                           IconButton(
-                            icon: Icon(Icons.delete,
-                                color: Color.fromARGB(255, 76, 76, 76)),
-                            onPressed: () async {
-                              // Hacer la función asíncrona
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
+                              icon: Icon(Icons.delete,
+                                  color: Color.fromARGB(255, 76, 76, 76)),
+                              onPressed: () async {
+                                // Hacer la función asíncrona
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
 
-                                // Mostrar un diálogo de confirmación
-                                bool confirmar = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Confirmar Eliminación'),
-                                      content: Text(
-                                          '¿Seguro que quiere eliminar al usuario?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text('Sí'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                true); // Confirma la eliminación
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text('No'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                false); // Cancela la eliminación
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
+                                  // Mostrar un diálogo de confirmación
+                                  bool confirmar = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Confirmar Eliminación'),
+                                        content: Text(
+                                            '¿Seguro que quiere eliminar al usuario?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text('Sí'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop(
+                                                  true); // Confirma la eliminación
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text('No'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop(
+                                                  false); // Cancela la eliminación
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
 
-                                if (confirmar) {
-                                  // Realizar la actualización en la base de dos
-                                  var id = filteredUsers[index]['dni'];
-                                  String updateQuery;
-                                  if (esEstudiante) {
-                                    updateQuery =
-                                        "UPDATE estudiante SET activo = false WHERE dni = '$id'";
-                                  } else {
-                                    updateQuery =
-                                        "UPDATE supervisor SET activo = false WHERE dni = '$id'";
+                                  if (confirmar) {
+                                    // Realizar la actualización en la base de datos
+                                    String updateQuery =
+                                        "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][user]['nombre']}' and apellidos = '${filteredUsers[index][user]['apellidos']}'";
+                                    // Luego, ejecuta la consulta en tu base de datos PostgreSQL
+                                    request(updateQuery);
+
+                                    //Actualizar la vista
+                                    setState(() {
+                                      // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
+                                      // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
+                                      filteredUsers.removeAt(index);
+                                    });
                                   }
-                                  request(updateQuery);
                                 }
-                              }
-                            },
-                          ),
+                              }),
                         ],
                       ),
                     ),

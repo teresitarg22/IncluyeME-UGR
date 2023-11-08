@@ -59,7 +59,8 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Inicio de sesión', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text('Inicio de sesión',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             SizedBox(height: 16),
             TextField(
               controller: _emailController,
@@ -102,7 +103,8 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
   Future<void> _showSuccessDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // El usuario debe tocar el botón para cerrar el diálogo.
+      barrierDismissible:
+          false, // El usuario debe tocar el botón para cerrar el diálogo.
       builder: (BuildContext context) {
         return AlertDialog(
           title: Row(
