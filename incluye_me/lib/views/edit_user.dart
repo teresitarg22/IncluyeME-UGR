@@ -38,10 +38,10 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 // -----------------------------------------------------
 
 class EditUserPage extends StatefulWidget {
-  final String userId;
+  final String nombre;
   final bool isStudent;
 
-  EditUserPage({required this.userId, required this.isStudent});
+  EditUserPage({required this.nombre, required this.isStudent});
 
   @override
   _EditUserPageState createState() => _EditUserPageState();
@@ -68,7 +68,7 @@ class _EditUserPageState extends State<EditUserPage> {
   // Buscar detalles del usuario en la base de datos
   void fetchUserDetails() async {
     final results =
-        await request('SELECT * FROM student WHERE dni = ${widget.userId}');
+        await request('SELECT * FROM student WHERE dni = ${widget.nombre}');
 
     if (results.isNotEmpty) {
       setState(() {

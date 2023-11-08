@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => StartView(),
         '/registroPage': (context) => HomeScreen(),
-        '/userList': (context) => UserListPage(),
         '/userList': (context) => UserListPage()
       },
     );
@@ -39,5 +38,4 @@ class MyTest extends StatelessWidget {
   }
 }
 // -------------------------------------------------------------------
-
 
