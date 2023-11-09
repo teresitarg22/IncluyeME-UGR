@@ -249,7 +249,6 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              //filteredUsers[index][tipo]?['nombre'] ?? '',
                               "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
@@ -521,7 +520,7 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}" ,
+                              "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande

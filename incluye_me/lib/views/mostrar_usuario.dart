@@ -225,7 +225,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         Row(
                           children: [
                             const Text(
-                               'Contraseña:',
+                              'Contraseña:',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -233,7 +233,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              user?.contrasenia ?? '' ,
+                              user?.contrasenia ?? '',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -394,7 +394,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81), // Color personalizado
+            backgroundColor: Color(0xFF29DA81),
             icon: Icon(Icons.people, color: Colors.white),
             label: 'Usuarios',
           ),

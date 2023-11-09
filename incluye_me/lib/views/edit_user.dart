@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:incluye_me/model/user.dart';
 import './mostrar_usuario.dart';
+import './user_list.dart';
 
 // -------------------------- DATA BASE --------------------------
 
@@ -268,7 +269,11 @@ class _EditUserPageState extends State<EditUserPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pushNamed(context, '/userList', arguments: widget.user);
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserListPage(
+                user: widget.user,
+              );
+            }));
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
