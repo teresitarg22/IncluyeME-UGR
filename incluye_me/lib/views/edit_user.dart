@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:incluye_me/model/estudiante.dart';
 import 'package:postgres/postgres.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:incluye_me/model/user.dart';
 import './mostrar_usuario.dart';
 import './user_list.dart';
@@ -47,8 +45,8 @@ class EditUserPage extends StatefulWidget {
   final bool esEstudiante;
   final String user;
 
-  EditUserPage(
-      {required this.nombre, required this.esEstudiante, required this.user});
+  const EditUserPage(
+      {super.key, required this.nombre, required this.esEstudiante, required this.user});
 
   @override
   _EditUserPageState createState() => _EditUserPageState();
@@ -120,14 +118,14 @@ Widget build(BuildContext context) {
     future: userFuture,
     builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       } else if (snapshot.hasError) {
         return Text('Error: ${snapshot.error}');
       } else {
          return Scaffold(
       appBar: AppBar(
-        title: Text('Edit User'),
-        backgroundColor: Color(0xFF29DA81),
+        title: const Text('Edit User'),
+        backgroundColor: const Color(0xFF29DA81),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -168,53 +166,53 @@ Widget build(BuildContext context) {
               const Divider(),
               FormBuilderTextField(
                 name: 'nombre',
-                decoration: InputDecoration(labelText: 'Nombre'),
+                decoration: const InputDecoration(labelText: 'Nombre'),
               ),
               FormBuilderTextField(
                 name: 'apellidos',
-                decoration: InputDecoration(labelText: 'Apellidos'),
+                decoration: const InputDecoration(labelText: 'Apellidos'),
               ),
               FormBuilderTextField(
                 name: 'correo',
-                decoration: InputDecoration(labelText: 'Correo'),
+                decoration: const InputDecoration(labelText: 'Correo'),
               ),
               FormBuilderTextField(
                 name: 'contrasenia',
-                decoration: InputDecoration(labelText: 'Contraseña'),
+                decoration: const InputDecoration(labelText: 'Contraseña'),
               ),
               FormBuilderTextField(
                 name: 'foto',
-                decoration: InputDecoration(labelText: 'Foto'),
+                decoration: const InputDecoration(labelText: 'Foto'),
               ),
 
               // Campos adicionales para estudiantes
               if (user is Estudiante) ...[
                 FormBuilderTextField(
                   name: 'tipo_letra',
-                  decoration: InputDecoration(labelText: 'Tipo de Letra'),
+                  decoration: const InputDecoration(labelText: 'Tipo de Letra'),
                 ),
                 FormBuilderTextField(
                   name: 'maymin',
                   decoration:
-                      InputDecoration(labelText: 'Mayúsculas/Minúsculas'),
+                      const InputDecoration(labelText: 'Mayúsculas/Minúsculas'),
                 ),
                 FormBuilderTextField(
                   name: 'formato',
-                  decoration: InputDecoration(labelText: 'Formato'),
+                  decoration: const InputDecoration(labelText: 'Formato'),
                 ),
                 FormBuilderTextField(
                   name: 'contrasenia_iconos',
                   decoration:
-                      InputDecoration(labelText: 'Contraseña de Iconos'),
+                      const InputDecoration(labelText: 'Contraseña de Iconos'),
                 ),
                 FormBuilderCheckbox(
                   name: 'sabeLeer',
-                  title: Text('Sabe Leer'),
+                  title: const Text('Sabe Leer'),
                 ),
               ],
               Container(
                 // -----------------------------------------------------------
-                margin: EdgeInsets.only(top: 16.0), // Define el margen superior
+                margin: const EdgeInsets.only(top: 16.0), // Define el margen superior
                 child: ElevatedButton(
                   onPressed: () {
                     if (_fbKey.currentState!.saveAndValidate()) {
@@ -263,13 +261,13 @@ Widget build(BuildContext context) {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 98, 186, 142),
+                    backgroundColor: const Color.fromARGB(255, 98, 186, 142),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                   ),
-                  child: Text('Guardar cambios'),
+                  child: const Text('Guardar cambios'),
                 ),
               ),
             ],
@@ -277,7 +275,7 @@ Widget build(BuildContext context) {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81), // Color personalizado
+        backgroundColor: const Color(0xFF29DA81), // Color personalizado
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {

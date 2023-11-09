@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:postgres/postgres.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
-import '../model/logic_database.dart';
 import './user_list.dart';
 
 // -------------------------- DATA BASE --------------------------
@@ -45,8 +44,8 @@ class UserDetailsPage extends StatefulWidget {
   final bool esEstudiante;
   final String user;
 
-  UserDetailsPage(
-      {required this.nombre, required this.esEstudiante, required this.user});
+  const UserDetailsPage(
+      {super.key, required this.nombre, required this.esEstudiante, required this.user});
   @override
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
@@ -108,7 +107,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles del Usuario'),
-        backgroundColor: Color(0xFF29DA81),
+        backgroundColor: const Color(0xFF29DA81),
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -142,7 +141,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                 Container(
                   //margin: EdgeInsets.only(top: 12, left: 20, right: 10),
                   width: double.infinity,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Row(children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +164,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
                               '${user?.nombre}',
                               style: const TextStyle(
@@ -193,7 +192,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
                             const Text(
@@ -255,7 +254,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.contrasenia_iconos ?? ''}'
+                                  ? (user as Estudiante?)?.contrasenia_iconos ?? ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -285,7 +284,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.tipo_letra ?? ''}'
+                                  ? (user as Estudiante?)?.tipo_letra ?? ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -308,7 +307,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.maymin ?? ''}'
+                                  ? (user as Estudiante?)?.maymin ?? ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -329,7 +328,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.formato ?? ''}'
+                                  ? (user as Estudiante?)?.formato ?? ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -369,7 +368,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81), // Color personalizado
+        backgroundColor: const Color(0xFF29DA81), // Color personalizado
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {

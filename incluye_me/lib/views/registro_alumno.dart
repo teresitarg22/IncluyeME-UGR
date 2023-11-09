@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
 import 'package:convert/convert.dart';
-import 'package:image/image.dart' as img;
 import '../controllers/registro_controller.dart';
 
 class AlumnoRegistration extends StatefulWidget {
+  const AlumnoRegistration({super.key});
+
   @override
   _AlumnoRegistrationState createState() => _AlumnoRegistrationState();
 }
@@ -76,8 +76,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Registro de Alumno'),
-          backgroundColor: Color.fromARGB(255, 41, 218, 129)),
+          title: const Text('Registro de Alumno'),
+          backgroundColor: const Color.fromARGB(255, 41, 218, 129)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -86,7 +86,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'Datos Personales', // Título "Datos Personales"
                   style: TextStyle(
                     fontSize: 22,
@@ -94,7 +94,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   ),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Nombre *'),
+                  decoration: const InputDecoration(labelText: 'Nombre *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El nombre es obligatorio ';
@@ -107,7 +107,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Apellido *'),
+                  decoration: const InputDecoration(labelText: 'Apellido *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El apellido es obligatorio';
@@ -121,12 +121,12 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                 ),
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Foto *',
                       style: TextStyle(
                           fontSize: 16.0), // Aumenta el tamaño del texto
                     ),
-                    SizedBox(
+                    const SizedBox(
                         width:
                             15.0), // Agrega espacio horizontal entre el texto y el botón
                     ElevatedButton(
@@ -143,9 +143,9 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                           ..writeAsBytesSync(img.encodePng(niIdea!));*/
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF29DA81),
+                        backgroundColor: const Color(0xFF29DA81),
                       ),
-                      child: Text('Elige una foto'),
+                      child: const Text('Elige una foto'),
                     ),
                   ],
                 ),
@@ -167,7 +167,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             child: Text(font),
                           ))
                       .toList(),
-                  decoration: InputDecoration(labelText: 'Tipo de Letra *'),
+                  decoration: const InputDecoration(labelText: 'Tipo de Letra *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El tipo de letra es obligatorio';
@@ -193,7 +193,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                           ))
                       .toList(),
                   decoration:
-                      InputDecoration(labelText: 'Mayúsculas / Minúsculas *'),
+                      const InputDecoration(labelText: 'Mayúsculas / Minúsculas *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'La selección es obligatorio';
@@ -208,16 +208,16 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                 MultiSelectDialogField<String>(
                   items: multiSelectOptions,
                   initialValue: selectedOptions,
-                  title: Text("Selecciona opciones"),
+                  title: const Text("Selecciona opciones"),
                   selectedColor: Colors.green,
-                  buttonText: Text('Preferencias para mostrar el contenido'),
+                  buttonText: const Text('Preferencias para mostrar el contenido'),
                   onConfirm: (values) {
                     setState(() {
                       selectedOptions = values;
                     });
                   },
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
@@ -230,7 +230,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   ),
                 ),
                 CheckboxListTile(
-                  title: Text('Sabe leer y escribir'),
+                  title: const Text('Sabe leer y escribir'),
                   value:
                       _sabeLeer, // Valor de la casilla de verificación (true o false)
                   onChanged: (bool? value) {
@@ -244,7 +244,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     ? Column(
                         children: <Widget>[
                           TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 labelText: 'Correo electrónico '),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -282,8 +282,9 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                               _passwd = value;
 
                               if (_confirmPasswd != null &&
-                                  _confirmPasswd != _passwd)
+                                  _confirmPasswd != _passwd) {
                                 return 'Las contraseñas deben ser iguales';
+                              }
 
                               return null;
                             },
@@ -315,8 +316,9 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
 
                               _confirmPasswd = value;
 
-                              if (_passwd != null && _confirmPasswd != _passwd)
+                              if (_passwd != null && _confirmPasswd != _passwd) {
                                 return 'Las contraseñas deben ser iguales';
+                              }
 
                               return null;
                             },
@@ -327,8 +329,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                     : MultiSelectDialogField(
                         items: multiSelectImagenes,
                         initialValue: selectedImages,
-                        title: Text('Selecciona imágenes'),
-                        buttonText: Text('Imágenes seleccionadas'),
+                        title: const Text('Selecciona imágenes'),
+                        buttonText: const Text('Imágenes seleccionadas'),
                         onConfirm: (values) {
                           if (values.length == 3) {
                             setState(() {
@@ -351,7 +353,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                           } else {
                             values.clear();
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content:
                                     Text('TIENES QUE SELECCIONAR 3 ELEMENTOS'),
                               ),
@@ -375,12 +377,12 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
-                                content: Text(
+                                title: const Text('Error'),
+                                content: const Text(
                                     'Ya existe una cuenta asociada a ese nombre.'),
                                 actions: [
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -411,12 +413,12 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Registro exitoso'),
-                                content: Text(
+                                title: const Text('Registro exitoso'),
+                                content: const Text(
                                     'El registro se ha completado con éxito.'),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text('Aceptar'),
+                                    child: const Text('Aceptar'),
                                     onPressed: () {
                                       controlador
                                           .llevarMostrarUsuarios(context);
@@ -430,10 +432,10 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(
+                      backgroundColor: const Color(
                           0xFF29DA81), // Cambia el color del botón a verde
                     ),
-                    child: Text('Registrarse'),
+                    child: const Text('Registrarse'),
                   ),
                 )
               ],

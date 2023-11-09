@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
-import 'registro.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
 
@@ -70,7 +69,7 @@ Future<bool> esUsuarioEstudiante(String user) async {
 class UserListPage extends StatefulWidget {
   final String user;
 
-  UserListPage({required this.user});
+  const UserListPage({super.key, required this.user});
 
   @override
   _UserListPageState createState() => _UserListPageState(user: user);
@@ -136,8 +135,8 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Usuarios'),
-        backgroundColor: Color(0xFF29DA81),
+        title: const Text('Lista de Usuarios'),
+        backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
             onPressed: () {
@@ -149,7 +148,7 @@ class _UserListPageState extends State<UserListPage> {
                       ''; // Variable para almacenar la consulta de búsqueda
 
                   return AlertDialog(
-                    title: Text('Buscar por Nombre'),
+                    title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
                         query =
@@ -183,14 +182,14 @@ class _UserListPageState extends State<UserListPage> {
                                 .cast<Map<String, Map<String, dynamic>>>());
                           });
                         },
-                        child: Text('Buscar'),
+                        child: const Text('Buscar'),
                       ),
                     ],
                   );
                 },
               );
             },
-            icon: Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search), // Icono de lupa
           ),
           DropdownButton<String?>(
             value: selectedFilter,
@@ -240,14 +239,14 @@ class _UserListPageState extends State<UserListPage> {
                     }));
                   },
                   child: Card(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                     child: ListTile(
                       title: GestureDetector(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
                               "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
                               style: const TextStyle(
@@ -256,13 +255,13 @@ class _UserListPageState extends State<UserListPage> {
                                 fontWeight: FontWeight.bold, // Texto en negrita
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                           ],
                         ),
                       ),
                       subtitle:
                           Text(filteredUsers[index][tipo]?['correo'] ?? ''),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.person,
                         size: 45,
                       ),
@@ -271,7 +270,7 @@ class _UserListPageState extends State<UserListPage> {
                         children: [
                           // ------------------------------------
                           IconButton(
-                            icon: Icon(Icons.edit,
+                            icon: const Icon(Icons.edit,
                                 color: Color.fromARGB(255, 76, 76, 76)),
                             onPressed: () {
                               // Nos dirigimos a la interfaz de edición de usuario:
@@ -287,10 +286,10 @@ class _UserListPageState extends State<UserListPage> {
                             },
                           ),
                           // -----------------
-                          SizedBox(width: 30.0),
+                          const SizedBox(width: 30.0),
                           // -----------------
                           IconButton(
-                              icon: Icon(Icons.delete,
+                              icon: const Icon(Icons.delete,
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
                                 // Hacer la función asíncrona
@@ -302,19 +301,19 @@ class _UserListPageState extends State<UserListPage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Confirmar Eliminación'),
-                                        content: Text(
+                                        title: const Text('Confirmar Eliminación'),
+                                        content: const Text(
                                             '¿Seguro que quiere eliminar al usuario?'),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: Text('Sí'),
+                                            child: const Text('Sí'),
                                             onPressed: () {
                                               Navigator.of(context).pop(
                                                   true); // Confirma la eliminación
                                             },
                                           ),
                                           TextButton(
-                                            child: Text('No'),
+                                            child: const Text('No'),
                                             onPressed: () {
                                               Navigator.of(context).pop(
                                                   false); // Cancela la eliminación
@@ -352,7 +351,7 @@ class _UserListPageState extends State<UserListPage> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 16.0, bottom: 30.0),
+            margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
             child: ElevatedButton(
               // --------------------------
               onPressed: () {
@@ -360,14 +359,14 @@ class _UserListPageState extends State<UserListPage> {
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF29DA81),
+                backgroundColor: const Color(0xFF29DA81),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
               ),
               // --------------------------
-              child: Row(
+              child: const Row(
                 // Usamos un Row para colocar el icono y el texto horizontalmente.
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -382,7 +381,7 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81),
+        backgroundColor: const Color(0xFF29DA81),
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
@@ -441,8 +440,8 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Alumnos'),
-        backgroundColor: Color(0xFF29DA81),
+        title: const Text('Lista de Alumnos'),
+        backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
             onPressed: () {
@@ -454,7 +453,7 @@ class _UserListPageState extends State<UserListPage> {
                       ''; // Variable para almacenar la consulta de búsqueda
 
                   return AlertDialog(
-                    title: Text('Buscar por Nombre'),
+                    title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
                         query =
@@ -482,14 +481,14 @@ class _UserListPageState extends State<UserListPage> {
                                 .cast<Map<String, Map<String, dynamic>>>());
                           });
                         },
-                        child: Text('Buscar'),
+                        child: const Text('Buscar'),
                       ),
                     ],
                   );
                 },
               );
             },
-            icon: Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search), // Icono de lupa
           ),
         ],
       ),
@@ -511,33 +510,33 @@ class _UserListPageState extends State<UserListPage> {
                     }));
                   },
                   child: Card(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                     child: ListTile(
                       title: GestureDetector(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
                               "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande
                                 fontWeight: FontWeight.bold, // Texto en negrita
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                           ],
                         ),
                       ),
                       subtitle:
                           Text(filteredUsers[index]['estudiante']['correo']),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.person,
                         size: 45,
                       ),
-                      trailing: Row(
+                      trailing: const Row(
                         mainAxisSize: MainAxisSize.min,
                       ),
                     ),
@@ -550,7 +549,7 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81),
+        backgroundColor: const Color(0xFF29DA81),
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {

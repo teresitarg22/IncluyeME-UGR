@@ -54,9 +54,9 @@ class LogicDatabase {
 //Registrar profesor en la base de datos
 
   Future<void> registrarProfesor(String nombre, String apellidos, String correo,
-      var contrasena, var foto, bool es_admin) async {
+      var contrasena, var foto, bool esAdmin) async {
     await request(
-        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', '$foto', '$es_admin')");
+        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', '$foto', '$esAdmin')");
   }
 
 // Comprobar si estudiante ya existe por nombre y apellidos
