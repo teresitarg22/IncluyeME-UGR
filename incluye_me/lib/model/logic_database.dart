@@ -106,4 +106,16 @@ class LogicDatabase {
   Future<List<Map<String, Map<String, dynamic>>>> Login(String email, String password) async {
     return await request("SELECT * FROM personal WHERE correo = '$email' AND contrasenia = '$password'");
   }
+
+  //Funcion para sacar lista de estudiantes
+
+  Future<List<Map<String, Map<String, dynamic>>>> listaEstudiantes() async {
+    return await request("SELECT * FROM estudiante");
+  }
+
+  // Funcion para sacar lista de personal
+
+  Future<List<Map<String, Map<String, dynamic>>>> listaPersonal() async {
+    return await request("SELECT * FROM personal");
+  }
 }

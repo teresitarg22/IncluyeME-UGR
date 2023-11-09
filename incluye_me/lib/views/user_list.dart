@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
+import '../controllers/usuario_controller.dart' ; 
+
 
 // -------------------------- DATA BASE --------------------------
 
@@ -82,6 +84,7 @@ class _UserListPageState extends State<UserListPage> {
   var estudiantes = [];
   var supervisor = [];
   var usuarios = [];
+  Controller controlador = Controller();
 
   String? selectedFilter = "Estudiantes";
 
@@ -104,13 +107,7 @@ class _UserListPageState extends State<UserListPage> {
     setState(() => isAdmin = adminStatus);
   }
 
-  Future<void> loadUsersIds() async {
-    estudiantes = await request('SELECT * FROM estudiante');
-    supervisor = await request('SELECT * FROM personal');
-    usuarios.addAll(estudiantes);
-    usuarios.addAll(supervisor);
-    setState(() {});
-  }
+}
 
   @override
   Widget build(BuildContext context) {
