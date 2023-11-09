@@ -272,10 +272,7 @@ class _UserListPageState extends State<UserListPage> {
 
                                   if (confirmar) {
                                     // Realizar la actualización en la base de datos
-                                    String updateQuery =
-                                        "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][tipo]['nombre']}' and apellidos = '${filteredUsers[index][tipo]['apellidos']}'";
-                                    // Luego, ejecuta la consulta en tu base de datos PostgreSQL
-                                    request(updateQuery);
+                                    controlador.eliminarEstudiante(filteredUsers[index][tipo]['nombre'], filteredUsers[index][tipo]['apellidos']) ; 
 
                                     //Actualizar la vista
                                     setState(() {
