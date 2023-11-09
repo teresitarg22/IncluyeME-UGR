@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/model/estudiante.dart';
-import 'package:postgres/postgres.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
+
+import 'package:postgres/postgres.dart';
+
 import 'package:incluye_me/model/user.dart';
+import 'package:incluye_me/model/estudiante.dart';
 
 // -------------------------- DATA BASE --------------------------
 
@@ -57,10 +57,12 @@ class _EditUserPageState extends State<EditUserPage> {
   var resultado = [];
   User? user;
 
-  // ------------------------
+  // --------------------------------------------
 
   @override
   void initState() {
+    user = null; // Inicializo los valores del usuario.
+
     super.initState();
     buscarDatosUsuario();
   }
@@ -96,11 +98,11 @@ class _EditUserPageState extends State<EditUserPage> {
           final detalles = resultado[0];
 
           user = User(
-              nombre: detalles['nombre'],
-              apellidos: detalles['apellidos'],
-              correo: detalles['correo'],
-              foto: detalles['foto'],
-              contrasenia: detalles['contrasenia']);
+              nombre: detalles['nombre'] ?? '',
+              apellidos: detalles['apellidos'] ?? '',
+              correo: detalles['correo'] ?? '',
+              foto: detalles['foto'] ?? '',
+              contrasenia: detalles['contrasenia'] ?? '');
         });
       }
     }
@@ -246,6 +248,8 @@ class _EditUserPageState extends State<EditUserPage> {
                       Navigator.of(context).pop(user);
                     }
                   },
+                  // --------------------------------------------------
+                  // Botón para guardar los cambios
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 98, 186, 142),
                     shape: RoundedRectangleBorder(
