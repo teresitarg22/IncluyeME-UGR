@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/user_list.dart';
 
 import '../model/database.dart';
 
@@ -154,7 +155,11 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
 
       Future.delayed(Duration(seconds: 1), () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/userList', arguments: 'Carla');
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return UserListPage(
+            user: "Carla",
+          );
+        }));
       });
     }
   }

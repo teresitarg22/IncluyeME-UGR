@@ -52,14 +52,13 @@ Future<bool> esAdmin(String user) async {
   return false;
 }
 
-Future<bool> esUsuarioEstudiante(var user) async {
-  var value = await request(
-      "SELECT * FROM estudiante WHERE nombre = '${user['nombre']}' and apellidos = '${user['apellidos']}'");
+Future<bool> esUsuarioEstudiante(String user) async {
+  var value = await request("SELECT * FROM estudiante WHERE nombre = '$user'");
 
   if (value.isNotEmpty) {
     var estudianteData = value[0]['estudiante'];
 
-    if (estudianteData != null && estudianteData['nombre'] == user['nombre']) {
+    if (estudianteData != null && estudianteData['nombre'] == user) {
       return true;
     }
   }
@@ -163,19 +162,19 @@ class _UserListPageState extends State<UserListPage> {
                           // Cierra el cuadro de diálogo y realiza la búsqueda
                           Navigator.of(context).pop();
                           // Lógica de búsqueda con "query"
-                          var searchResults = usuarios
-                              .where((user) =>
-                                  (user['estudiante'] != null &&
-                                      user['estudiante']['nombre'] != null &&
-                                      user['estudiante']['nombre']
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase())) ||
-                                  (user['personal'] != null &&
-                                      user['personal']['nombre'] != null &&
-                                      user['personal']['nombre']
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase())))
-                              .toList();
+                          var searchResults = usuarios.where((user) {
+                            final estudianteNombre =
+                                user['estudiante']?['nombre']?.toLowerCase() ??
+                                    '';
+                            final personalNombre =
+                                user['personal']?['nombre']?.toLowerCase() ??
+                                    '';
+
+                            return estudianteNombre
+                                    .contains(query.toLowerCase()) ||
+                                personalNombre.contains(query.toLowerCase());
+                          }).toList();
+
                           // Filtra la lista de usuarios según "query"
                           setState(() {
                             // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
@@ -216,15 +215,18 @@ class _UserListPageState extends State<UserListPage> {
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
-                esUsuarioEstudiante(filteredUsers[index][tipo])
-                    .then((valorEsEstudiante) {
-                  esEstudiante = valorEsEstudiante;
-                  if (esEstudiante) {
-                    tipo = "estudiante";
-                  } else {
-                    tipo = "personal";
-                  }
-                });
+                final nombre = filteredUsers[index][tipo]?['nombre'];
+
+                if (nombre != null) {
+                  esUsuarioEstudiante(nombre).then((valorEsEstudiante) {
+                    esEstudiante = valorEsEstudiante;
+                    if (esEstudiante) {
+                      tipo = "estudiante";
+                    } else {
+                      tipo = "personal";
+                    }
+                  });
+                }
 
                 return InkWell(
                   onTap: () {
@@ -247,8 +249,8 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             SizedBox(height: 4),
                             Text(
-                              filteredUsers[index][tipo]['nombre'],
-                              style: TextStyle(
+                              filteredUsers[index][tipo]?['nombre'] ?? '',
+                              style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande
                                 fontWeight: FontWeight.bold, // Texto en negrita
@@ -258,7 +260,8 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle: Text(filteredUsers[index][tipo]['correo']),
+                      subtitle:
+                          Text(filteredUsers[index][tipo]?['correo'] ?? ''),
                       leading: Icon(
                         Icons.person,
                         size: 45,
