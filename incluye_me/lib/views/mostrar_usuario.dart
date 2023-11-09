@@ -8,6 +8,7 @@ import '../controllers/usuario_controller.dart';
 
 class UserDetailsPage extends StatefulWidget {
   final String nombre;
+  final String apellidos;
   final bool esEstudiante;
   final String userName;
   final String userSurname;
@@ -15,6 +16,7 @@ class UserDetailsPage extends StatefulWidget {
   const UserDetailsPage(
       {super.key,
       required this.nombre,
+      required this.apellidos,
       required this.esEstudiante,
       required this.userName,
       required this.userSurname});
@@ -36,42 +38,36 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
   Future<void> buscarDatosUsuario() async {
     if (widget.esEstudiante == true) {
-      resultado =
-          controlador.getEstudiante(widget.userName, widget.userSurname);
+      resultado = controlador.getEstudiante(widget.nombre, widget.apellidos);
 
-      if (resultado.isNotEmpty) {
-        setState(() {
-          final detalles = resultado[0]['estudiante'];
+      setState(() {
+        final detalles = resultado[0]['estudiante'];
 
-          user = Estudiante(
-              nombre: detalles['nombre'],
-              apellidos: detalles['apellidos'],
-              correo: detalles['correo'],
-              foto: "",
-              contrasenia: detalles['contrasenia'],
-              tipo_letra: detalles['tipo_letra'] ?? '',
-              maymin: detalles['maymin'] ?? '',
-              formato: detalles['formato'] ?? '',
-              contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
-              sabeLeer: detalles['sabeLeer'] ?? false);
-        });
-      }
+        user = Estudiante(
+            nombre: detalles['nombre'],
+            apellidos: detalles['apellidos'],
+            correo: detalles['correo'],
+            foto: "",
+            contrasenia: detalles['contrasenia'],
+            tipo_letra: detalles['tipo_letra'] ?? '',
+            maymin: detalles['maymin'] ?? '',
+            formato: detalles['formato'] ?? '',
+            contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
+            sabeLeer: detalles['sabeLeer'] ?? false);
+      });
     } else {
-      resultado = await request(
-          'SELECT * FROM personal WHERE nombre = \'${widget.nombre}\'');
+      resultado = controlador.getPersonal(widget.nombre, widget.apellidos);
 
-      if (resultado.isNotEmpty) {
-        setState(() {
-          final detalles = resultado[0]['personal'];
+      setState(() {
+        final detalles = resultado[0]['personal'];
 
-          user = User(
-              nombre: detalles['nombre'],
-              apellidos: detalles['apellidos'],
-              correo: detalles['correo'],
-              foto: "",
-              contrasenia: detalles['contrasenia']);
-        });
-      }
+        user = User(
+            nombre: detalles['nombre'],
+            apellidos: detalles['apellidos'],
+            correo: detalles['correo'],
+            foto: "",
+            contrasenia: detalles['contrasenia']);
+      });
     }
   }
 
@@ -362,6 +358,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
                 nombre: widget.userName,
+                apellidos: widget.userSurname,
                 esEstudiante: false,
                 userName: widget.userName,
                 userSurname: widget.userSurname,

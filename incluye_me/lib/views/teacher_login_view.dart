@@ -170,29 +170,5 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
               })
             }
         });
-
-    /*
-    if (user == null) {
-      setState(() {
-        _errorMessage = 'Email no registrado.';
-      });
-    } else if (password_test != password) {
-      setState(() {
-        _passwordErrorMessage = 'Contraseña incorrecta.';
-      });
-    } else {
-      _showSuccessDialog();
-
-      Future.delayed(Duration(seconds: 1), () {
-        Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return UserListPage(
-            user: "Carla",
-          );
-        }));
-      });
-    }
-
-    */
   }
 }
