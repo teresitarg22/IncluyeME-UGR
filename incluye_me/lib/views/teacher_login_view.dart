@@ -153,7 +153,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
                 Navigator.pop(context);
                 Future.delayed(const Duration(seconds: 1), () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                     return UserListPage(
                       userName: nombre,
                       userSurname: apellido,

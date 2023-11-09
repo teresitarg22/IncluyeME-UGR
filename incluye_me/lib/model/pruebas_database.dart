@@ -85,6 +85,8 @@ class DataBaseDriver {
 
     var result = await request("SELECT contrasenia FROM personal WHERE correo = '$email'");
 
+    this.close();
+
     if (result.isEmpty) {
       return false;
     }

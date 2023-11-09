@@ -3,6 +3,7 @@ import 'package:postgres/postgres.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
 import '../controllers/usuario_controller.dart';
+import '../controllers/session_controller.dart';
 
 // Clase para la página de lista de usuarios
 class UserListPage extends StatefulWidget {
@@ -24,7 +25,14 @@ class _UserListPageState extends State<UserListPage> {
   var usuarios = [];
   Controller controlador = Controller();
 
+  SessionController sessionController = SessionController();
+
   String? selectedFilter = "Estudiantes";
+
+  void userLogout() async {
+    await sessionController.logout();
+    Navigator.of(context).pushReplacementNamed('/');
+  }
 
   @override
   void initState() {
@@ -532,6 +540,9 @@ class _UserListPageState extends State<UserListPage> {
               );
             }));
           }
+          else if (index == 5) {
+            userLogout();
+          }
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -554,6 +565,10 @@ class _UserListPageState extends State<UserListPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.white),
             label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout, color: Colors.white),
+            label: 'Cerrar Sesión',
           ),
         ],
       ),
