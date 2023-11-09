@@ -58,30 +58,32 @@ class EditUserPage extends StatefulWidget {
 class _EditUserPageState extends State<EditUserPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey();
   var resultado = [];
-  User? user;
+  Future<User>? userFuture ; 
+  User? user; 
 
   // ------------------------
 
   @override
   void initState() {
     super.initState();
-    buscarDatosUsuario();
+    userFuture =  buscarDatosUsuario();
   }
 
-  Future<void> buscarDatosUsuario() async {
+  Future<User> buscarDatosUsuario() async {
     if (widget.esEstudiante == true) {
+
       resultado = await request(
           'SELECT * FROM estudiante WHERE nombre = \'${widget.nombre}\'');
 
       if (resultado.isNotEmpty) {
         setState(() {
-          final detalles = resultado[0];
+          final detalles = resultado[0]['estudiante'];
 
           user = Estudiante(
               nombre: detalles['nombre'],
               apellidos: detalles['apellidos'],
               correo: detalles['correo'],
-              foto: detalles['foto'],
+              foto: " ",
               contrasenia: detalles['contrasenia'],
               tipo_letra: detalles['tipo_letra'] ?? '',
               maymin: detalles['maymin'] ?? '',
@@ -96,22 +98,32 @@ class _EditUserPageState extends State<EditUserPage> {
 
       if (resultado.isNotEmpty) {
         setState(() {
-          final detalles = resultado[0];
+          final detalles = resultado[0]['personal'];
 
           user = User(
               nombre: detalles['nombre'],
               apellidos: detalles['apellidos'],
               correo: detalles['correo'],
-              foto: detalles['foto'],
+              foto: " ",
               contrasenia: detalles['contrasenia']);
         });
       }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+    return user!;
+  }
+   
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder(
+    future: userFuture,
+    builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else {
+         return Scaffold(
       appBar: AppBar(
         title: Text('Edit User'),
         backgroundColor: Color(0xFF29DA81),
@@ -119,7 +131,7 @@ class _EditUserPageState extends State<EditUserPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FormBuilder(
-          key: _fbKey,
+         // key: _fbKey,
           initialValue: {
             'nombre': user?.nombre,
             'correo': user?.correo,
@@ -310,5 +322,9 @@ class _EditUserPageState extends State<EditUserPage> {
         ],
       ),
     );
+      }
+    },
+  );
   }
 }
+
