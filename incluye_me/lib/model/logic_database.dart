@@ -118,4 +118,11 @@ class LogicDatabase {
   Future<List<Map<String, Map<String, dynamic>>>> listaPersonal() async {
     return await request("SELECT * FROM personal");
   }
+
+  // Funcion para elimiar estudiante
+
+  Future<void> eliminarEstudiante(String nombre, String apellidos) async {
+    await request(
+        "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
+  }
 }

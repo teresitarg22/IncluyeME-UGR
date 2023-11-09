@@ -51,4 +51,8 @@ class Controller {
 
     return false;
   }
+
+  Future <void> eliminarEstudiante(String nombre, String apellidos) async {
+    await _logicDatabase.eliminarEstudiante(nombre, apellidos);
+  }
 }
