@@ -113,7 +113,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
             children: [
               Icon(Icons.check_circle, color: Colors.green),
               SizedBox(width: 10),
-              Text('Inicio de sesión exitoso'),
+              Text('Inicio de sesión'),
             ],
           ),
           content: Column(
