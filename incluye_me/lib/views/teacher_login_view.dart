@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/model/pruebas_database.dart';
-
+import 'package:incluye_me/views/user_list.dart';
 import '../model/database.dart';
 
 class TeacherLoginView extends StatefulWidget {
@@ -137,13 +137,23 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
+    var nombre;
+    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) => nombre = value[0]['personal']?['nombre']);
+
+
     DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
       if (value == true) {
         _showSuccessDialog(),
-        Navigator.pushNamed(context, '/'),
         Future.delayed(Duration(seconds: 2), () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/userList');
+          Future.delayed(Duration(seconds: 1), () {
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return UserListPage(
+            user: nombre,
+          );
+        }));
+      });
         })
       } else {
         setState(() {
@@ -167,9 +177,13 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     } else {
       _showSuccessDialog();
 
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/userList');
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return UserListPage(
+            user: "Carla",
+          );
+        }));
       });
     }
 

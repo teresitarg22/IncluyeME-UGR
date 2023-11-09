@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/model/estudiante.dart';
 import 'package:postgres/postgres.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:incluye_me/model/user.dart';
+import './mostrar_usuario.dart';
 
 // -------------------------- DATA BASE --------------------------
 
@@ -9,8 +13,8 @@ import 'package:incluye_me/model/user.dart';
 final connection = PostgreSQLConnection(
   'flora.db.elephantsql.com', // database host
   5432, // database port
-  'srvvjedp', // database name
-  username: 'srvvjedp', // database username
+  'srvvjedp', // database nombre
+  username: 'srvvjedp', // database usernombre
   password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
 );
 
@@ -39,9 +43,11 @@ Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
 
 class EditUserPage extends StatefulWidget {
   final String nombre;
-  final bool isStudent;
+  final bool esEstudiante;
+  final String user;
 
-  EditUserPage({required this.nombre, required this.isStudent});
+  EditUserPage(
+      {required this.nombre, required this.esEstudiante, required this.user});
 
   @override
   _EditUserPageState createState() => _EditUserPageState();
@@ -51,51 +57,55 @@ class EditUserPage extends StatefulWidget {
 
 class _EditUserPageState extends State<EditUserPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey();
-  Map<String, dynamic> details = {};
+  var resultado = [];
   User? user;
 
-  // --------------------------------
+  // ------------------------
 
   @override
   void initState() {
     super.initState();
-
-    // Realizar una consulta a la base de datos para obtener los detalles del usuario
-    fetchUserDetails();
+    buscarDatosUsuario();
   }
 
-  // --------------------------------
-  // Buscar detalles del usuario en la base de datos
-  void fetchUserDetails() async {
-    final results =
-        await request('SELECT * FROM student WHERE dni = ${widget.nombre}');
+  Future<void> buscarDatosUsuario() async {
+    if (widget.esEstudiante == true) {
+      resultado = await request(
+          'SELECT * FROM estudiante WHERE nombre = \'${widget.nombre}\'');
 
-    if (results.isNotEmpty) {
-      setState(() {
-        details = results[0];
-        user = User(
-          dni: details['dni'] ?? '',
-          gender: details['genero'] ?? '',
-          name: details['nombre'] ?? '',
-          lastName: details['apellidos'] ?? '',
-          dateOfBirth: details['fechanacimiento'] ?? '',
-          password: details['"contraseña"'] ?? '',
-          healthCard: details['tarjetasanitaria'] ?? '',
-          homeAddress: details['direcciondomiciliar'] ?? '',
-          phone: details['numerotelefono'] ?? '',
-          email: details['correoelectronico'] ?? '',
-          photo: details['foto'] ?? '',
-          medicalRecord: details['archivomedico'] ?? '',
-          allergiesIntolerances: details['alergiasintolerancias'] ?? '',
-          additionalMedicalInformation:
-              details['informacionadicionalmedico'] ?? '',
-          fontType: details['tipodeletra'] ?? '',
-          fontSize: details['minmay'] ?? '',
-          appFormat: details['formatodeapp'] ?? '',
-          touchscreen: details['pantallatactil'] ?? false,
-          tutorDni: details['dni_tutor'] ?? '',
-        );
-      });
+      if (resultado.isNotEmpty) {
+        setState(() {
+          final detalles = resultado[0];
+
+          user = Estudiante(
+              nombre: detalles['nombre'],
+              apellidos: detalles['apellidos'],
+              correo: detalles['correo'],
+              foto: detalles['foto'],
+              contrasenia: detalles['contrasenia'],
+              tipo_letra: detalles['tipo_letra'] ?? '',
+              maymin: detalles['maymin'] ?? '',
+              formato: detalles['formato'] ?? '',
+              contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
+              sabeLeer: detalles['sabeLeer'] ?? false);
+        });
+      }
+    } else {
+      resultado = await request(
+          'SELECT * FROM personal WHERE nombre = \'${widget.nombre}\'');
+
+      if (resultado.isNotEmpty) {
+        setState(() {
+          final detalles = resultado[0];
+
+          user = User(
+              nombre: detalles['nombre'],
+              apellidos: detalles['apellidos'],
+              correo: detalles['correo'],
+              foto: detalles['foto'],
+              contrasenia: detalles['contrasenia']);
+        });
+      }
     }
   }
 
@@ -111,26 +121,84 @@ class _EditUserPageState extends State<EditUserPage> {
         child: FormBuilder(
           key: _fbKey,
           initialValue: {
-            'name': user?.name, // Asigna el nombre del usuario desde 'user'
-            'email': user?.email, // Asigna el email del usuario desde 'user'
+            'nombre': user?.nombre,
+            'correo': user?.correo,
+            'apellidos': user?.apellidos,
+            'foto': user?.foto,
+            'contrasenia': user?.contrasenia,
+            //--------------------------------------
+            // Campos adicionales para estudiantes
+            'tipo_letra':
+                (user is Estudiante) ? (user as Estudiante).tipo_letra : '',
+            'maymin': (user is Estudiante) ? (user as Estudiante).maymin : '',
+            'formato': (user is Estudiante) ? (user as Estudiante).formato : '',
+            'contrasenia_iconos': (user is Estudiante)
+                ? (user as Estudiante).contrasenia_iconos
+                : '',
+            'sabeLeer':
+                (user is Estudiante) ? (user as Estudiante).sabeLeer : false,
           },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: <Widget>[
               // -----------------------------------------------------------
-              ListTile(
-                title: Text('Name: ${user?.name ?? ''}'),
-                subtitle: Text('Email: ${user?.email ?? ''}'),
+              const ListTile(
+                title: Text(
+                  'FORMULARIO DE EDICIÓN DE DATOS',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 77, 131, 105),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              Divider(),
+              const Divider(),
               FormBuilderTextField(
-                name: 'name',
-                decoration: InputDecoration(labelText: 'Name'),
+                name: 'nombre',
+                decoration: InputDecoration(labelText: 'Nombre'),
               ),
               FormBuilderTextField(
-                name: 'email',
-                decoration: InputDecoration(labelText: 'Email'),
+                name: 'apellidos',
+                decoration: InputDecoration(labelText: 'Apellidos'),
               ),
+              FormBuilderTextField(
+                name: 'correo',
+                decoration: InputDecoration(labelText: 'Correo'),
+              ),
+              FormBuilderTextField(
+                name: 'contrasenia',
+                decoration: InputDecoration(labelText: 'Contraseña'),
+              ),
+              FormBuilderTextField(
+                name: 'foto',
+                decoration: InputDecoration(labelText: 'Foto'),
+              ),
+
+              // Campos adicionales para estudiantes
+              if (user is Estudiante) ...[
+                FormBuilderTextField(
+                  name: 'tipo_letra',
+                  decoration: InputDecoration(labelText: 'Tipo de Letra'),
+                ),
+                FormBuilderTextField(
+                  name: 'maymin',
+                  decoration:
+                      InputDecoration(labelText: 'Mayúsculas/Minúsculas'),
+                ),
+                FormBuilderTextField(
+                  name: 'formato',
+                  decoration: InputDecoration(labelText: 'Formato'),
+                ),
+                FormBuilderTextField(
+                  name: 'contrasenia_iconos',
+                  decoration:
+                      InputDecoration(labelText: 'Contraseña de Iconos'),
+                ),
+                FormBuilderCheckbox(
+                  name: 'sabeLeer',
+                  title: Text('Sabe Leer'),
+                ),
+              ],
               Container(
                 // -----------------------------------------------------------
                 margin: EdgeInsets.only(top: 16.0), // Define el margen superior
@@ -138,11 +206,42 @@ class _EditUserPageState extends State<EditUserPage> {
                   onPressed: () {
                     if (_fbKey.currentState!.saveAndValidate()) {
                       // Guarda los datos actualizados en el objeto 'user' desde el formulario
-                      user?.name = _fbKey.currentState!.fields['name']?.value ??
-                          user?.name;
-                      user?.email =
-                          _fbKey.currentState!.fields['email']?.value ??
-                              user?.email;
+                      user?.nombre =
+                          _fbKey.currentState!.fields['nombre']?.value ??
+                              user?.nombre;
+                      user?.correo =
+                          _fbKey.currentState!.fields['correo']?.value ??
+                              user?.correo;
+                      user?.apellidos =
+                          _fbKey.currentState!.fields['apellidos']?.value ??
+                              user?.apellidos;
+                      user?.foto = _fbKey.currentState!.fields['foto']?.value ??
+                          user?.foto;
+                      user?.contrasenia =
+                          _fbKey.currentState!.fields['contrasenia']?.value ??
+                              user?.contrasenia;
+
+                      //--------------------------------------
+                      // Campos adicionales para estudiantes
+                      if (user is Estudiante) {
+                        var estudiante = user as Estudiante;
+
+                        estudiante.tipo_letra =
+                            _fbKey.currentState!.fields['tipo_letra']?.value ??
+                                estudiante.tipo_letra;
+                        estudiante.maymin =
+                            _fbKey.currentState!.fields['maymin']?.value ??
+                                estudiante.maymin;
+                        estudiante.formato =
+                            _fbKey.currentState!.fields['formato']?.value ??
+                                estudiante.formato;
+                        estudiante.contrasenia_iconos = _fbKey.currentState!
+                                .fields['contrasenia_iconos']?.value ??
+                            estudiante.contrasenia_iconos;
+                        estudiante.sabeLeer =
+                            _fbKey.currentState!.fields['sabeLeer']?.value ??
+                                false;
+                      }
 
                       // Aquí puedes realizar la lógica para guardar los cambios en la base de datos si es necesario
 
@@ -151,15 +250,15 @@ class _EditUserPageState extends State<EditUserPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF29DA81),
+                    backgroundColor: Color.fromARGB(255, 98, 186, 142),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     padding: EdgeInsets.all(16.0),
                   ),
-                  child: Text('Save Changes'),
+                  child: Text('Guardar cambios'),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -169,7 +268,7 @@ class _EditUserPageState extends State<EditUserPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pushNamed(context, '/userList');
+            Navigator.pushNamed(context, '/userList', arguments: widget.user);
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
@@ -177,7 +276,13 @@ class _EditUserPageState extends State<EditUserPage> {
           } else if (index == 3) {
             // Lógica para la pestaña "Chat"
           } else if (index == 4) {
-            // Lógica para la pestaña "Perfil"
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserDetailsPage(
+                nombre: widget.user,
+                esEstudiante: false,
+                user: widget.user,
+              );
+            }));
           }
         },
         items: const <BottomNavigationBarItem>[
