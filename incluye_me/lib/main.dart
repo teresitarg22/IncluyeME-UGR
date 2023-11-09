@@ -32,6 +32,7 @@ class MyTest extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => TeacherLoginView(),
+        '/userList': (context) => UserListPage()
       },
     );
   }

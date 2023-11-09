@@ -140,7 +140,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
       if (value == true) {
         _showSuccessDialog(),
-        Navigator.pushNamed(context, '/userList'),
+        Navigator.pushNamed(context, '/'),
         Future.delayed(Duration(seconds: 2), () {
           Navigator.pop(context);
           Navigator.pushNamed(context, '/userList');
