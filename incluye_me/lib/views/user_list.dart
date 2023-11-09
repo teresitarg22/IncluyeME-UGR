@@ -242,47 +242,52 @@ class _UserListPageState extends State<UserListPage> {
                               icon: Icon(Icons.delete,
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
-                                // Mostrar un diálogo de confirmación
-                                bool confirmar = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Confirmar Eliminación'),
-                                      content: Text(
-                                          '¿Seguro que quiere eliminar al usuario?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text('Sí'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                true); // Confirma la eliminación
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text('No'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                false); // Cancela la eliminación
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
+                                // Hacer la función asíncrona
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
 
-                                if (confirmar) {
-                                  // Realizar la actualización en la base de datos
-                                  String updateQuery =
-                                      "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][user]['nombre']}' and apellidos = '${filteredUsers[index][user]['apellidos']}'";
-                                  // Luego, ejecuta la consulta en tu base de datos PostgreSQL
-                                  request(updateQuery);
+                                  // Mostrar un diálogo de confirmación
+                                  bool confirmar = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Confirmar Eliminación'),
+                                        content: Text(
+                                            '¿Seguro que quiere eliminar al usuario?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text('Sí'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop(
+                                                  true); // Confirma la eliminación
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text('No'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop(
+                                                  false); // Cancela la eliminación
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
 
-                                  //Actualizar la vista
-                                  setState(() {
-                                    // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
-                                    // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
-                                    filteredUsers.removeAt(index);
-                                  });
+                                  if (confirmar) {
+                                    // Realizar la actualización en la base de datos
+                                    String updateQuery =
+                                        "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][user]['nombre']}' and apellidos = '${filteredUsers[index][user]['apellidos']}'";
+                                    // Luego, ejecuta la consulta en tu base de datos PostgreSQL
+                                    request(updateQuery);
+
+                                    //Actualizar la vista
+                                    setState(() {
+                                      // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
+                                      // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
+                                      filteredUsers.removeAt(index);
+                                    });
+                                  }
                                 }
                               }),
                         ],
