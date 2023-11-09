@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:incluye_me/model/pruebas_database.dart';
+import 'package:incluye_me/views/user_list.dart';
 import '../model/database.dart';
 
 class TeacherLoginView extends StatefulWidget {
@@ -127,20 +128,44 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     );
   }
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     setState(() {
       _errorMessage = null;
       _passwordErrorMessage = null;
     });
 
     final email = _emailController.text;
-
     final password = _passwordController.text;
 
-    final user = MockDatabase.getUserByEmail(email);
+    var nombre;
+    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) => nombre = value[0]['personal']?['nombre']);
 
-    final password_test = '12345';
 
+    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
+      if (value == true) {
+        _showSuccessDialog(),
+        Future.delayed(Duration(seconds: 2), () {
+          Navigator.pop(context);
+          Future.delayed(Duration(seconds: 1), () {
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return UserListPage(
+            user: nombre,
+          );
+        }));
+      });
+        })
+      } else {
+        setState(() {
+          _passwordErrorMessage = 'Contraseña incorrecta o email no registrado';
+        })
+      }
+    });
+
+
+
+
+    /*
     if (user == null) {
       setState(() {
         _errorMessage = 'Email no registrado.';
@@ -152,10 +177,16 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     } else {
       _showSuccessDialog();
 
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/userList');
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return UserListPage(
+            user: "Carla",
+          );
+        }));
       });
     }
+
+    */
   }
 }

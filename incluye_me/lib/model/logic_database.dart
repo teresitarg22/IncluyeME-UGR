@@ -102,4 +102,8 @@ class LogicDatabase {
     await request(
         " INSERT INTO imparte_en (nombre_aula, nombre_personal, apellidos_personal) VALUES ('$aula', '$nombre', '$apellidos')");
   }
+
+  Future<List<Map<String, Map<String, dynamic>>>> Login(String email, String password) async {
+    return await request("SELECT * FROM personal WHERE correo = '$email' AND contrasenia = '$password'");
+  }
 }
