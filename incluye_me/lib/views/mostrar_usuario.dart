@@ -233,7 +233,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              user?.contrasenia ?? '',
+                              user?.contrasenia ?? 'No tiene',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -244,7 +244,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         Row(
                           children: [
                             Text(
-                              widget.esEstudiante ? 'Contraseña de iconos' : "",
+                              widget.esEstudiante
+                                  ? 'Contraseña de iconos'
+                                  : "No tiene",
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
