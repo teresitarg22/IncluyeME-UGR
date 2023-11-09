@@ -45,7 +45,8 @@ class _EditUserPageState extends State<EditUserPage> {
 
   Future<User> buscarDatosUsuario() async {
     if (widget.esEstudiante == true) {
-      resultado = controlador.getEstudiante(widget.nombre, widget.apellidos);
+      resultado =
+          await controlador.getEstudiante(widget.nombre, widget.apellidos);
 
       if (resultado.isNotEmpty) {
         setState(() {
@@ -65,7 +66,8 @@ class _EditUserPageState extends State<EditUserPage> {
         });
       }
     } else {
-      resultado = controlador.getPersonal(widget.nombre, widget.apellidos);
+      resultado =
+          await controlador.getPersonal(widget.nombre, widget.apellidos);
       ;
 
       if (resultado.isNotEmpty) {

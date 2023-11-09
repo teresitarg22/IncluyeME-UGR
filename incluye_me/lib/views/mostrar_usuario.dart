@@ -38,10 +38,11 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
   Future<void> buscarDatosUsuario() async {
     if (widget.esEstudiante == true) {
-      resultado = controlador.getEstudiante(widget.nombre, widget.apellidos);
+      resultado =
+          await controlador.getEstudiante(widget.nombre, widget.apellidos);
 
       setState(() {
-        final detalles = resultado[0]['estudiante'];
+        var detalles = resultado[0]['estudiante'];
 
         user = Estudiante(
             nombre: detalles['nombre'],
@@ -56,10 +57,11 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             sabeLeer: detalles['sabeLeer'] ?? false);
       });
     } else {
-      resultado = controlador.getPersonal(widget.nombre, widget.apellidos);
+      resultado =
+          await controlador.getPersonal(widget.nombre, widget.apellidos);
 
       setState(() {
-        final detalles = resultado[0]['personal'];
+        var detalles = resultado[0]['personal'];
 
         user = User(
             nombre: detalles['nombre'],

@@ -20,7 +20,7 @@ class _UserListPageState extends State<UserListPage> {
   bool isAdmin = false;
   final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
-  var supervisor = [];
+  var personal = [];
   var usuarios = [];
   Controller controlador = Controller();
 
@@ -38,14 +38,12 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   Future<void> loadUsersIds() async {
-    var estudiantesData = await controlador.listaEstudiantes();
-    var supervisorData = await controlador.listaPersonal();
+    estudiantes = await controlador.listaEstudiantes();
+    personal = await controlador.listaPersonal();
 
     setState(() {
-      estudiantes = estudiantesData;
-      supervisor = supervisorData;
       usuarios.addAll(estudiantes);
-      usuarios.addAll(supervisor);
+      usuarios.addAll(personal);
     });
   }
 
@@ -67,7 +65,7 @@ class _UserListPageState extends State<UserListPage> {
     String tipo = "estudiante";
 
     if (selectedFilter == "Personal") {
-      filteredUsers = supervisor;
+      filteredUsers = personal;
       esEstudiante = false;
       tipo = "personal";
     } else if (selectedFilter == "Estudiantes") {
@@ -161,7 +159,9 @@ class _UserListPageState extends State<UserListPage> {
 
                 if (nombre != null) {
                   controlador
-                      .esUsuarioEstudiante(widget.userName, widget.userSurname)
+                      .esUsuarioEstudiante(
+                          filteredUsers[index][tipo]?['nombre'],
+                          filteredUsers[index][tipo]?['apellidos'])
                       .then((valorEsEstudiante) {
                     esEstudiante = valorEsEstudiante;
                     if (esEstudiante) {
@@ -226,7 +226,8 @@ class _UserListPageState extends State<UserListPage> {
                                     builder: (context) => EditUserPage(
                                           nombre: filteredUsers[index][tipo]
                                               ['nombre'],
-                                          apellidos: filteredUsers[index],
+                                          apellidos: filteredUsers[index][tipo]
+                                              ['apellidos'],
                                           esEstudiante: esEstudiante,
                                           userName: widget.userName,
                                           userSurname: widget.userSurname,
@@ -276,7 +277,10 @@ class _UserListPageState extends State<UserListPage> {
 
                                   if (confirmar) {
                                     // Realizar la actualización en la base de datos
-                                    controlador.eliminarEstudiante(filteredUsers[index][tipo]['nombre'], filteredUsers[index][tipo]['apellidos']) ; 
+                                    controlador.eliminarEstudiante(
+                                        filteredUsers[index][tipo]['nombre'],
+                                        filteredUsers[index][tipo]
+                                            ['apellidos']);
 
                                     //Actualizar la vista
                                     setState(() {
