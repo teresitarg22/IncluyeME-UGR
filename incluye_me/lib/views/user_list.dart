@@ -178,8 +178,10 @@ class _UserListPageState extends State<UserListPage> {
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
                         nombre: filteredUsers[index][tipo]['nombre'],
+                        apellidos: filteredUsers[index][tipo]['apellidos'],
                         esEstudiante: esEstudiante,
-                        user: widget.userName,
+                        userName: widget.userName,
+                        userSurname: widget.userSurname,
                       );
                     }));
                   },
@@ -224,8 +226,10 @@ class _UserListPageState extends State<UserListPage> {
                                     builder: (context) => EditUserPage(
                                           nombre: filteredUsers[index][tipo]
                                               ['nombre'],
+                                          apellidos: filteredUsers[index],
                                           esEstudiante: esEstudiante,
-                                          user: widget.userName,
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
                                         )),
                               );
                             },
@@ -347,8 +351,10 @@ class _UserListPageState extends State<UserListPage> {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
                 nombre: widget.userName,
+                apellidos: widget.userSurname,
                 esEstudiante: false,
-                user: widget.userName,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           }
@@ -451,8 +457,11 @@ class _UserListPageState extends State<UserListPage> {
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
                         nombre: filteredUsers[index]['estudiante']['nombre'],
+                        apellidos: filteredUsers[index]['estudiante']
+                            ['apellidos'],
                         esEstudiante: esEstudiante,
-                        user: widget.userName,
+                        userName: widget.userName,
+                        userSurname: widget.userSurname,
                       );
                     }));
                   },
@@ -516,8 +525,10 @@ class _UserListPageState extends State<UserListPage> {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
                 nombre: widget.userName,
+                apellidos: widget.userSurname,
                 esEstudiante: false,
-                user: widget.userSurname,
+                userName: widget.userSurname,
+                userSurname: widget.userSurname,
               );
             }));
           }

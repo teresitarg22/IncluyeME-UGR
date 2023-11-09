@@ -139,32 +139,37 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     final password = _passwordController.text;
 
     var nombre;
-    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) => nombre = value[0]['personal']?['nombre']);
-
-
-    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
-      if (value == true) {
-        _showSuccessDialog(),
-        Future.delayed(const Duration(seconds: 2), () {
-          Navigator.pop(context);
-          Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return UserListPage(
-            user: nombre,
-          );
-        }));
-      });
-        })
-      } else {
-        setState(() {
-          _passwordErrorMessage = 'Contraseña incorrecta o email no registrado';
-        })
-      }
+    var apellido;
+    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) {
+      nombre = value[0]['personal']?['nombre'];
+      apellido = value[0]['personal']?['apellidos'];
     });
 
-
-
+    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
+          if (value == true)
+            {
+              _showSuccessDialog(),
+              Future.delayed(const Duration(seconds: 2), () {
+                Navigator.pop(context);
+                Future.delayed(const Duration(seconds: 1), () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return UserListPage(
+                      userName: nombre,
+                      userSurname: apellido,
+                    );
+                  }));
+                });
+              })
+            }
+          else
+            {
+              setState(() {
+                _passwordErrorMessage =
+                    'Contraseña incorrecta o email no registrado';
+              })
+            }
+        });
 
     /*
     if (user == null) {

@@ -12,6 +12,16 @@ class Controller {
     return await _logicDatabase.listaPersonal();
   }
 
+  Future<List<Map<String, Map<String, dynamic>>>> getEstudiante(
+      String nombre, String apellidos) async {
+    return await _logicDatabase.comprobarEstudiante(nombre, apellidos);
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> getPersonal(
+      String nombre, String apellidos) async {
+    return await _logicDatabase.comprobarPersonal(nombre, apellidos);
+  }
+
   Future<bool> esAdmin(String nombre, String apellidos) async {
     var value = await _logicDatabase.comprobarPersonal(nombre, apellidos);
 
