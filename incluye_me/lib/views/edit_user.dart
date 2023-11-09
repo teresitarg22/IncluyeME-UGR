@@ -6,6 +6,8 @@ import 'package:incluye_me/model/user.dart';
 import './mostrar_usuario.dart';
 import './user_list.dart';
 import '../controllers/usuario_controller.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class EditUserPage extends StatefulWidget {
   final String nombre;
@@ -34,6 +36,41 @@ class _EditUserPageState extends State<EditUserPage> {
   var resultado;
   Future<User>? userFuture;
   User? user;
+  List<String> availableFonts = GoogleFonts.asMap().keys.toList();
+  List<MultiSelectItem<String>> multiSelectOptions = [
+    MultiSelectItem("Pictograma", "Pictograma"),
+    MultiSelectItem("Audio", "Audio"),
+    MultiSelectItem("Imagen", "Imagen"),
+    MultiSelectItem("Video", "Video"),
+    MultiSelectItem("Dibujo", "Dibujo"),
+    MultiSelectItem("Texto", "Texto"),
+  ];
+  List<String> selectedOptions = [];
+  List<String> selectedImages = []; //CONTRASEÑA
+
+  List<MultiSelectItem<String>> multiSelectImagenes = [
+    MultiSelectItem("../assets/symbol0.png", "Balón"),
+    MultiSelectItem("../assets/symbol8.png", "Martillo"),
+    MultiSelectItem("../assets/symbol5.png", "Raqueta"),
+    MultiSelectItem("../assets/symbol2.png", "Teléfono"),
+    MultiSelectItem("../assets/symbol3.png", "Silla"),
+    MultiSelectItem("../assets/symbol6.png", "Oso"),
+    MultiSelectItem("../assets/symbol7.png", "Hamburguesa"),
+    MultiSelectItem("../assets/symbol4.png", "Reloj"),
+    MultiSelectItem("../assets/symbol1.png", "Casa"),
+  ];
+
+  Map<int, String> mapaImagenes = {
+    0: '../assets/symbol0.png',
+    1: '../assets/symbol1.png',
+    2: '../assets/symbol2.png',
+    3: '../assets/symbol3.png',
+    4: '../assets/symbol4.png',
+    5: '../assets/symbol5.png',
+    6: '../assets/symbol6.png',
+    7: '../assets/symbol7.png',
+    8: '../assets/symbol8.png',
+  };
 
   // ------------------------
 
@@ -62,7 +99,19 @@ class _EditUserPageState extends State<EditUserPage> {
               maymin: detalles['maymin'] ?? '',
               formato: detalles['formato'] ?? '',
               contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
-              sabeLeer: detalles['sabeLeer'] ?? false);
+              sabeLeer: detalles['sabe_leer'] ?? false);
+
+          if (detalles['formato'] != "") {
+            selectedOptions = detalles['formato']
+                .substring(1, detalles['formato'].length - 1)
+                .split(', ');
+          }
+          if (detalles['contrasenia_iconos'] != "") {
+            List<String> keys = detalles['contrasenia_iconos']?.split(',');
+            for (var key in keys) {
+              selectedImages.add(mapaImagenes[int.parse(key)]!);
+            }
+          }
         });
       }
     } else {
@@ -119,8 +168,6 @@ class _EditUserPageState extends State<EditUserPage> {
                       : '',
                   'maymin':
                       (user is Estudiante) ? (user as Estudiante).maymin : '',
-                  'formato':
-                      (user is Estudiante) ? (user as Estudiante).formato : '',
                   'contrasenia_iconos': (user is Estudiante)
                       ? (user as Estudiante).contrasenia_iconos
                       : '',
@@ -167,24 +214,70 @@ class _EditUserPageState extends State<EditUserPage> {
 
                     // Campos adicionales para estudiantes
                     if (user is Estudiante) ...[
-                      FormBuilderTextField(
+                      FormBuilderDropdown(
                         name: 'tipo_letra',
-                        decoration:
-                            const InputDecoration(labelText: 'Tipo de Letra'),
+                        decoration: InputDecoration(labelText: 'Tipo de Letra'),
+                        items: availableFonts
+                            .map((option) => DropdownMenuItem(
+                                value: option, child: Text("$option")))
+                            .toList(),
                       ),
-                      FormBuilderTextField(
+                      FormBuilderDropdown(
                         name: 'maymin',
-                        decoration: const InputDecoration(
-                            labelText: 'Mayúsculas/Minúsculas'),
+                        decoration:
+                            InputDecoration(labelText: 'Mayúsculas/Minúsculas'),
+                        items: ['Mayúscula', 'Minúscula']
+                            .map((option) => DropdownMenuItem(
+                                value: option, child: Text("$option")))
+                            .toList(),
                       ),
-                      FormBuilderTextField(
-                        name: 'formato',
-                        decoration: const InputDecoration(labelText: 'Formato'),
+                      MultiSelectDialogField<String>(
+                        items: multiSelectOptions,
+                        initialValue: selectedOptions,
+                        title: const Text("Selecciona opciones"),
+                        selectedColor: Colors.green,
+                        buttonText: const Text(
+                            'Preferencias para mostrar el contenido'),
+                        onConfirm: (values) {
+                          setState(() {
+                            selectedOptions = values;
+                          });
+                        },
                       ),
-                      FormBuilderTextField(
-                        name: 'contrasenia_iconos',
-                        decoration: const InputDecoration(
-                            labelText: 'Contraseña de Iconos'),
+                      MultiSelectDialogField(
+                        items: multiSelectImagenes,
+                        initialValue: selectedImages,
+                        title: const Text('Selecciona imágenes'),
+                        buttonText: const Text('Imágenes seleccionadas'),
+                        onConfirm: (values) {
+                          if (values.length == 3) {
+                            setState(() {
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[0])
+                                  .key
+                                  .toString());
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[1])
+                                  .key
+                                  .toString());
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[2])
+                                  .key
+                                  .toString());
+                            });
+                          } else {
+                            values.clear();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('TIENES QUE SELECCIONAR 3 ELEMENTOS'),
+                              ),
+                            );
+                          }
+                        },
                       ),
                       FormBuilderCheckbox(
                         name: 'sabeLeer',

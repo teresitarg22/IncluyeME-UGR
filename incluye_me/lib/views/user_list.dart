@@ -243,8 +243,7 @@ class _UserListPageState extends State<UserListPage> {
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
                                 // Hacer la función asíncrona
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
+                              
 
                                   // Mostrar un diálogo de confirmación
                                   bool confirmar = await showDialog(
@@ -289,7 +288,7 @@ class _UserListPageState extends State<UserListPage> {
                                       filteredUsers.removeAt(index);
                                     });
                                   }
-                                }
+                                
                               }),
                         ],
                       ),
