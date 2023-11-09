@@ -4,13 +4,41 @@ import 'package:flutter/material.dart';
 class Controller {
   final LogicDatabase _logicDatabase = LogicDatabase();
 
-   Future<void> loadUsersIds(var estudiantes, var supervisor, var usuarios) async {
-    estudiantes = await _logicDatabase.listaEstudiantes(); 
-    supervisor = await _logicDatabase.listaPersonal() ; 
-    usuarios.addAll(estudiantes);
-    usuarios.addAll(supervisor);
-  
-   }
-} 
+  Future<List<Map<String, Map<String, dynamic>>>> listaEstudiantes() async {
+    return await _logicDatabase.listaEstudiantes();
+  }
 
+  Future<List<Map<String, Map<String, dynamic>>>> listaPersonal() async {
+    return await _logicDatabase.listaPersonal();
+  }
 
+  Future<bool> esAdmin(String nombre, String apellidos) async {
+    var value = await _logicDatabase.comprobarPersonal(nombre, apellidos);
+
+    if (value.isNotEmpty) {
+      var personalData = value[0]['personal'];
+
+      if (personalData != null && personalData['es_admin'] == true) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  Future<bool> esUsuarioEstudiante(String nombre, String apellidos) async {
+    var value = await _logicDatabase.comprobarEstudiante(nombre, apellidos);
+
+    if (value.isNotEmpty) {
+      var estudianteData = value[0]['estudiante'];
+
+      if (estudianteData != null &&
+          estudianteData['nombre'] == nombre &&
+          estudianteData['apellidos'] == apellidos) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}

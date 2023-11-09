@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const StartView(),
         '/registroPage': (context) => const HomeScreen(),
-        '/userList': (context) => UserListPage(user: user)
+        '/userList': (context) =>
+            UserListPage(userName: user, userSurname: user)
       },
     );
   }

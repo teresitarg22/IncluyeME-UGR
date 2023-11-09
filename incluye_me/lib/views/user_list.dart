@@ -2,84 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
-import '../controllers/usuario_controller.dart' ; 
+import '../controllers/usuario_controller.dart';
 
-
-// -------------------------- DATA BASE --------------------------
-
-// Create the connection as a global variable
-final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // database host
-  5432, // database port
-  'srvvjedp', // database name
-  username: 'srvvjedp', // database username
-  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
-);
-
-Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
-  List<Map<String, Map<String, dynamic>>> results = [];
-
-  try {
-    // Check if the connection is closed before attempting to open it
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    results = await connection.mappedResultsQuery(query);
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    // Do not close the connection here
-    print('Query executed');
-  }
-
-  return results;
-}
-
-// -----------------------------------------------------
-
-Future<bool> esAdmin(String user) async {
-  var value = await request("SELECT * FROM personal WHERE nombre = '$user'");
-
-  if (value.isNotEmpty) {
-    var personalData = value[0]['personal'];
-
-    if (personalData != null && personalData['es_admin'] == true) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-Future<bool> esUsuarioEstudiante(String user) async {
-  var value = await request("SELECT * FROM estudiante WHERE nombre = '$user'");
-
-  if (value.isNotEmpty) {
-    var estudianteData = value[0]['estudiante'];
-
-    if (estudianteData != null && estudianteData['nombre'] == user) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-//---------------------------------------------------------------------------------------
+// Clase para la página de lista de usuarios
 class UserListPage extends StatefulWidget {
-  final String user;
+  final String userName;
+  final String userSurname;
 
-  const UserListPage({super.key, required this.user});
+  const UserListPage(
+      {super.key, required this.userName, required this.userSurname});
 
   @override
-  _UserListPageState createState() => _UserListPageState(user: user);
+  _UserListPageState createState() => _UserListPageState();
 }
 
 class _UserListPageState extends State<UserListPage> {
-  late bool isAdmin = false;
-  late String user;
+  bool isAdmin = false;
   final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
   var supervisor = [];
@@ -88,12 +26,9 @@ class _UserListPageState extends State<UserListPage> {
 
   String? selectedFilter = "Estudiantes";
 
-  _UserListPageState({required this.user});
-
   @override
   void initState() {
     super.initState();
-    user = widget.user;
     initializeData();
   }
 
@@ -102,12 +37,23 @@ class _UserListPageState extends State<UserListPage> {
     await initializeAdminStatus();
   }
 
-  Future<void> initializeAdminStatus() async {
-    bool adminStatus = await esAdmin(user);
-    setState(() => isAdmin = adminStatus);
+  Future<void> loadUsersIds() async {
+    var estudiantesData = await controlador.listaEstudiantes();
+    var supervisorData = await controlador.listaPersonal();
+
+    setState(() {
+      estudiantes = estudiantesData;
+      supervisor = supervisorData;
+      usuarios.addAll(estudiantes);
+      usuarios.addAll(supervisor);
+    });
   }
 
-}
+  Future<void> initializeAdminStatus() async {
+    bool adminStatus =
+        await controlador.esAdmin(widget.userName, widget.userSurname);
+    setState(() => isAdmin = adminStatus);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +160,9 @@ class _UserListPageState extends State<UserListPage> {
                 final nombre = filteredUsers[index][tipo]?['nombre'];
 
                 if (nombre != null) {
-                  esUsuarioEstudiante(nombre).then((valorEsEstudiante) {
+                  controlador
+                      .esUsuarioEstudiante(widget.userName, widget.userSurname)
+                      .then((valorEsEstudiante) {
                     esEstudiante = valorEsEstudiante;
                     if (esEstudiante) {
                       tipo = "estudiante";
@@ -231,7 +179,7 @@ class _UserListPageState extends State<UserListPage> {
                       return UserDetailsPage(
                         nombre: filteredUsers[index][tipo]['nombre'],
                         esEstudiante: esEstudiante,
-                        user: widget.user,
+                        user: widget.userName,
                       );
                     }));
                   },
@@ -277,7 +225,7 @@ class _UserListPageState extends State<UserListPage> {
                                           nombre: filteredUsers[index][tipo]
                                               ['nombre'],
                                           esEstudiante: esEstudiante,
-                                          user: widget.user,
+                                          user: widget.userName,
                                         )),
                               );
                             },
@@ -298,7 +246,8 @@ class _UserListPageState extends State<UserListPage> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Confirmar Eliminación'),
+                                        title:
+                                            const Text('Confirmar Eliminación'),
                                         content: const Text(
                                             '¿Seguro que quiere eliminar al usuario?'),
                                         actions: <Widget>[
@@ -384,7 +333,8 @@ class _UserListPageState extends State<UserListPage> {
           if (index == 0) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserListPage(
-                user: widget.user,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           } else if (index == 1) {
@@ -396,9 +346,9 @@ class _UserListPageState extends State<UserListPage> {
           } else if (index == 4) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
-                nombre: widget.user,
+                nombre: widget.userName,
                 esEstudiante: false,
-                user: widget.user,
+                user: widget.userName,
               );
             }));
           }
@@ -502,7 +452,7 @@ class _UserListPageState extends State<UserListPage> {
                       return UserDetailsPage(
                         nombre: filteredUsers[index]['estudiante']['nombre'],
                         esEstudiante: esEstudiante,
-                        user: widget.user,
+                        user: widget.userName,
                       );
                     }));
                   },
@@ -552,7 +502,8 @@ class _UserListPageState extends State<UserListPage> {
           if (index == 0) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserListPage(
-                user: widget.user,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           } else if (index == 1) {
@@ -564,9 +515,9 @@ class _UserListPageState extends State<UserListPage> {
           } else if (index == 4) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
-                nombre: widget.user,
+                nombre: widget.userName,
                 esEstudiante: false,
-                user: widget.user,
+                user: widget.userSurname,
               );
             }));
           }
