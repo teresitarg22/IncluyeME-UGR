@@ -7,9 +7,12 @@ class LoginWithSymbols extends StatefulWidget {
   _LoginWithSymbolsState createState() => _LoginWithSymbolsState();
 }
 
+// ------------------------------------------------------------------------
+
 class _LoginWithSymbolsState extends State<LoginWithSymbols> {
   List<String> selectedSymbols = [];
-  final List<String> symbols = List.generate(9, (index) => 'assets/symbol$index.png');
+  final List<String> symbols =
+      List.generate(9, (index) => 'assets/symbol$index.png');
 
   // Combinación correcta de símbolos
   final List<String> correctCombination = [
@@ -47,7 +50,8 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(10), // Borde redondeado
+                      borderRadius:
+                          BorderRadius.circular(10), // Borde redondeado
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -68,24 +72,28 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
             height: 250,
             child: Column(
               children: [
+                // --------------------------
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(3, (index) {
                     if (index < selectedSymbols.length) {
-                      return Image.asset(selectedSymbols[index], height: 100, width: 100);
+                      return Image.asset(selectedSymbols[index],
+                          height: 100, width: 100);
                     } else {
-                      return const Icon(Icons.clear, size: 50, color: Colors.red);
+                      return const Icon(Icons.clear,
+                          size: 50, color: Colors.red);
                     }
                   }),
                 ),
+                // --------------------------
                 ElevatedButton(
                   onPressed: () {
-                    // Verificar si la combinación es correcta
+                    // Verificar si la combinación es correcta.
                     if (selectedSymbols.length == 3 &&
                         selectedSymbols[0] == correctCombination[0] &&
                         selectedSymbols[1] == correctCombination[1] &&
                         selectedSymbols[2] == correctCombination[2]) {
-                      // Mostrar popup de inicio de sesión correcto
+                      // Mostrar popup de inicio de sesión correcto.
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -96,7 +104,8 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                               onPressed: () {
                                 // Simular redirección
                                 Navigator.pop(context); // Cerrar popup
-                                Navigator.pop(context); // Cerrar pantalla actual
+                                Navigator.pop(
+                                    context); // Cerrar pantalla actual
                               },
                               child: const Text('Aceptar'),
                             ),
@@ -104,7 +113,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                         ),
                       );
                     } else {
-                      // Mostrar popup de inicio de sesión incorrecto
+                      // Mostrar popup de inicio de sesión incorrecto.
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -112,7 +121,8 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                           content: const Text('Por favor, intenta de nuevo.'),
                           actions: [
                             TextButton(
-                              onPressed: () => Navigator.pop(context), // Cerrar popup
+                              onPressed: () =>
+                                  Navigator.pop(context), // Cerrar popup
                               child: const Text('Aceptar'),
                             ),
                           ],
@@ -122,6 +132,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                   },
                   child: const Text('Aceptar'),
                 ),
+                // --------------------------
                 ElevatedButton(
                   onPressed: () {
                     // Acción para borrar toda la selección

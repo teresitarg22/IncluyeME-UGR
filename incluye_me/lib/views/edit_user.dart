@@ -27,16 +27,17 @@ class EditUserPage extends StatefulWidget {
   _EditUserPageState createState() => _EditUserPageState();
 }
 
-
 // -----------------------------------------------------------
 
 class _EditUserPageState extends State<EditUserPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey();
   Controller controlador = Controller();
+
   var resultado;
   Future<User>? userFuture;
   User? user;
   List<String> availableFonts = GoogleFonts.asMap().keys.toList();
+
   List<MultiSelectItem<String>> multiSelectOptions = [
     MultiSelectItem("Pictograma", "Pictograma"),
     MultiSelectItem("Audio", "Audio"),
@@ -45,6 +46,7 @@ class _EditUserPageState extends State<EditUserPage> {
     MultiSelectItem("Dibujo", "Dibujo"),
     MultiSelectItem("Texto", "Texto"),
   ];
+
   List<String> selectedOptions = [];
   List<String> selectedImages = []; //CONTRASEÑA
 
@@ -80,8 +82,12 @@ class _EditUserPageState extends State<EditUserPage> {
     userFuture = buscarDatosUsuario();
   }
 
+  // ------------------------------------------------------------------------------------
+  // Buscamos los datos del usuario en la BD, teniendo en cuenta si es estudiante o no.
   Future<User> buscarDatosUsuario() async {
     if (widget.esEstudiante == true) {
+      // --------------------------
+      // ESTUDIANTE
       resultado =
           await controlador.getEstudiante(widget.nombre, widget.apellidos);
 
@@ -115,9 +121,10 @@ class _EditUserPageState extends State<EditUserPage> {
         });
       }
     } else {
+      // --------------------------
+      // PERSONAL
       resultado =
           await controlador.getPersonal(widget.nombre, widget.apellidos);
-      ;
 
       if (resultado.isNotEmpty) {
         setState(() {
@@ -136,6 +143,7 @@ class _EditUserPageState extends State<EditUserPage> {
     return user!;
   }
 
+  // -------------------------------------------
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -189,6 +197,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                    // --------------------------
                     const Divider(),
                     FormBuilderTextField(
                       name: 'nombre',
@@ -332,9 +341,7 @@ class _EditUserPageState extends State<EditUserPage> {
                                   false;
                             }
 
-                            // Aquí puedes realizar la lógica para guardar los cambios en la base de datos si es necesario
-
-                            // Vuelve a la página de detalles del usuario con los datos actualizados
+                            // Vuelve a la página de detalles del usuario con los datos actualizados.
                             Navigator.of(context).pop(user);
                           }
                         },

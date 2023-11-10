@@ -9,12 +9,15 @@ class TeacherLoginView extends StatefulWidget {
   _TeacherLoginViewState createState() => _TeacherLoginViewState();
 }
 
+// -----------------------------------------------------------------
+
 class _TeacherLoginViewState extends State<TeacherLoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
   String? _passwordErrorMessage;
 
+  // --------------------------
   @override
   void initState() {
     super.initState();
@@ -23,6 +26,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     _passwordController.addListener(_clearPasswordError);
   }
 
+  // --------------------------
   @override
   void dispose() {
     _emailController.removeListener(_clearEmailError);
@@ -34,6 +38,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     super.dispose();
   }
 
+  // --------------------------
   void _clearEmailError() {
     if (_emailController.text.isNotEmpty && _errorMessage != null) {
       setState(() {
@@ -42,6 +47,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     }
   }
 
+  // --------------------------
   void _clearPasswordError() {
     if (_passwordController.text.isNotEmpty && _passwordErrorMessage != null) {
       setState(() {
@@ -50,6 +56,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     }
   }
 
+  // --------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +71,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
             const Text('Inicio de sesión',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
+            // --------------------------
             TextField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
@@ -74,6 +82,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
               ),
             ),
             const SizedBox(height: 16),
+            // --------------------------
             TextField(
               controller: _passwordController,
               obscureText: true,
@@ -84,12 +93,14 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
               ),
             ),
             const SizedBox(height: 24),
+            // --------------------------
             ElevatedButton(
               onPressed: () {
                 _handleLogin();
               },
               child: const Text('Login'),
             ),
+            // --------------------------
             TextButton(
               onPressed: () {
                 // Acción para recuperar contraseña
@@ -102,6 +113,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     );
   }
 
+  // -----------------------------------------------------
   Future<void> _showSuccessDialog() async {
     return showDialog<void>(
       context: context,
@@ -129,6 +141,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     );
   }
 
+  // ----------------------------------------------
   Future<void> _handleLogin() async {
     setState(() {
       _errorMessage = null;
@@ -153,7 +166,8 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
                 Navigator.pop(context);
                 Future.delayed(const Duration(seconds: 1), () {
                   Navigator.pop(context);
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
                     return UserListPage(
                       userName: nombre,
                       userSurname: apellido,

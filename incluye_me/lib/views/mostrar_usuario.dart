@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
 import './user_list.dart';
@@ -25,6 +24,8 @@ class UserDetailsPage extends StatefulWidget {
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
 
+// -----------------------------------------------------------------------
+
 class _UserDetailsPageState extends State<UserDetailsPage> {
   final Controller controlador = Controller();
   var resultado;
@@ -36,8 +37,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     buscarDatosUsuario();
   }
 
+  // -----------------------------------------------------------------------------------------
+  // Buscamos en la BD los detalles del usuario, teniendo en cuenta si es estudiante o no.
   Future<void> buscarDatosUsuario() async {
     if (widget.esEstudiante == true) {
+      // ------------------------
+      // ESTUDIANTE
       resultado =
           await controlador.getEstudiante(widget.nombre, widget.apellidos);
 
@@ -57,6 +62,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             sabeLeer: detalles['sabeLeer'] ?? false);
       });
     } else {
+      // ------------------------
+      // PERSONAL
       resultado =
           await controlador.getPersonal(widget.nombre, widget.apellidos);
 
@@ -108,9 +115,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   height: 100, // ajusta la altura según tus necesidades
                 )
               : const Text('Sin foto'),*/
-                const Divider(height: 1, color: Colors.grey), // Línea divisoria
+                const Divider(height: 1, color: Colors.grey),
                 Container(
-                  //margin: EdgeInsets.only(top: 12, left: 20, right: 10),
                   width: double.infinity,
                   padding: const EdgeInsets.all(10),
                   child: Row(children: [
@@ -126,6 +132,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 10),
+                        // -----------------------------
                         Row(
                           children: [
                             const Text(
@@ -145,6 +152,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         const SizedBox(height: 4),
+                        // -----------------------------
                         Row(
                           children: [
                             const Text(
@@ -164,6 +172,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         const SizedBox(height: 4),
+                        // -----------------------------
                         Row(
                           children: [
                             const Text(
@@ -192,6 +201,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 10),
+                        // -----------------------------
                         Row(
                           children: [
                             const Text(
@@ -211,6 +221,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         const SizedBox(height: 4),
+                        // -----------------------------
                         Row(
                           children: [
                             Text(
@@ -244,6 +255,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 10),
+                        // -----------------------------
                         Row(
                           children: [
                             Text(
@@ -265,6 +277,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         const SizedBox(height: 4),
+                        // -----------------------------
                         Row(
                           children: [
                             Text(
@@ -288,6 +301,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         const SizedBox(height: 4),
+                        // -----------------------------
                         Row(
                           children: [
                             Text(
@@ -309,6 +323,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         const SizedBox(height: 4),
+                        // -----------------------------
                         Row(
                           children: [
                             Text(
@@ -340,7 +355,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81), // Color personalizado
+        backgroundColor: const Color(0xFF29DA81),
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {

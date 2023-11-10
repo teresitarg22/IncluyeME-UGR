@@ -13,10 +13,10 @@ class StudentLoginView extends StatelessWidget {
       body: GridView.builder(
         padding: const EdgeInsets.all(60.0),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // número de columnas
-          mainAxisSpacing: 32.0, // espacio vertical entre cuadros
-          crossAxisSpacing: 32.0, // espacio horizontal entre cuadros
-          childAspectRatio: 1.0, // proporción para determinar el tamaño del cuadro
+          crossAxisCount: 2, // número de columnas.
+          mainAxisSpacing: 32.0, // espacio vertical entre cuadros.
+          crossAxisSpacing: 32.0, // espacio horizontal entre cuadros.
+          childAspectRatio: 1.0, // proporción para determinar el tamaño del cuadro.
         ),
         itemBuilder: (BuildContext context, int index) {
           return ElevatedButton(

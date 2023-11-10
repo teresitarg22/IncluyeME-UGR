@@ -10,6 +10,8 @@ class ProfesorRegistration extends StatefulWidget {
   _ProfesorRegistrationState createState() => _ProfesorRegistrationState();
 }
 
+// --------------------------------------------------------
+
 class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _passwd;
@@ -55,6 +57,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                // --------------------------
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Nombre *'),
                   validator: (value) {
@@ -68,6 +71,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         value; // Asignar el valor introducido a la variable
                   },
                 ),
+                // --------------------------
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Apellido *'),
                   validator: (value) {
@@ -113,8 +117,8 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       Expanded(
                         child: TextFormField(
                           initialValue: entry.value, // Mostrar el aula
-                          decoration:
-                              const InputDecoration(labelText: 'Aulas de Profesor '),
+                          decoration: const InputDecoration(
+                              labelText: 'Aulas de Profesor '),
                           onChanged: (value) {
                             // Guardar el valor introducido en _aulasProfesor
                             setState(() {
@@ -134,6 +138,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     ],
                   );
                 }),
+                // --------------------------
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -158,6 +163,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     ),
                   ),
                 ),
+                // --------------------------
                 TextFormField(
                   decoration:
                       const InputDecoration(labelText: 'Correo electrónico *'),
@@ -172,6 +178,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         value; // Asignar el valor introducido a la variable
                   },
                 ),
+                // --------------------------
                 TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Contraseña *',
@@ -201,9 +208,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     return null;
                   },
                   obscureText:
-                      !_showPassword, // Mostrar u ocultar la contraseña según el estado
+                      !_showPassword, // Mostrar u ocultar la contraseña según el estado.
                 ),
 
+                // --------------------------
                 TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Confirmar contraseña *',
@@ -249,6 +257,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     ),
                   ),
                 ),
+                // --------------------------
                 CheckboxListTile(
                   title: const Text('Administrador'),
                   value:
@@ -256,16 +265,17 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   onChanged: (bool? value) {
                     setState(() {
                       _isAdmin =
-                          value!; // Actualiza el valor de _isAdmin al marcar/desmarcar
+                          value!; // Actualiza el valor de _isAdmin al marcar/desmarcar.
                     });
                   },
                 ),
 
                 Align(
-                  alignment: Alignment.center, // Centra el botón en el medio
+                  alignment: Alignment.center, // Centra el botón en el medio.
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Hacer la función asíncrona
+                      // ----------------------------------------
+                      // Hacer la función asíncrona.
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
 
@@ -293,6 +303,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               );
                             },
                           );
+                          // --------------------------------------------------
                         } else if (comprobacion2.isNotEmpty) {
                           showDialog(
                             context: context,
@@ -312,6 +323,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               );
                             },
                           );
+                          // ----------------------------------------------
                         } else {
                           await _controlador.handleRegisterProfesor(
                               _nombre!,
@@ -322,7 +334,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                               _isAdmin!,
                               _aulasProfesor);
 
-                          // Mostrar un cuadro de diálogo
+                          // Mostrar un cuadro de diálogo:
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -346,8 +358,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(
-                          0xFF29DA81), // Cambia el color del botón a verde
+                      backgroundColor: const Color(0xFF29DA81),
                     ),
                     child: const Text('Registrarse'),
                   ),
@@ -360,6 +371,8 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
     );
   }
 
+  // --------------------------------------------------------
+
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
     final pickedImage =
@@ -368,7 +381,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
       setState(() {
         _image = File(pickedImage.path);
         _imageError =
-            null; // Resetea el mensaje de error cuando se selecciona una imagen
+            null; // Resetea el mensaje de error cuando se selecciona una imagen.
       });
     }
   }

@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
+              // --------------------------
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -31,21 +32,23 @@ class HomeScreen extends StatelessWidget {
                   minimumSize: const Size(
                       double.infinity, 100), // Ajusta la altura como desees
                 ),
+                // --------------------------
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.school), // Icono de estudiante
-                    SizedBox(width: 8), // Espacio entre el icono y el texto
+                    Icon(Icons.school), // Icono de estudiante.
+                    SizedBox(width: 8),
                     Text(
-                      'Alumno',
+                      'Estudiante',
                       style: TextStyle(fontSize: 24),
                     ), // Texto del botón
                   ],
                 ),
               ),
             ),
-            const SizedBox(width: 20), // Espacio entre los botones
+            const SizedBox(width: 20),
             Expanded(
+              // --------------------------
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -60,10 +63,11 @@ class HomeScreen extends StatelessWidget {
                   minimumSize: const Size(
                       double.infinity, 100), // Ajusta la altura como desees
                 ),
+                // --------------------------
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.work), // Icono de estudiante
+                    Icon(Icons.work), // Icono de estudiante.
                     SizedBox(width: 8), // Espacio entre el icono y el texto
                     Text(
                       'Personal',

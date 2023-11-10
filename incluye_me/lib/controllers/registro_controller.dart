@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class RegistroController {
   final LogicDatabase _logicDatabase = LogicDatabase();
 
+  // ----------------------------------------------------
+
   Future<void> handleRegister(
       String nombre,
       String apellidos,
@@ -28,6 +30,8 @@ class RegistroController {
         sabeLeer);
   }
 
+  // ----------------------------------------------------
+
   Future<void> handleRegisterProfesor(
       String nombre,
       String apellidos,
@@ -51,21 +55,25 @@ class RegistroController {
     }
   }
 
+  // ----------------------------------------------------
   Future<List<Map<String, Map<String, dynamic>>>> comprobarEstudianteController(
       String nombre, String apellidos) async {
     return await _logicDatabase.comprobarEstudiante(nombre, apellidos);
   }
 
+  // ----------------------------------------------------
   Future<List<Map<String, Map<String, dynamic>>>> comprobarPersonalController(
       String nombre, String apellidos) async {
     return await _logicDatabase.comprobarPersonal(nombre, apellidos);
   }
 
+  // ----------------------------------------------------
   Future<List<Map<String, Map<String, dynamic>>>>
       comprobarPersonalCorreoController(String correo) async {
     return await _logicDatabase.comprobarPersonalCorreo(correo);
   }
 
+  // ----------------------------------------------------
   void llevarMostrarUsuarios(BuildContext context) {
     Navigator.of(context).pop();
     Navigator.pushNamed(context, '/userList');

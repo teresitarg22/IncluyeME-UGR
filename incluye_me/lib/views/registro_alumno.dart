@@ -17,7 +17,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _selectedFont;
   String? _selectedTamanio;
-  String? _selectedImage;
   var imageBytes;
   List<int>? imagenPrueba;
   File? mostrarImagen;
@@ -167,7 +166,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             child: Text(font),
                           ))
                       .toList(),
-                  decoration: const InputDecoration(labelText: 'Tipo de Letra *'),
+                  decoration:
+                      const InputDecoration(labelText: 'Tipo de Letra *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El tipo de letra es obligatorio';
@@ -192,8 +192,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             child: Text(tamanio),
                           ))
                       .toList(),
-                  decoration:
-                      const InputDecoration(labelText: 'Mayúsculas / Minúsculas *'),
+                  decoration: const InputDecoration(
+                      labelText: 'Mayúsculas / Minúsculas *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'La selección es obligatorio';
@@ -210,7 +210,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   initialValue: selectedOptions,
                   title: const Text("Selecciona opciones"),
                   selectedColor: Colors.green,
-                  buttonText: const Text('Preferencias para mostrar el contenido'),
+                  buttonText:
+                      const Text('Preferencias para mostrar el contenido'),
                   onConfirm: (values) {
                     setState(() {
                       selectedOptions = values;
@@ -316,7 +317,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
 
                               _confirmPasswd = value;
 
-                              if (_passwd != null && _confirmPasswd != _passwd) {
+                              if (_passwd != null &&
+                                  _confirmPasswd != _passwd) {
                                 return 'Las contraseñas deben ser iguales';
                               }
 
@@ -446,6 +448,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     );
   }
 
+  // ---------------------------------------------------
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
     final pickedImage =

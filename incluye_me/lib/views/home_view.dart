@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => const AlumnoRegistration()));
               },
-              child: const Text('Alumno'),
+              child: const Text('Estudiante'),
             ),
             const SizedBox(width: 20),
             ElevatedButton(
