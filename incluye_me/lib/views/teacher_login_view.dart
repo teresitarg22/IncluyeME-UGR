@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/model/pruebas_database.dart';
 import 'package:incluye_me/views/user_list.dart';
-import '../model/database.dart';
 
 class TeacherLoginView extends StatefulWidget {
+  const TeacherLoginView({super.key});
+
   @override
   _TeacherLoginViewState createState() => _TeacherLoginViewState();
 }
@@ -53,47 +54,47 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login Profesores'),
+        title: const Text('Login Profesores'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Inicio de sesión',
+            const Text('Inicio de sesión',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 errorText: _errorMessage,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Contraseña',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 errorText: _passwordErrorMessage,
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
                 _handleLogin();
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
             TextButton(
               onPressed: () {
                 // Acción para recuperar contraseña
               },
-              child: Text('¿Olvidaste tu contraseña?'),
+              child: const Text('¿Olvidaste tu contraseña?'),
             ),
           ],
         ),
@@ -107,12 +108,12 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
       barrierDismissible:
           false, // El usuario debe tocar el botón para cerrar el diálogo.
       builder: (BuildContext context) {
-        return AlertDialog(
+        return const AlertDialog(
           title: Row(
             children: [
               Icon(Icons.check_circle, color: Colors.green),
               SizedBox(width: 10),
-              Text('Inicio de sesión exitoso'),
+              Text('Inicio de sesión'),
             ],
           ),
           content: Column(
@@ -138,55 +139,36 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     final password = _passwordController.text;
 
     var nombre;
-    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) => nombre = value[0]['personal']?['nombre']);
-
-
-    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
-      if (value == true) {
-        _showSuccessDialog(),
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.pop(context);
-          Future.delayed(Duration(seconds: 1), () {
-        Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return UserListPage(
-            user: nombre,
-          );
-        }));
-      });
-        })
-      } else {
-        setState(() {
-          _passwordErrorMessage = 'Contraseña incorrecta o email no registrado';
-        })
-      }
+    var apellido;
+    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) {
+      nombre = value[0]['personal']?['nombre'];
+      apellido = value[0]['personal']?['apellidos'];
     });
 
-
-
-
-    /*
-    if (user == null) {
-      setState(() {
-        _errorMessage = 'Email no registrado.';
-      });
-    } else if (password_test != password) {
-      setState(() {
-        _passwordErrorMessage = 'Contraseña incorrecta.';
-      });
-    } else {
-      _showSuccessDialog();
-
-      Future.delayed(Duration(seconds: 1), () {
-        Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return UserListPage(
-            user: "Carla",
-          );
-        }));
-      });
-    }
-
-    */
+    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
+          if (value == true)
+            {
+              _showSuccessDialog(),
+              Future.delayed(const Duration(seconds: 2), () {
+                Navigator.pop(context);
+                Future.delayed(const Duration(seconds: 1), () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                    return UserListPage(
+                      userName: nombre,
+                      userSurname: apellido,
+                    );
+                  }));
+                });
+              })
+            }
+          else
+            {
+              setState(() {
+                _passwordErrorMessage =
+                    'Contraseña incorrecta o email no registrado';
+              })
+            }
+        });
   }
 }

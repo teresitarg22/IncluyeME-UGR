@@ -4,6 +4,8 @@ import 'dart:io';
 import '../controllers/registro_controller.dart';
 
 class ProfesorRegistration extends StatefulWidget {
+  const ProfesorRegistration({super.key});
+
   @override
   _ProfesorRegistrationState createState() => _ProfesorRegistrationState();
 }
@@ -23,9 +25,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   String? _apellidos;
   String? _correoElectronico;
 
-  List<String> _aulasProfesor = [];
+  final List<String> _aulasProfesor = [];
 
-  RegistroController _controlador = RegistroController();
+  final RegistroController _controlador = RegistroController();
 
   @override
   void initState() {
@@ -36,8 +38,8 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Registro de Personal'),
-          backgroundColor: Color.fromARGB(255, 41, 218, 129)),
+          title: const Text('Registro de Personal'),
+          backgroundColor: const Color.fromARGB(255, 41, 218, 129)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -46,7 +48,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'Datos Personales', // Título "Datos Personales"
                   style: TextStyle(
                     fontSize: 22,
@@ -54,7 +56,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   ),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Nombre *'),
+                  decoration: const InputDecoration(labelText: 'Nombre *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El nombre es obligatorio';
@@ -67,7 +69,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Apellido *'),
+                  decoration: const InputDecoration(labelText: 'Apellido *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El apellido es obligatorio';
@@ -82,12 +84,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
 
                 Row(
                   children: [
-                    Text(
+                    const Text(
                       'Foto *',
                       style: TextStyle(
                           fontSize: 16.0), // Aumenta el tamaño del texto
                     ),
-                    SizedBox(
+                    const SizedBox(
                         width:
                             15.0), // Agrega espacio horizontal entre el texto y el botón
                     ElevatedButton(
@@ -95,9 +97,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         _pickImage(); // Llama a la función para seleccionar una imagen
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF29DA81),
+                        backgroundColor: const Color(0xFF29DA81),
                       ),
-                      child: Text('Elige una foto'),
+                      child: const Text('Elige una foto'),
                     ),
                   ],
                 ),
@@ -112,7 +114,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         child: TextFormField(
                           initialValue: entry.value, // Mostrar el aula
                           decoration:
-                              InputDecoration(labelText: 'Aulas de Profesor '),
+                              const InputDecoration(labelText: 'Aulas de Profesor '),
                           onChanged: (value) {
                             // Guardar el valor introducido en _aulasProfesor
                             setState(() {
@@ -122,7 +124,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () {
                           setState(() {
                             _aulasProfesor.removeAt(index); // Eliminar el aula
@@ -131,7 +133,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       ),
                     ],
                   );
-                }).toList(),
+                }),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -139,12 +141,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
+                    backgroundColor: const Color(0xFF29DA81),
                   ),
-                  child: Text('Añadir Aulas del Profesor'),
+                  child: const Text('Añadir Aulas del Profesor'),
                 ),
 
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
@@ -158,7 +160,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                 ),
                 TextFormField(
                   decoration:
-                      InputDecoration(labelText: 'Correo electrónico *'),
+                      const InputDecoration(labelText: 'Correo electrónico *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El correo electrónico es obligatorio';
@@ -192,8 +194,9 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
 
                     _passwd = value;
 
-                    if (_confirmPasswd != null && _confirmPasswd != _passwd)
+                    if (_confirmPasswd != null && _confirmPasswd != _passwd) {
                       return 'Las contraseñas deben ser iguales';
+                    }
 
                     return null;
                   },
@@ -225,15 +228,16 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
 
                     _confirmPasswd = value;
 
-                    if (_passwd != null && _confirmPasswd != _passwd)
+                    if (_passwd != null && _confirmPasswd != _passwd) {
                       return 'Las contraseñas deben ser iguales';
+                    }
 
                     return null;
                   },
                   obscureText: !_showConfirmPassword,
                 ),
 
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(
                       top:
                           16.0), // Ajusta la cantidad de espacio superior según tus necesidades
@@ -246,7 +250,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                   ),
                 ),
                 CheckboxListTile(
-                  title: Text('Administrador'),
+                  title: const Text('Administrador'),
                   value:
                       _isAdmin, // Valor de la casilla de verificación (true o false)
                   onChanged: (bool? value) {
@@ -275,12 +279,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
-                                content: Text(
+                                title: const Text('Error'),
+                                content: const Text(
                                     'Ya existe una cuenta asociada a ese nombre .'),
                                 actions: [
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -294,12 +298,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
-                                content: Text(
+                                title: const Text('Error'),
+                                content: const Text(
                                     'Ya existe una cuenta asociada a ese correo electronico.'),
                                 actions: [
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -323,12 +327,12 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Registro exitoso'),
-                                content: Text(
+                                title: const Text('Registro exitoso'),
+                                content: const Text(
                                     'El registro se ha completado con éxito.'),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text('Aceptar'),
+                                    child: const Text('Aceptar'),
                                     onPressed: () {
                                       _controlador
                                           .llevarMostrarUsuarios(context);
@@ -342,10 +346,10 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(
+                      backgroundColor: const Color(
                           0xFF29DA81), // Cambia el color del botón a verde
                     ),
-                    child: Text('Registrarse'),
+                    child: const Text('Registrarse'),
                   ),
                 )
               ],

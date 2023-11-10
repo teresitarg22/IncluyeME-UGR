@@ -54,9 +54,9 @@ class LogicDatabase {
 //Registrar profesor en la base de datos
 
   Future<void> registrarProfesor(String nombre, String apellidos, String correo,
-      var contrasena, var foto, bool es_admin) async {
+      var contrasena, var foto, bool esAdmin) async {
     await request(
-        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', '$foto', '$es_admin')");
+        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', '$foto', '$esAdmin')");
   }
 
 // Comprobar si estudiante ya existe por nombre y apellidos
@@ -105,5 +105,24 @@ class LogicDatabase {
 
   Future<List<Map<String, Map<String, dynamic>>>> Login(String email, String password) async {
     return await request("SELECT * FROM personal WHERE correo = '$email' AND contrasenia = '$password'");
+  }
+
+  //Funcion para sacar lista de estudiantes
+
+  Future<List<Map<String, Map<String, dynamic>>>> listaEstudiantes() async {
+    return await request("SELECT * FROM estudiante");
+  }
+
+  // Funcion para sacar lista de personal
+
+  Future<List<Map<String, Map<String, dynamic>>>> listaPersonal() async {
+    return await request("SELECT * FROM personal");
+  }
+
+  // Funcion para elimiar estudiante
+
+  Future<void> eliminarEstudiante(String nombre, String apellidos) async {
+    await request(
+        "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 }

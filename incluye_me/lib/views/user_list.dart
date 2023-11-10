@@ -1,97 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:postgres/postgres.dart';
-import 'registro.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
+import '../controllers/usuario_controller.dart';
+import '../controllers/session_controller.dart';
 
-// -------------------------- DATA BASE --------------------------
-
-// Create the connection as a global variable
-final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // database host
-  5432, // database port
-  'srvvjedp', // database name
-  username: 'srvvjedp', // database username
-  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
-);
-
-Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
-  List<Map<String, Map<String, dynamic>>> results = [];
-
-  try {
-    // Check if the connection is closed before attempting to open it
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    results = await connection.mappedResultsQuery(query);
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    // Do not close the connection here
-    print('Query executed');
-  }
-
-  return results;
-}
-
-// -----------------------------------------------------
-
-Future<bool> esAdmin(String user) async {
-  var value = await request("SELECT * FROM personal WHERE nombre = '$user'");
-
-  if (value.isNotEmpty) {
-    var personalData = value[0]['personal'];
-
-    if (personalData != null && personalData['es_admin'] == true) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-Future<bool> esUsuarioEstudiante(String user) async {
-  var value = await request("SELECT * FROM estudiante WHERE nombre = '$user'");
-
-  if (value.isNotEmpty) {
-    var estudianteData = value[0]['estudiante'];
-
-    if (estudianteData != null && estudianteData['nombre'] == user) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-//---------------------------------------------------------------------------------------
+// Clase para la página de lista de usuarios
 class UserListPage extends StatefulWidget {
-  final String user;
+  final String userName;
+  final String userSurname;
 
-  UserListPage({required this.user});
+  const UserListPage(
+      {super.key, required this.userName, required this.userSurname});
 
   @override
-  _UserListPageState createState() => _UserListPageState(user: user);
+  _UserListPageState createState() => _UserListPageState();
 }
 
 class _UserListPageState extends State<UserListPage> {
-  late bool isAdmin = false;
-  late String user;
+  bool isAdmin = false;
   final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
-  var supervisor = [];
+  var personal = [];
   var usuarios = [];
+  Controller controlador = Controller();
+
+  SessionController sessionController = SessionController();
 
   String? selectedFilter = "Estudiantes";
 
-  _UserListPageState({required this.user});
+  void userLogout() async {
+    await sessionController.logout();
+    Navigator.of(context).pushReplacementNamed('/');
+  }
 
   @override
   void initState() {
     super.initState();
-    user = widget.user;
     initializeData();
   }
 
@@ -100,17 +45,20 @@ class _UserListPageState extends State<UserListPage> {
     await initializeAdminStatus();
   }
 
-  Future<void> initializeAdminStatus() async {
-    bool adminStatus = await esAdmin(user);
-    setState(() => isAdmin = adminStatus);
+  Future<void> loadUsersIds() async {
+    estudiantes = await controlador.listaEstudiantes();
+    personal = await controlador.listaPersonal();
+
+    setState(() {
+      usuarios.addAll(estudiantes);
+      usuarios.addAll(personal);
+    });
   }
 
-  Future<void> loadUsersIds() async {
-    estudiantes = await request('SELECT * FROM estudiante');
-    supervisor = await request('SELECT * FROM personal');
-    usuarios.addAll(estudiantes);
-    usuarios.addAll(supervisor);
-    setState(() {});
+  Future<void> initializeAdminStatus() async {
+    bool adminStatus =
+        await controlador.esAdmin(widget.userName, widget.userSurname);
+    setState(() => isAdmin = adminStatus);
   }
 
   @override
@@ -125,7 +73,7 @@ class _UserListPageState extends State<UserListPage> {
     String tipo = "estudiante";
 
     if (selectedFilter == "Personal") {
-      filteredUsers = supervisor;
+      filteredUsers = personal;
       esEstudiante = false;
       tipo = "personal";
     } else if (selectedFilter == "Estudiantes") {
@@ -136,8 +84,8 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Usuarios'),
-        backgroundColor: Color(0xFF29DA81),
+        title: const Text('Lista de Usuarios'),
+        backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
             onPressed: () {
@@ -149,7 +97,7 @@ class _UserListPageState extends State<UserListPage> {
                       ''; // Variable para almacenar la consulta de búsqueda
 
                   return AlertDialog(
-                    title: Text('Buscar por Nombre'),
+                    title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
                         query =
@@ -183,14 +131,14 @@ class _UserListPageState extends State<UserListPage> {
                                 .cast<Map<String, Map<String, dynamic>>>());
                           });
                         },
-                        child: Text('Buscar'),
+                        child: const Text('Buscar'),
                       ),
                     ],
                   );
                 },
               );
             },
-            icon: Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search), // Icono de lupa
           ),
           DropdownButton<String?>(
             value: selectedFilter,
@@ -218,7 +166,11 @@ class _UserListPageState extends State<UserListPage> {
                 final nombre = filteredUsers[index][tipo]?['nombre'];
 
                 if (nombre != null) {
-                  esUsuarioEstudiante(nombre).then((valorEsEstudiante) {
+                  controlador
+                      .esUsuarioEstudiante(
+                          filteredUsers[index][tipo]?['nombre'],
+                          filteredUsers[index][tipo]?['apellidos'])
+                      .then((valorEsEstudiante) {
                     esEstudiante = valorEsEstudiante;
                     if (esEstudiante) {
                       tipo = "estudiante";
@@ -234,20 +186,22 @@ class _UserListPageState extends State<UserListPage> {
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
                         nombre: filteredUsers[index][tipo]['nombre'],
+                        apellidos: filteredUsers[index][tipo]['apellidos'],
                         esEstudiante: esEstudiante,
-                        user: widget.user,
+                        userName: widget.userName,
+                        userSurname: widget.userSurname,
                       );
                     }));
                   },
                   child: Card(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                     child: ListTile(
                       title: GestureDetector(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
                               "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
                               style: const TextStyle(
@@ -256,13 +210,13 @@ class _UserListPageState extends State<UserListPage> {
                                 fontWeight: FontWeight.bold, // Texto en negrita
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                           ],
                         ),
                       ),
                       subtitle:
                           Text(filteredUsers[index][tipo]?['correo'] ?? ''),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.person,
                         size: 45,
                       ),
@@ -271,7 +225,7 @@ class _UserListPageState extends State<UserListPage> {
                         children: [
                           // ------------------------------------
                           IconButton(
-                            icon: Icon(Icons.edit,
+                            icon: const Icon(Icons.edit,
                                 color: Color.fromARGB(255, 76, 76, 76)),
                             onPressed: () {
                               // Nos dirigimos a la interfaz de edición de usuario:
@@ -280,41 +234,44 @@ class _UserListPageState extends State<UserListPage> {
                                     builder: (context) => EditUserPage(
                                           nombre: filteredUsers[index][tipo]
                                               ['nombre'],
+                                          apellidos: filteredUsers[index][tipo]
+                                              ['apellidos'],
                                           esEstudiante: esEstudiante,
-                                          user: widget.user,
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
                                         )),
                               );
                             },
                           ),
                           // -----------------
-                          SizedBox(width: 30.0),
+                          const SizedBox(width: 30.0),
                           // -----------------
                           IconButton(
-                              icon: Icon(Icons.delete,
+                              icon: const Icon(Icons.delete,
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
                                 // Hacer la función asíncrona
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
+                              
 
                                   // Mostrar un diálogo de confirmación
                                   bool confirmar = await showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Confirmar Eliminación'),
-                                        content: Text(
+                                        title:
+                                            const Text('Confirmar Eliminación'),
+                                        content: const Text(
                                             '¿Seguro que quiere eliminar al usuario?'),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: Text('Sí'),
+                                            child: const Text('Sí'),
                                             onPressed: () {
                                               Navigator.of(context).pop(
                                                   true); // Confirma la eliminación
                                             },
                                           ),
                                           TextButton(
-                                            child: Text('No'),
+                                            child: const Text('No'),
                                             onPressed: () {
                                               Navigator.of(context).pop(
                                                   false); // Cancela la eliminación
@@ -327,10 +284,10 @@ class _UserListPageState extends State<UserListPage> {
 
                                   if (confirmar) {
                                     // Realizar la actualización en la base de datos
-                                    String updateQuery =
-                                        "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][tipo]['nombre']}' and apellidos = '${filteredUsers[index][tipo]['apellidos']}'";
-                                    // Luego, ejecuta la consulta en tu base de datos PostgreSQL
-                                    request(updateQuery);
+                                    controlador.eliminarEstudiante(
+                                        filteredUsers[index][tipo]['nombre'],
+                                        filteredUsers[index][tipo]
+                                            ['apellidos']);
 
                                     //Actualizar la vista
                                     setState(() {
@@ -339,7 +296,7 @@ class _UserListPageState extends State<UserListPage> {
                                       filteredUsers.removeAt(index);
                                     });
                                   }
-                                }
+                                
                               }),
                         ],
                       ),
@@ -352,7 +309,7 @@ class _UserListPageState extends State<UserListPage> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 16.0, bottom: 30.0),
+            margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
             child: ElevatedButton(
               // --------------------------
               onPressed: () {
@@ -360,14 +317,14 @@ class _UserListPageState extends State<UserListPage> {
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF29DA81),
+                backgroundColor: const Color(0xFF29DA81),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
               ),
               // --------------------------
-              child: Row(
+              child: const Row(
                 // Usamos un Row para colocar el icono y el texto horizontalmente.
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -382,13 +339,14 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81),
+        backgroundColor: const Color(0xFF29DA81),
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserListPage(
-                user: widget.user,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           } else if (index == 1) {
@@ -400,9 +358,11 @@ class _UserListPageState extends State<UserListPage> {
           } else if (index == 4) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
-                nombre: widget.user,
+                nombre: widget.userName,
+                apellidos: widget.userSurname,
                 esEstudiante: false,
-                user: widget.user,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           }
@@ -441,8 +401,8 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Alumnos'),
-        backgroundColor: Color(0xFF29DA81),
+        title: const Text('Lista de Alumnos'),
+        backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
             onPressed: () {
@@ -454,7 +414,7 @@ class _UserListPageState extends State<UserListPage> {
                       ''; // Variable para almacenar la consulta de búsqueda
 
                   return AlertDialog(
-                    title: Text('Buscar por Nombre'),
+                    title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
                         query =
@@ -482,14 +442,14 @@ class _UserListPageState extends State<UserListPage> {
                                 .cast<Map<String, Map<String, dynamic>>>());
                           });
                         },
-                        child: Text('Buscar'),
+                        child: const Text('Buscar'),
                       ),
                     ],
                   );
                 },
               );
             },
-            icon: Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search), // Icono de lupa
           ),
         ],
       ),
@@ -505,39 +465,42 @@ class _UserListPageState extends State<UserListPage> {
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
                         nombre: filteredUsers[index]['estudiante']['nombre'],
+                        apellidos: filteredUsers[index]['estudiante']
+                            ['apellidos'],
                         esEstudiante: esEstudiante,
-                        user: widget.user,
+                        userName: widget.userName,
+                        userSurname: widget.userSurname,
                       );
                     }));
                   },
                   child: Card(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                     child: ListTile(
                       title: GestureDetector(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
                               "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande
                                 fontWeight: FontWeight.bold, // Texto en negrita
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                           ],
                         ),
                       ),
                       subtitle:
                           Text(filteredUsers[index]['estudiante']['correo']),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.person,
                         size: 45,
                       ),
-                      trailing: Row(
+                      trailing: const Row(
                         mainAxisSize: MainAxisSize.min,
                       ),
                     ),
@@ -550,13 +513,14 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81),
+        backgroundColor: const Color(0xFF29DA81),
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserListPage(
-                user: widget.user,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           } else if (index == 1) {
@@ -568,11 +532,16 @@ class _UserListPageState extends State<UserListPage> {
           } else if (index == 4) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
-                nombre: widget.user,
+                nombre: widget.userName,
+                apellidos: widget.userSurname,
                 esEstudiante: false,
-                user: widget.user,
+                userName: widget.userSurname,
+                userSurname: widget.userSurname,
               );
             }));
+          }
+          else if (index == 5) {
+            userLogout();
           }
         },
         items: const <BottomNavigationBarItem>[
@@ -596,6 +565,10 @@ class _UserListPageState extends State<UserListPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.white),
             label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout, color: Colors.white),
+            label: 'Cerrar Sesión',
           ),
         ],
       ),

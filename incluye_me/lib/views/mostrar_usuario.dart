@@ -3,57 +3,31 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:postgres/postgres.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
-import '../model/logic_database.dart';
 import './user_list.dart';
-
-// -------------------------- DATA BASE --------------------------
-
-// Create the connection as a global variable
-final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // database host
-  5432, // database port
-  'srvvjedp', // database name
-  username: 'srvvjedp', // database username
-  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
-);
-
-Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
-  List<Map<String, Map<String, dynamic>>> results = [];
-
-  try {
-    // Check if the connection is closed before attempting to open it
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    results = await connection.mappedResultsQuery(query);
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    // Do not close the connection here
-    print('Query executed');
-  }
-
-  return results;
-}
-
-// -----------------------------------------------------
+import '../controllers/usuario_controller.dart';
 
 class UserDetailsPage extends StatefulWidget {
   final String nombre;
+  final String apellidos;
   final bool esEstudiante;
-  final String user;
+  final String userName;
+  final String userSurname;
 
-  UserDetailsPage(
-      {required this.nombre, required this.esEstudiante, required this.user});
+  const UserDetailsPage(
+      {super.key,
+      required this.nombre,
+      required this.apellidos,
+      required this.esEstudiante,
+      required this.userName,
+      required this.userSurname});
   @override
   _UserDetailsPageState createState() => _UserDetailsPageState();
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey();
-  var resultado = [];
+  final Controller controlador = Controller();
+  var resultado;
   User? user;
 
   @override
@@ -64,42 +38,38 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
 
   Future<void> buscarDatosUsuario() async {
     if (widget.esEstudiante == true) {
-      resultado = await request(
-          'SELECT * FROM estudiante WHERE nombre = \'${widget.nombre}\'');
+      resultado =
+          await controlador.getEstudiante(widget.nombre, widget.apellidos);
 
-      if (resultado.isNotEmpty) {
-        setState(() {
-          final detalles = resultado[0]['estudiante'];
+      setState(() {
+        var detalles = resultado[0]['estudiante'];
 
-          user = Estudiante(
-              nombre: detalles['nombre'],
-              apellidos: detalles['apellidos'],
-              correo: detalles['correo'],
-              foto: "",
-              contrasenia: detalles['contrasenia'],
-              tipo_letra: detalles['tipo_letra'] ?? '',
-              maymin: detalles['maymin'] ?? '',
-              formato: detalles['formato'] ?? '',
-              contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
-              sabeLeer: detalles['sabeLeer'] ?? false);
-        });
-      }
+        user = Estudiante(
+            nombre: detalles['nombre'],
+            apellidos: detalles['apellidos'],
+            correo: detalles['correo'],
+            foto: "",
+            contrasenia: detalles['contrasenia'],
+            tipo_letra: detalles['tipo_letra'] ?? '',
+            maymin: detalles['maymin'] ?? '',
+            formato: detalles['formato'] ?? '',
+            contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
+            sabeLeer: detalles['sabeLeer'] ?? false);
+      });
     } else {
-      resultado = await request(
-          'SELECT * FROM personal WHERE nombre = \'${widget.nombre}\'');
+      resultado =
+          await controlador.getPersonal(widget.nombre, widget.apellidos);
 
-      if (resultado.isNotEmpty) {
-        setState(() {
-          final detalles = resultado[0]['personal'];
+      setState(() {
+        var detalles = resultado[0]['personal'];
 
-          user = User(
-              nombre: detalles['nombre'],
-              apellidos: detalles['apellidos'],
-              correo: detalles['correo'],
-              foto: "",
-              contrasenia: detalles['contrasenia']);
-        });
-      }
+        user = User(
+            nombre: detalles['nombre'],
+            apellidos: detalles['apellidos'],
+            correo: detalles['correo'],
+            foto: "",
+            contrasenia: detalles['contrasenia']);
+      });
     }
   }
 
@@ -108,7 +78,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles del Usuario'),
-        backgroundColor: Color(0xFF29DA81),
+        backgroundColor: const Color(0xFF29DA81),
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -142,7 +112,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                 Container(
                   //margin: EdgeInsets.only(top: 12, left: 20, right: 10),
                   width: double.infinity,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Row(children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +135,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Text(
                               '${user?.nombre}',
                               style: const TextStyle(
@@ -193,7 +163,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
                             const Text(
@@ -255,7 +225,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.contrasenia_iconos ?? ''}'
+                                  ? (user as Estudiante?)?.contrasenia_iconos ??
+                                      ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -285,7 +256,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.tipo_letra ?? ''}'
+                                  ? (user as Estudiante?)?.tipo_letra ?? ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -308,7 +279,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.maymin ?? ''}'
+                                  ? (user as Estudiante?)?.maymin ?? ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -329,7 +300,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const SizedBox(width: 4),
                             Text(
                               widget.esEstudiante
-                                  ? '${(user as Estudiante?)?.formato ?? ''}'
+                                  ? (user as Estudiante?)?.formato ?? ''
                                   : '',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -369,13 +340,14 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81), // Color personalizado
+        backgroundColor: const Color(0xFF29DA81), // Color personalizado
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserListPage(
-                user: widget.user,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           } else if (index == 1) {
@@ -387,9 +359,11 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           } else if (index == 4) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
-                nombre: widget.user,
+                nombre: widget.userName,
+                apellidos: widget.userSurname,
                 esEstudiante: false,
-                user: widget.user,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
               );
             }));
           }
