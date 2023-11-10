@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:postgres/postgres.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
 import '../controllers/usuario_controller.dart';
 import '../controllers/session_controller.dart';
 
+// --------------------------------------------
 // Clase para la página de lista de usuarios
 class UserListPage extends StatefulWidget {
   final String userName;
@@ -17,9 +17,10 @@ class UserListPage extends StatefulWidget {
   _UserListPageState createState() => _UserListPageState();
 }
 
+// ------------------------------------------------------------------
+
 class _UserListPageState extends State<UserListPage> {
   bool isAdmin = false;
-  final _formKey = GlobalKey<FormState>();
   var estudiantes = [];
   var personal = [];
   var usuarios = [];
@@ -29,22 +30,26 @@ class _UserListPageState extends State<UserListPage> {
 
   String? selectedFilter = "Estudiantes";
 
+  // -----------------------------
   void userLogout() async {
     await sessionController.logout();
     Navigator.of(context).pushReplacementNamed('/');
   }
 
+  // -----------------------------
   @override
   void initState() {
     super.initState();
     initializeData();
   }
 
+  // -----------------------------
   Future<void> initializeData() async {
     await loadUsersIds();
     await initializeAdminStatus();
   }
 
+  // -----------------------------
   Future<void> loadUsersIds() async {
     estudiantes = await controlador.listaEstudiantes();
     personal = await controlador.listaPersonal();
@@ -55,18 +60,21 @@ class _UserListPageState extends State<UserListPage> {
     });
   }
 
+  // -----------------------------
   Future<void> initializeAdminStatus() async {
     bool adminStatus =
         await controlador.esAdmin(widget.userName, widget.userSurname);
     setState(() => isAdmin = adminStatus);
   }
 
+  // -----------------------------
   @override
   Widget build(BuildContext context) {
     return isAdmin ? buildAdminUI() : buildNonAdminUI();
   }
 
-  // Lógica para construir la interfaz de administrador
+  // ---------------------------------------------------------
+  // Lógica para construir la interfaz de administrador.
   Widget buildAdminUI() {
     var filteredUsers = [];
     bool esEstudiante = true;
@@ -89,19 +97,19 @@ class _UserListPageState extends State<UserListPage> {
         actions: [
           IconButton(
             onPressed: () {
-              // Abre un cuadro de diálogo para la búsqueda
+              // Abre un cuadro de diálogo para la búsqueda.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   String query =
-                      ''; // Variable para almacenar la consulta de búsqueda
+                      ''; // Variable para almacenar la consulta de búsqueda.
 
                   return AlertDialog(
                     title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
                         query =
-                            text; // Almacena la consulta a medida que se escribe
+                            text; // Almacena la consulta a medida que se escribe.
                       },
                     ),
                     actions: [
@@ -109,7 +117,7 @@ class _UserListPageState extends State<UserListPage> {
                         onPressed: () {
                           // Cierra el cuadro de diálogo y realiza la búsqueda
                           Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query"
+                          // Lógica de búsqueda con "query".
                           var searchResults = usuarios.where((user) {
                             final estudianteNombre =
                                 user['estudiante']?['nombre']?.toLowerCase() ??
@@ -123,9 +131,9 @@ class _UserListPageState extends State<UserListPage> {
                                 personalNombre.contains(query.toLowerCase());
                           }).toList();
 
-                          // Filtra la lista de usuarios según "query"
+                          // Filtra la lista de usuarios según "query".
                           setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
+                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
                             filteredUsers.clear();
                             filteredUsers.addAll(searchResults
                                 .cast<Map<String, Map<String, dynamic>>>());
@@ -138,7 +146,7 @@ class _UserListPageState extends State<UserListPage> {
                 },
               );
             },
-            icon: const Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search), // Icono de lupa.
           ),
           DropdownButton<String?>(
             value: selectedFilter,
@@ -206,8 +214,9 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18, // Tamaño de fuente más grande
-                                fontWeight: FontWeight.bold, // Texto en negrita
+                                fontSize: 18, // Tamaño de fuente más grande.
+                                fontWeight:
+                                    FontWeight.bold, // Texto en negrita.
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -250,64 +259,59 @@ class _UserListPageState extends State<UserListPage> {
                               icon: const Icon(Icons.delete,
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
-                                // Hacer la función asíncrona
-                              
+                                // Función asíncrona.
 
-                                  // Mostrar un diálogo de confirmación
-                                  bool confirmar = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title:
-                                            const Text('Confirmar Eliminación'),
-                                        content: const Text(
-                                            '¿Seguro que quiere eliminar al usuario?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('Sí'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(
-                                                  true); // Confirma la eliminación
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: const Text('No'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(
-                                                  false); // Cancela la eliminación
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                // Mostrar un diálogo de confirmación.
+                                bool confirmar = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title:
+                                          const Text('Confirmar Eliminación'),
+                                      content: const Text(
+                                          '¿Seguro que quiere eliminar al usuario?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Sí'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(
+                                                true); // Confirma la eliminación.
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(
+                                                false); // Cancela la eliminación.
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
 
-                                  if (confirmar) {
-                                    // Realizar la actualización en la base de datos
-                                    controlador.eliminarEstudiante(
-                                        filteredUsers[index][tipo]['nombre'],
-                                        filteredUsers[index][tipo]
-                                            ['apellidos']);
+                                if (confirmar) {
+                                  // Realizar la actualización en la base de datos.
+                                  controlador.eliminarEstudiante(
+                                      filteredUsers[index][tipo]['nombre'],
+                                      filteredUsers[index][tipo]['apellidos']);
 
-                                    //Actualizar la vista
-                                    setState(() {
-                                      // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
-                                      // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
-                                      filteredUsers.removeAt(index);
-                                    });
-                                  }
-                                
+                                  //Actualizar la vista.
+                                  setState(() {
+                                    // Eliminar el usuario de la lista de usuarios filtrados:
+                                    filteredUsers.removeAt(index);
+                                  });
+                                }
                               }),
                         ],
                       ),
                     ),
                   ),
                 );
-                //}
-                return Container();
               },
             ),
           ),
+          // ---------------------------------------------------------------------
           Container(
             margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
             child: ElevatedButton(
@@ -350,11 +354,11 @@ class _UserListPageState extends State<UserListPage> {
               );
             }));
           } else if (index == 1) {
-            // Lógica para la pestaña "Tareas"
+            // Lógica para la pestaña "Tareas".
           } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos"
+            // Lógica para la pestaña "Gráficos".
           } else if (index == 3) {
-            // Lógica para la pestaña "Chat"
+            // Lógica para la pestaña "Chat".
           } else if (index == 4) {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UserDetailsPage(
@@ -394,6 +398,7 @@ class _UserListPageState extends State<UserListPage> {
     );
   }
 
+  // -------------------------------------------------------------------------
   // Lógica para construir la interfaz no administrador
   Widget buildNonAdminUI() {
     var filteredUsers = estudiantes;
@@ -406,27 +411,27 @@ class _UserListPageState extends State<UserListPage> {
         actions: [
           IconButton(
             onPressed: () {
-              // Abre un cuadro de diálogo para la búsqueda
+              // Abre un cuadro de diálogo para la búsqueda.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   String query =
-                      ''; // Variable para almacenar la consulta de búsqueda
+                      ''; // Variable para almacenar la consulta de búsqueda.
 
                   return AlertDialog(
                     title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
                         query =
-                            text; // Almacena la consulta a medida que se escribe
+                            text; // Almacena la consulta a medida que se escribe.
                       },
                     ),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          // Cierra el cuadro de diálogo y realiza la búsqueda
+                          // Cierra el cuadro de diálogo y realiza la búsqueda.
                           Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query"
+                          // Lógica de búsqueda con "query".
                           var searchResults = estudiantes
                               .where((user) =>
                                   user['nombre'] != null &&
@@ -434,9 +439,9 @@ class _UserListPageState extends State<UserListPage> {
                                       .toLowerCase()
                                       .contains(query.toLowerCase()))
                               .toList();
-                          // Filtra la lista de usuarios según "query"
+                          // Filtra la lista de usuarios según "query".
                           setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
+                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
                             filteredUsers.clear();
                             filteredUsers.addAll(searchResults
                                 .cast<Map<String, Map<String, dynamic>>>());
@@ -486,8 +491,8 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18, // Tamaño de fuente más grande
-                                fontWeight: FontWeight.bold, // Texto en negrita
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -506,7 +511,6 @@ class _UserListPageState extends State<UserListPage> {
                     ),
                   ),
                 );
-                return Container();
               },
             ),
           ),
@@ -539,8 +543,7 @@ class _UserListPageState extends State<UserListPage> {
                 userSurname: widget.userSurname,
               );
             }));
-          }
-          else if (index == 5) {
+          } else if (index == 5) {
             userLogout();
           }
         },

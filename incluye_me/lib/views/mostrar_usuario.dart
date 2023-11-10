@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:postgres/postgres.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
 import './user_list.dart';
 import '../controllers/usuario_controller.dart';
+
+// ----------------------------------------------------------
 
 class UserDetailsPage extends StatefulWidget {
   final String nombre;
@@ -25,7 +26,6 @@ class UserDetailsPage extends StatefulWidget {
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
-  final GlobalKey<FormBuilderState> _fbKey = GlobalKey();
   final Controller controlador = Controller();
   var resultado;
   User? user;
