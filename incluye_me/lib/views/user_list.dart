@@ -251,52 +251,49 @@ class _UserListPageState extends State<UserListPage> {
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
                                 // Hacer la función asíncrona
-                              
 
-                                  // Mostrar un diálogo de confirmación
-                                  bool confirmar = await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title:
-                                            const Text('Confirmar Eliminación'),
-                                        content: const Text(
-                                            '¿Seguro que quiere eliminar al usuario?'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('Sí'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(
-                                                  true); // Confirma la eliminación
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: const Text('No'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop(
-                                                  false); // Cancela la eliminación
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                // Mostrar un diálogo de confirmación
+                                bool confirmar = await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title:
+                                          const Text('Confirmar Eliminación'),
+                                      content: const Text(
+                                          '¿Seguro que quiere eliminar al usuario?'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Sí'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(
+                                                true); // Confirma la eliminación
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: const Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(
+                                                false); // Cancela la eliminación
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
 
-                                  if (confirmar) {
-                                    // Realizar la actualización en la base de datos
-                                    controlador.eliminarEstudiante(
-                                        filteredUsers[index][tipo]['nombre'],
-                                        filteredUsers[index][tipo]
-                                            ['apellidos']);
+                                if (confirmar) {
+                                  // Realizar la actualización en la base de datos
+                                  controlador.eliminarEstudiante(
+                                      filteredUsers[index][tipo]['nombre'],
+                                      filteredUsers[index][tipo]['apellidos']);
 
-                                    //Actualizar la vista
-                                    setState(() {
-                                      // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
-                                      // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
-                                      filteredUsers.removeAt(index);
-                                    });
-                                  }
-                                
+                                  //Actualizar la vista
+                                  setState(() {
+                                    // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
+                                    // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
+                                    filteredUsers.removeAt(index);
+                                  });
+                                }
                               }),
                         ],
                       ),
@@ -365,6 +362,8 @@ class _UserListPageState extends State<UserListPage> {
                 userSurname: widget.userSurname,
               );
             }));
+          } else if (index == 5) {
+            userLogout();
           }
         },
         items: const <BottomNavigationBarItem>[
@@ -388,6 +387,10 @@ class _UserListPageState extends State<UserListPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.white),
             label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout, color: Colors.white),
+            label: 'Cerrar Sesión',
           ),
         ],
       ),
@@ -539,8 +542,7 @@ class _UserListPageState extends State<UserListPage> {
                 userSurname: widget.userSurname,
               );
             }));
-          }
-          else if (index == 5) {
+          } else if (index == 5) {
             userLogout();
           }
         },
