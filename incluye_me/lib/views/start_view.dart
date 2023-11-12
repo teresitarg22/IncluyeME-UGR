@@ -19,7 +19,7 @@ class StartView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Image(
-                image: AssetImage("assets/logo.png"), height: 200, width: 200),
+                image: AssetImage("assets/logo.png"), height: 300, width: 300),
             const SizedBox(
                 height: 40), // Espacio adicional antes de los botones.
             Padding(
