@@ -63,4 +63,9 @@ class Controller {
   Future<void> eliminarEstudiante(String nombre, String apellidos) async {
     await _logicDatabase.eliminarEstudiante(nombre, apellidos);
   }
+
+  // -----------------------------
+  Future<void> insertarTarea(String nombre, DateTime tarea) async {
+    await _logicDatabase.insertarTarea(nombre, tarea);
+  }
 }
