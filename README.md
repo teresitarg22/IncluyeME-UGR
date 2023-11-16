@@ -1,13 +1,25 @@
-## IncluyeME
+# ![Logo](Documentacion/logo_mini.png) IncluyeME+
 
-**IncluyeMe+** es una aplicación destinada a apoyar a las personas con diversidad funcional durante el programa PTVAL, destinado a la transición a la vida adulta. La aplicación será desarrollada para el colegio San Rafael (Granada). La aplicación debe ser accesible a todo tipo de estudiantes, profesores y administradores. Debe ser lo más simple posible pero también personalizable. Esta aplicación debe cumplir con los requisitos en el pliego técnico proporcionado por el colegio, que refleja sus solicitudes y necesidades específicas. Además, estamos dispuestos a adaptar la aplicación de acuerdo a posibles cambios de las necesidades del cliente.
+Nuestro objetivo es desarrollar la aplicación **IncluyeMe+** destinada a apoyar a personas con diversidad funcional durante el programa PTVAL. La aplicación será desarrollada para el colegio San Rafael (Granada). La aplicación debe ser accesible a todo tipo de estudiantes, profesores y administradores. Debe ser lo más simple posible pero también personalizable. Esta aplicación debe cumplir con los requisitos en el pliego técnico proporcionado por el colegio, que refleja sus solicitudes y necesidades específicas. Además, estamos dispuestos a adaptar la aplicación de acuerdo a posibles cambios de las necesidades del cliente.
 
-La **función principal** de la aplicación es proporcionar una agenda individual, diaria o semanal, para dar autonomía a los estudiantes. Esta agenda la gestionan los profesores y deben estar en capacidad de ver si las tareas, que pueden estar “fijas” o “petición”, han sido realizadas. Las tareas son gestionadas por el administrador del centro pero los educadores la supervisan y pueden añadir detalles. Los estudiantes deben apuntar si han hecho o no sus tareas asignadas y además pueden enviar fotos o vídeos para mostrar el resultado.  Los profesores podrán proporcionar un feedback de los resultados de las mismas.
+### :bulb: Miembros del equipo de desarrollo
 
-La aplicación puede enviar alertas, a modo de recordatorio, en las tareas pendientes de los estudiantes. También debe estar disponible un chat con profesores o de grupo de tareas. La aplicación debe tener un historial semanal sencillo y fácilmente comprensible, con gráfica y resumen visible para el educador y el estudiante. Necesitamos proporcionar una aplicación sencilla e intuitiva para los estudiantes y el personal educativo, adaptable para móvil, tableta y ordenador.
+- :bust_in_silhouette: Cano Flores, Julia María
+- :bust_in_silhouette: Guisado Farnes, Alba
+- :bust_in_silhouette: Muñoz Gómez, Sergio
+- :bust_in_silhouette: Morel, Louis
+- :bust_in_silhouette: Reyes García, Teresa Fernanda
+- :bust_in_silhouette: Torres Bordón, Antonio Javier
+- :bust_in_silhouette: Vialard Santana, Alejandro
 
-El proyecto se llevará a cabo en un periodo de cuatro meses, con fecha de finalización en diciembre tras las tres primeras iteraciones del proyecto. En tal fecha, se entregará un primer prototipo donde estarán disponibles algunas de las funcionalidades prioritarias de la aplicación. 
+## :file_folder: Iteración 1
 
-El modelo de negocio de la aplicación se basa en la modalidad bajo demanda, lo que implica que el primer prototipo de la aplicación estará disponible tan pronto como se complete su desarrollo, permitiendo al cliente acceder a los servicios más básicos.
+En esta primera iteración, presentamos el primer prototipo que marca el inicio de nuestra aplicación. Durante esta fase, nos hemos centrado en establecer funcionalidades básicas esenciales para el desarrollo continuo de IncluyeMe+. Entre las características destacadas se incluyen:
 
-![Logo](Documentacion/Logo.png)
+- Implementación inicial del inicio de sesión para alumnos y profesores. Se reconoce la necesidad de mejoras y refinamientos.
+- Implementación de la función de cierre de sesión para garantizar la seguridad y privacidad de los usuarios.
+- Funciones administrativas vitales, como la visualización del listado de usuarios, edición de perfiles, eliminación de cuentas existentes y registro de nuevos usuarios.
+- La capacidad de acceder y visualizar detalles específicos de los usuarios.
+
+Dejamos la documentación de la primera iteración en :scroll: [Iteración 1](Documentacion/Documentación.pdf)
+
