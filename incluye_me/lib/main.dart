@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/start_view.dart';
 import 'views/registro.dart';
-import 'views/listado_usuarios.dart';
-import 'views/test_principal_view.dart';
+import 'views/user_list.dart';
 
 // -------------------------------------------------------------------
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
+    String user = "";
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => StartView(),
-        '/registroPage': (context) => HomeScreen(),
-        '/principal': (context) => TestPrincipalView(),
+        '/': (context) => const StartView(),
+        '/registroPage': (context) => const HomeScreen(),
+        '/userList': (context) =>
+            UserListPage(userName: user, userSurname: user)
       },
     );
   }
 }
 
 // -------------------------------------------------------------------
-
 

@@ -1,7 +1,15 @@
 class User {
-  String name;
-  String email;
-  bool isTeacher;
+  String nombre;
+  String apellidos;
+  String correo;
+  String foto;
+  String contrasenia;
 
-  User({required this.name, required this.email, required this.isTeacher});
+  User({
+    required this.nombre,
+    required this.apellidos,
+    required this.correo,
+    required this.foto,
+    required this.contrasenia,
+  });
 }

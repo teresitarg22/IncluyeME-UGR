@@ -1,91 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:intl/intl.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
-import 'package:postgres/postgres.dart';
-
-// Crear la conexión como una variable global
-final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-      'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
-);
-
-Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
-  List<Map<String, Map<String, dynamic>>> results = [];
-
-  try {
-    // Verificar si la conexión está cerrada antes de intentar abrirla
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    results = await connection.mappedResultsQuery(query);
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    // No cerrar la conexión aquí
-    print('Query executed');
-  }
-
-  return results;
-}
+import 'package:convert/convert.dart';
+import '../controllers/registro_controller.dart';
 
 class AlumnoRegistration extends StatefulWidget {
+  const AlumnoRegistration({super.key});
+
   @override
   _AlumnoRegistrationState createState() => _AlumnoRegistrationState();
 }
 
 class _AlumnoRegistrationState extends State<AlumnoRegistration> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? _selectedGender;
-  String? _selectedGenderTutor;
-  /*String? _selectedDiscapacidad;
-  String? _selectedTipo;
-  String? _selectedNecesidad;*/
   String? _selectedFont;
   String? _selectedTamanio;
-  String? _selectedRelacion;
-  String? _selectedImage;
+  var imageBytes;
+  List<int>? imagenPrueba;
+  File? mostrarImagen;
 
-  TextEditingController _dateControllerAlumno = TextEditingController();
-  DateTime? _selectedDateAlumno;
-  //TextEditingController _historialMedicoController = TextEditingController();
-  File? _attachedFile;
   File? _image;
-  String? _imageError;
-  bool? _isTactil = false;
-
   String? _nombre;
   String? _apellidos;
-  String? _genero;
-  String? _id;
-  String? _tarjetaSanitaria;
-  String? _direccionDomicilio;
-  String? _informacionAdicional;
-  String? _alergias;
   String? _tipoLetra;
   String? _mayMin;
-  String? _numeroTlfAlumno;
   String? _correoElectronicoAlumno;
-
-  String? _nombreTutor;
-  String? _apellidosTutor;
-  String? _relacionAlumnoTutor;
-  String? _generoTutor;
-  String? _idTutor;
-  String? _direccionDomicilioTutor;
-  String? _numeroTlfTutor;
-  String? _correoElectronicoTutor;
-  String? _tlfEmergencia;
+  String? _passwd;
+  String? _confirmPasswd;
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
+  bool _sabeLeer = false;
+  RegistroController controlador = RegistroController();
 
   List<String> availableFonts = GoogleFonts.asMap().keys.toList();
   List<String> selectedOptions = []; //FORMATO DE LA APP.
@@ -112,12 +59,24 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     MultiSelectItem("../assets/symbol1.png", "Casa"),
   ];
 
+  Map<int, String> mapaImagenes = {
+    0: '../assets/symbol0.png',
+    1: '../assets/symbol1.png',
+    2: '../assets/symbol2.png',
+    3: '../assets/symbol3.png',
+    4: '../assets/symbol4.png',
+    5: '../assets/symbol5.png',
+    6: '../assets/symbol6.png',
+    7: '../assets/symbol7.png',
+    8: '../assets/symbol8.png',
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Registro de Alumno'),
-          backgroundColor: Color.fromARGB(255, 41, 218, 129)),
+          title: const Text('Registro de Alumno'),
+          backgroundColor: const Color.fromARGB(255, 41, 218, 129)),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -126,7 +85,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'Datos Personales', // Título "Datos Personales"
                   style: TextStyle(
                     fontSize: 22,
@@ -134,10 +93,10 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   ),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Nombre *'),
+                  decoration: const InputDecoration(labelText: 'Nombre *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'El nombre es obligatorio';
+                      return 'El nombre es obligatorio ';
                     }
                     return null;
                   },
@@ -147,7 +106,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   },
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Apellido *'),
+                  decoration: const InputDecoration(labelText: 'Apellido *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El apellido es obligatorio';
@@ -159,184 +118,40 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                         value; // Asignar el valor introducido a la variable
                   },
                 ),
-                TextFormField(
-                  controller: _dateControllerAlumno,
-                  decoration: InputDecoration(
-                    labelText: 'Fecha de Nacimiento *',
-                  ),
-                  validator: (value) {
-                    if (_selectedDateAlumno == null) {
-                      return 'La fecha de nacimiento es obligatoria';
-                    }
-                    return null;
-                  },
-                  onTap: () {
-                    _selectDateAlumno(context);
-                  },
-                  readOnly: true,
-                ),
-                DropdownButtonFormField<String>(
-                  value: _selectedGender,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGender = value;
-                    });
-                  },
-                  items: ['Hombre', 'Mujer', 'Otro']
-                      .map((gender) => DropdownMenuItem<String>(
-                            value: gender,
-                            child: Text(gender),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(labelText: 'Género *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El género es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _genero =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                if (_selectedGender == 'Otro')
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Género *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El genero es obligatorio';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _genero =
-                          value; // Asignar el valor introducido a la variable
-                    },
-                  ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Dirección del domiciio *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'La dirección es obligatoria';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _direccionDomicilio =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Documento de Identificación *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El documento de identificación es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _id = value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Número de Seguridad Social *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El número de seguridad social es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _tarjetaSanitaria =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Foto',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  children: [
+                    const Text(
+                      'Foto *',
+                      style: TextStyle(
+                          fontSize: 16.0), // Aumenta el tamaño del texto
                     ),
-                  ),
-                ),
-                if (_image != null)
-                  Image.file(_image!), // Muestra la imagen seleccionada
-                ElevatedButton(
-                  onPressed: () {
-                    _pickImage(); // Llama a la función para seleccionar una imagen
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Seleccionar Foto'),
-                ),
-                if (_imageError !=
-                    null) // Muestra un mensaje de error si el campo está vacío
-                  Text(
-                    _imageError!,
-                    style: TextStyle(color: Colors.red),
-                  ),
-
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Historial Médico',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(
+                        width:
+                            15.0), // Agrega espacio horizontal entre el texto y el botón
+                    ElevatedButton(
+                      onPressed: () async {
+                        _pickImage(); // Llama a la función para seleccionar una imagen
+                        /* String imageQuery =
+                            "SELECT foto FROM estudiante WHERE nombre = '$_nombre' and apellidos = '$_apellidos'";
+                        imageBytes = await request(imageQuery);
+                        if (imageBytes.first[0] != null) {
+                          imagenPrueba = imageBytes.first[0] as List<int>;
+                        }
+                        img.Image? niIdea = img.decodeImage(imagenPrueba!);
+                        mostrarImagen = new File('hola.pg')
+                          ..writeAsBytesSync(img.encodePng(niIdea!));*/
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF29DA81),
+                      ),
+                      child: const Text('Elige una foto'),
                     ),
-                  ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    _pickFile(); // Abre el selector de archivos
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81),
-                  ),
-                  child: Text('Añadir historial médico'),
-                ),
-                if (_attachedFile != null)
-                  Text('Archivo adjunto: ${_attachedFile!.path}'),
-
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Alergías o intolerancias '),
-                  onSaved: (value) {
-                    _alergias =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Información Adicional '),
-                  onSaved: (value) {
-                    _informacionAdicional =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Accesibilidad',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                if (_image != null) Image.file(_image!),
+                if (mostrarImagen != null) Image.file(mostrarImagen!),
+                /*Image.file(_image!),
+                  String sacarimagen = "SELECT foto FROM estudiante WHERE dni = 'nuevo1'",*/
 
                 DropdownButtonFormField<String>(
                   value: _selectedFont,
@@ -351,7 +166,8 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             child: Text(font),
                           ))
                       .toList(),
-                  decoration: InputDecoration(labelText: 'Tipo de Letra *'),
+                  decoration:
+                      const InputDecoration(labelText: 'Tipo de Letra *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'El tipo de letra es obligatorio';
@@ -370,14 +186,14 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       _selectedTamanio = value;
                     });
                   },
-                  items: ['Mayuscula', 'Miniscula']
+                  items: ['Mayúscula', 'Minúscula']
                       .map((tamanio) => DropdownMenuItem<String>(
                             value: tamanio,
                             child: Text(tamanio),
                           ))
                       .toList(),
-                  decoration:
-                      InputDecoration(labelText: 'Mayúsculas / Minúsculas *'),
+                  decoration: const InputDecoration(
+                      labelText: 'Mayúsculas / Minúsculas *'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'La selección es obligatorio';
@@ -392,305 +208,183 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                 MultiSelectDialogField<String>(
                   items: multiSelectOptions,
                   initialValue: selectedOptions,
-                  title: Text("Selecciona opciones"),
+                  title: const Text("Selecciona opciones"),
                   selectedColor: Colors.green,
-                  buttonText: Text('Preferencias para mostrar el contenido'),
+                  buttonText:
+                      const Text('Preferencias para mostrar el contenido'),
                   onConfirm: (values) {
                     setState(() {
                       selectedOptions = values;
                     });
                   },
                 ),
+                const Padding(
+                  padding: EdgeInsets.only(
+                      top:
+                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
+                  child: Text(
+                    'Información de seguridad y acceso',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 CheckboxListTile(
-                  title: Text('Uso de pantalla táctil'),
+                  title: const Text('Sabe leer y escribir'),
                   value:
-                      _isTactil, // Valor de la casilla de verificación (true o false)
+                      _sabeLeer, // Valor de la casilla de verificación (true o false)
                   onChanged: (bool? value) {
                     setState(() {
-                      _isTactil =
-                          value; // Actualiza el valor de _isAdmin al marcar/desmarcar
+                      _sabeLeer =
+                          value!; // Actualiza el valor de _sabeLeer al marcar/desmarcar
                     });
                   },
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Información de contacto del tutor legal',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                DropdownButtonFormField<String>(
-                  value: _selectedRelacion,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedRelacion = value;
-                    });
-                  },
-                  items: ['Madre', 'Padre', 'Otro']
-                      .map((relacion) => DropdownMenuItem<String>(
-                            value: relacion,
-                            child: Text(relacion),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(
-                      labelText: 'Relación entre el tutor y el alumno *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'La relación es obligatoria';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _relacionAlumnoTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                if (_selectedRelacion == 'Otro')
-                  TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'Relación entre el tutor y el alumno *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'La relación es obligatoria';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _relacionAlumnoTutor =
-                          value; // Asignar el valor introducido a la variable
-                    },
-                  ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Nombre *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El nombre es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _nombreTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Apellido *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El apellido es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _apellidosTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                DropdownButtonFormField<String>(
-                  value: _selectedGenderTutor,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGenderTutor = value;
-                    });
-                  },
-                  items: ['Hombre', 'Mujer', 'Otro']
-                      .map((gender) => DropdownMenuItem<String>(
-                            value: gender,
-                            child: Text(gender),
-                          ))
-                      .toList(),
-                  decoration: InputDecoration(labelText: 'Género *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El género es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _generoTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                if (_selectedGenderTutor == 'Otro')
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Género *'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'El genero es obligatorio';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _generoTutor =
-                          value; // Asignar el valor introducido a la variable
-                    },
-                  ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Dirección del domiciio *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'La dirección es obligatoria';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _direccionDomicilioTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText: 'Documento de Identificación *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El documento de identificación es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _idTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Número de teléfono *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El número de teléfono es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _numeroTlfTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(labelText: 'Correo electrónico *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El correo electrónico es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _correoElectronicoTutor =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                      labelText:
-                          'Contacto de emergencia (número de teléfono) *'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'El contacto de emergencia es obligatorio';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _tlfEmergencia =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top:
-                          16.0), // Ajusta la cantidad de espacio superior según tus necesidades
-                  child: Text(
-                    'Información de contacto del alumno',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Número de teléfono '),
-                  onSaved: (value) {
-                    _numeroTlfAlumno =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Correo electrónico '),
-                  onSaved: (value) {
-                    _correoElectronicoAlumno =
-                        value; // Asignar el valor introducido a la variable
-                  },
-                ),
+                _sabeLeer
+                    ? Column(
+                        children: <Widget>[
+                          TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Correo electrónico '),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'El nombre es obligatorio ';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _correoElectronicoAlumno =
+                                  value; // Asignar el valor introducido a la variable
+                            },
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Contraseña *',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _showPassword = !_showPassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'La contraseña es obligatoria';
+                              }
 
-                MultiSelectDialogField(
-                  items: multiSelectImagenes,
-                  initialValue: selectedImages,
-                  title: Text('Selecciona imágenes'),
-                  buttonText: Text('Imágenes seleccionadas'),
-                  onConfirm: (values) {
-                    if (values.length == 3) {
-                      setState(() {
-                        selectedImages = values;
-                      });
-                    } else {
-                      values.clear();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('TIENES QUE SELECCIONAR 3 ELEMENTOS'),
-                        ),
-                      );
-                    }
-                  },
-                ),
-                SizedBox(height: 20), // Espacio entre el menú y otros elementos
-                Text(
-                  'Imágenes seleccionadas:',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: selectedImages.map((option) {
-                    return Image.asset(
-                      option,
-                      width: 50, // Tamaño de la imagen
-                      height: 50,
-                    );
-                  }).toList(),
-                ),
+                              _passwd = value;
 
+                              if (_confirmPasswd != null &&
+                                  _confirmPasswd != _passwd) {
+                                return 'Las contraseñas deben ser iguales';
+                              }
+
+                              return null;
+                            },
+                            obscureText:
+                                !_showPassword, // Mostrar u ocultar la contraseña según el estado
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Confirmar contraseña *',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _showConfirmPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _showConfirmPassword =
+                                        !_showConfirmPassword;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'La confirmación de contraseña es obligatoria';
+                              }
+
+                              _confirmPasswd = value;
+
+                              if (_passwd != null &&
+                                  _confirmPasswd != _passwd) {
+                                return 'Las contraseñas deben ser iguales';
+                              }
+
+                              return null;
+                            },
+                            obscureText: !_showConfirmPassword,
+                          ),
+                        ],
+                      )
+                    : MultiSelectDialogField(
+                        items: multiSelectImagenes,
+                        initialValue: selectedImages,
+                        title: const Text('Selecciona imágenes'),
+                        buttonText: const Text('Imágenes seleccionadas'),
+                        onConfirm: (values) {
+                          if (values.length == 3) {
+                            setState(() {
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[0])
+                                  .key
+                                  .toString());
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[1])
+                                  .key
+                                  .toString());
+                              selectedImages.add(mapaImagenes.entries
+                                  .firstWhere(
+                                      (entry) => entry.value == values[2])
+                                  .key
+                                  .toString());
+                            });
+                          } else {
+                            values.clear();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text('TIENES QUE SELECCIONAR 3 ELEMENTOS'),
+                              ),
+                            );
+                          }
+                        },
+                      ),
                 Align(
                   alignment: Alignment.center, // Centra el botón en el medio
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        String formattedDate = DateFormat('yyyy-MM-dd')
-                            .format(_selectedDateAlumno!);
 
-                        String checkQuery1 =
-                            "SELECT * FROM estudiante WHERE dni = '$_id'";
-                        var result1 = await request(checkQuery1);
+                        var comprobacion =
+                            await controlador.comprobarEstudianteController(
+                                _nombre!, _apellidos!);
 
-                        if (result1.isNotEmpty) {
+                        if (comprobacion.isNotEmpty) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
-                                content: Text(
-                                    'Ya existe una cuenta asociada a ese DNI.'),
+                                title: const Text('Error'),
+                                content: const Text(
+                                    'Ya existe una cuenta asociada a ese nombre.'),
                                 actions: [
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -700,27 +394,50 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             },
                           );
                         } else {
-                          String checkQuery2 =
-                              "SELECT * FROM tutor_legal WHERE dni = '$_idTutor'";
-                          var result2 = await request(checkQuery2);
+                          List<int> imageBytes = _image!.readAsBytesSync();
+                          String imageHex = hex.encode(imageBytes);
 
-                          if (result2.isEmpty) {
-                            String query2 =
-                                "INSERT INTO tutor_legal (dni, genero, nombre, apellidos, direcciondomiciliar, numerotelefono, correoelectronico, contactoemergencia, relacion) VALUES ('$_idTutor', '$_generoTutor', '$_nombreTutor', '$_apellidosTutor', '$_direccionDomicilioTutor', '$_numeroTlfTutor', '$_correoElectronicoTutor', '$_tlfEmergencia', '$_relacionAlumnoTutor')";
-                            request(query2);
-                          }
+                          await controlador.handleRegister(
+                            _nombre!,
+                            _apellidos!,
+                            selectedImages.join(","),
+                            _passwd,
+                            _correoElectronicoAlumno,
+                            imageHex,
+                            _tipoLetra!,
+                            _mayMin!,
+                            selectedOptions.join(","),
+                            _sabeLeer,
+                          );
 
-                          String query =
-                              "INSERT INTO estudiante (dni, genero, nombre, apellidos, fechanacimiento, contraseña, tarjetasanitaria, direcciondomiciliar, numerotelefono, correoelectronico, foto, archivomedico, alergiasintolerancias, informacionadicionalmedico, tipodeletra, minmay, formatodeapp, pantallatactil, dnitutorlegal) VALUES ('$_id', '$_genero', '$_nombre', '$_apellidos', '$formattedDate', '$selectedImages', '$_tarjetaSanitaria', '$_direccionDomicilio', '$_numeroTlfAlumno', '$_correoElectronicoAlumno', '$_image', '$_attachedFile', '$_alergias', '$_informacionAdicional', '$_tipoLetra', '$_mayMin', '$selectedOptions', '$_isTactil', '$_idTutor')";
-                          request(query);
+                          // Mostrar un cuadro de diálogo
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Registro exitoso'),
+                                content: const Text(
+                                    'El registro se ha completado con éxito.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Aceptar'),
+                                    onPressed: () {
+                                      controlador
+                                          .llevarMostrarUsuarios(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(
+                      backgroundColor: const Color(
                           0xFF29DA81), // Cambia el color del botón a verde
                     ),
-                    child: Text('Registrarse'),
+                    child: const Text('Registrarse'),
                   ),
                 )
               ],
@@ -731,31 +448,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     );
   }
 
-  Future<void> _selectDateAlumno(BuildContext context) async {
-    final DateTime picked = (await showDatePicker(
-      context: context,
-      initialDate: _selectedDateAlumno ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    ))!;
-
-    if (picked != null && picked != _selectedDateAlumno) {
-      setState(() {
-        _selectedDateAlumno = picked;
-        _dateControllerAlumno.text = DateFormat('dd-MM-yyyy').format(picked);
-      });
-    }
-  }
-
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      setState(() {
-        _attachedFile = File(result.files.single.path!);
-      });
-    }
-  }
-
+  // ---------------------------------------------------
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
     final pickedImage =
@@ -763,8 +456,6 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
-        _imageError =
-            null; // Resetea el mensaje de error cuando se selecciona una imagen
       });
     }
   }
