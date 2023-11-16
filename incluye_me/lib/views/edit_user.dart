@@ -233,8 +233,8 @@ class _EditUserPageState extends State<EditUserPage> {
                       ),
                       FormBuilderDropdown(
                         name: 'maymin',
-                        decoration:
-                            InputDecoration(labelText: 'Mayúsculas/Minúsculas'),
+                        decoration: const InputDecoration(
+                            labelText: 'Mayúsculas/Minúsculas'),
                         items: ['Mayúscula', 'Minúscula']
                             .map((option) => DropdownMenuItem(
                                 value: option, child: Text("$option")))
