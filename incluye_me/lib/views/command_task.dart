@@ -7,6 +7,7 @@ import '../views/user_list.dart';
 import '../views/home_view.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
+import 'classroom_choose.dart' ; 
 
 void main() {
   runApp(const MyApp());
@@ -21,17 +22,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => TaskCommand(),
+        '/': (context) => TaskCommand(clase: "clase1"),
         '/registroPage': (context) => const HomeScreen(),
         '/userList': (context) =>
-            UserListPage(userName: user, userSurname: user)
+            UserListPage(userName: user, userSurname: user),
+        '/classroomChoose': (context) => ClaseDropdown(),
       },
     );
   }
 }
 
 class TaskCommand extends StatefulWidget {
-  const TaskCommand({super.key});
+  final String? clase; 
+  const TaskCommand({super.key, required this.clase});
 
   @override
   _CreateTaskCommandState createState() => _CreateTaskCommandState();
@@ -132,7 +135,8 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                   });
                 } else {
                   // Navega a la página de resumen cuando se han anotado todos los menús
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => SummaryPage(amount: amount)));
+                       Navigator.of(context).pop();
+                       Navigator.pushNamed(context, '/classroomChoose');
                 }
               },
             ),
