@@ -78,4 +78,9 @@ class RegistroController {
     Navigator.of(context).pop();
     Navigator.pushNamed(context, '/userList');
   }
+
+  // ----------------------------------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
+    return await _logicDatabase.listaAulas();
+  }
 }
