@@ -129,15 +129,11 @@ class _CreateTaskCommandState extends State<TaskCommand> {
               icon: Icon(Icons.arrow_forward),
               iconSize: 50.0, // Hace el icono más grande
               onPressed: () {
-                if (currentClassIndex < classroom.length - 1) {
-                  setState(() {
-                    currentClassIndex++;
-                  });
-                } else {
+               
                   // Navega a la página de resumen cuando se han anotado todos los menús
-                       Navigator.of(context).pop();
-                       Navigator.pushNamed(context, '/classroomChoose');
-                }
+                       Navigator.pop(context,widget.clase);
+                       
+                
               },
             ),
           ),

@@ -33,7 +33,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
   List<String> _classList = [];
 
   Future<void> loadClass() async {
-    if(_classList.isNotEmpty) return;
+    if (_classList.isNotEmpty) return;
     for (var _class in await controlador.listaAulas()) {
       _classList.add(_class['aula']!['nombre'].toString());
     }
@@ -90,13 +90,21 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                     icon: Icon(Icons.arrow_forward),
                     iconSize: 50.0,
                     onPressed: () {
-                      Navigator.of(context).pop();
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return TaskCommand(
                           clase: _selectedClase,
                         );
-                      }));
+                      })).then((result) {
+                        // result es el dato que pasaste de vuelta desde TaskCommand
+                        if (result != null) {
+                          setState(() {
+                            _classList.remove(result);
+                            _selectedClase =
+                                _classList.isNotEmpty ? _classList[0] : null;
+                          });
+                        }
+                      });
                     },
                   ),
                 ),
@@ -107,7 +115,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                     icon: Icon(Icons.arrow_back),
                     iconSize: 50.0,
                     onPressed: () {
-                      // Acción al presionar el botón de retroceso
+                        Navigator.pop(context);
                     },
                   ),
                 ),
