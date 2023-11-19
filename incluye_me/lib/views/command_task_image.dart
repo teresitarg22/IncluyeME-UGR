@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/classroom_choose_image.dart';
 import '../views/user_list.dart';
 import '../views/home_view.dart';
 import 'classroom_choose.dart';
@@ -16,25 +17,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => TaskCommand(clase: "clase1"),
+        '/': (context) => TaskCommandImage(clase: "clase1"),
         '/registroPage': (context) => const HomeScreen(),
         '/userList': (context) =>
             UserListPage(userName: user, userSurname: user),
-        '/classroomChoose': (context) => ClaseDropdown(),
+        '/classroomChoose': (context) => ClaseDropdownImage(),
       },
     );
   }
 }
 
-class TaskCommand extends StatefulWidget {
+class TaskCommandImage extends StatefulWidget {
   final String? clase;
-  const TaskCommand({super.key, required this.clase});
+  const TaskCommandImage({super.key, required this.clase});
 
   @override
-  _CreateTaskCommandState createState() => _CreateTaskCommandState();
+  _CreateTaskImageCommandState createState() => _CreateTaskImageCommandState();
 }
 
-class _CreateTaskCommandState extends State<TaskCommand> {
+class _CreateTaskImageCommandState extends State<TaskCommandImage> {
   List<String> menus = [
     'assets/menu.png',
     'assets/no_carne.png',
@@ -49,12 +50,14 @@ class _CreateTaskCommandState extends State<TaskCommand> {
   //List<String> classroom = ['Clase 1', 'Clase 2', 'Clase 3']; // Lista de clases
   //int currentClassIndex = 0; // Índice de la clase actual
 
-  String current_class = "Clase1";
+  late String current_class;
   Map<String, String> contador = {};
 
   @override
   void initState() {
     super.initState();
+
+    current_class = widget.clase!;
 
     amount[current_class] = {};
 
@@ -97,7 +100,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Selecciona las comandas para Clase1',
+          'Selecciona las comandas para $current_class',
         ),
         backgroundColor: const Color.fromARGB(255, 41, 218, 129),
       ),

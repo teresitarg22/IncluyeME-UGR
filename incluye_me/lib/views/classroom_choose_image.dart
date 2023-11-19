@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/command_task_image.dart';
 import 'command_task.dart';
 import '../controllers/usuario_controller.dart';
 import 'package:path_provider/path_provider.dart';
@@ -19,19 +20,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => ClaseDropdown(),
-        '/classroomChoose': (context) => ClaseDropdown(),
+        '/': (context) => ClaseDropdownImage(),
+        '/classroomChoose': (context) => ClaseDropdownImage(),
       },
     );
   }
 }
 
-class ClaseDropdown extends StatefulWidget {
+class ClaseDropdownImage extends StatefulWidget {
   @override
-  _ClaseDropdownState createState() => _ClaseDropdownState();
+  _ClaseDropdownImageState createState() => _ClaseDropdownImageState();
 }
 
-class _ClaseDropdownState extends State<ClaseDropdown> {
+class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
   final Controller controlador = Controller();
   var aulas = [];
   //Map<String, File> fotos = {};
@@ -107,9 +108,16 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
             children: [
               ElevatedButton(
                 onPressed: () {
+                  if (index >= 0 && index < sizeAulas) {
+                    _selectedClase = aulas[index]['aula']['nombre'];
+                    /*if (!fotos.containsKey(_selectedClase)) {
+                      getImageFromDatabase(_selectedClase);
+                    }*/
+                  }
+
                   Navigator.of(context).pop();
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return TaskCommand(
+                    return TaskCommandImage(
                       clase: _selectedClase,
                     );
                   }));

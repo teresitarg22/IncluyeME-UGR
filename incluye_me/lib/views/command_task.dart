@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'dart:io';
-import '../controllers/usuario_controller.dart';
 import '../views/user_list.dart';
 import '../views/home_view.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:intl/intl.dart';
-import 'classroom_choose.dart' ; 
+import 'classroom_choose.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +27,7 @@ class MyApp extends StatelessWidget {
 }
 
 class TaskCommand extends StatefulWidget {
-  final String? clase; 
+  final String? clase;
   const TaskCommand({super.key, required this.clase});
 
   @override
@@ -135,8 +129,8 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                   });
                 } else {
                   // Navega a la página de resumen cuando se han anotado todos los menús
-                       Navigator.of(context).pop();
-                       Navigator.pushNamed(context, '/classroomChoose');
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, '/classroomChoose');
                 }
               },
             ),
