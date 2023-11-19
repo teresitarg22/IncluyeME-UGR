@@ -55,7 +55,11 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
           // Cuando los datos están listos, muestra tu widget
           return Scaffold(
             appBar: AppBar(
-              title: Text('Selecciona una Clase'),
+              title: Text(
+                'Selecciona una Clase',
+                style: TextStyle(fontSize: 28), 
+              ),
+              backgroundColor: const Color.fromARGB(255, 41, 218, 129),
             ),
             body: Stack(
               children: [
@@ -65,7 +69,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                     children: [
                       Text(
                         'Selecciona una Clase:',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 25), 
                       ),
                       SizedBox(height: 20),
                       DropdownButton<String>(
@@ -75,10 +79,17 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                             _selectedClase = value;
                           });
                         },
+                       
                         items: _classList.map((clase) {
                           return DropdownMenuItem<String>(
                             value: clase,
-                            child: Text(clase),
+                            child: Container(
+                              width: 300, 
+                              child: Text(
+                                clase,
+                                style: TextStyle(fontSize: 20), 
+                              ),
+                            ),
                           );
                         }).toList(),
                       ),
@@ -105,7 +116,6 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                             
                             amount[result['clase']] = amount_aux ; 
                             
-                            
                             _classList.remove(result['clase']);
                             _selectedClase =
                                 _classList.isNotEmpty ? _classList[0] : null;
@@ -118,7 +128,6 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                                 );
                               }));
                             }
-                            
                           });
                         }
                       });

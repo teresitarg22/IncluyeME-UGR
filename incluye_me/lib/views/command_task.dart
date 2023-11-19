@@ -1,24 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
-
-  @override
-  Widget build(BuildContext context) {
-    String user = "";
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => TaskCommand(clase: "clase1"),
-      },
-    );
-  }
-}
-
 class TaskCommand extends StatefulWidget {
   final String? clase;
   const TaskCommand({Key? key, required this.clase});
@@ -28,9 +9,9 @@ class TaskCommand extends StatefulWidget {
 }
 
 class _CreateTaskCommandState extends State<TaskCommand> {
-  List<String> menus = ['Menu 1', 'Menu 2', 'Menu 3'];
+  List<String> menus = ['Menu Principal', 'Menu Vegano'];
   Map<String, int> amount = {};
-
+  Map<String, int> specialOptions = {'Sin Carne': 0, 'Triturados': 0};
   int currentClassIndex = 0;
 
   @override
@@ -50,30 +31,34 @@ class _CreateTaskCommandState extends State<TaskCommand> {
         backgroundColor: const Color.fromARGB(255, 41, 218, 129),
       ),
       body: Center(
-        child: Stack(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ListView.builder(
+              shrinkWrap: true,
               itemCount: menus.length,
               itemBuilder: (context, index) {
                 return Container(
-                  padding: EdgeInsets.all(.10),
+                  padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Expanded(
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 8.0), // Ajusta el espacio aquí
                         child: Text(
                           menus[index],
                           style: TextStyle(fontSize: 20.0),
                           textAlign: TextAlign.center,
                         ),
                       ),
+                      SizedBox(width: 30),
                       IconButton(
                         icon: Icon(Icons.remove, size: 30.0),
                         onPressed: () {
                           setState(() {
                             if (amount[menus[index]]! > 0) {
-                              amount[menus[index]] =
-                                  amount[menus[index]]! - 1;
+                              amount[menus[index]] = amount[menus[index]]! - 1;
                             }
                           });
                         },
@@ -86,8 +71,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                         icon: Icon(Icons.add, size: 30.0),
                         onPressed: () {
                           setState(() {
-                            amount[menus[index]] =
-                                amount[menus[index]]! + 1;
+                            amount[menus[index]] = amount[menus[index]]! + 1;
                           });
                         },
                       ),
@@ -96,36 +80,74 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                 );
               },
             ),
-            Positioned(
-              right: 0,
-              top: MediaQuery.of(context).size.height / 2,
-              child: IconButton(
-                icon: Icon(Icons.arrow_forward),
-                iconSize: 50.0,
-                onPressed: () {
-                  Navigator.pop(
-                    context,
-                    {'clase': widget.clase, 'menu': amount},
-                  );
-                },
-              ),
-            ),
-            Positioned(
-              left: 0,
-              top: MediaQuery.of(context).size.height / 2,
-              child: IconButton(
-                icon: Icon(Icons.arrow_back),
-                iconSize: 50.0,
-                onPressed: () {
-                  if (currentClassIndex > 0) {
-                    setState(() {
-                      currentClassIndex--;
-                    });
-                  } else {
-                    // Navega a la página anterior o realiza otra acción cuando se está en la primera clase
-                  }
-                },
-              ),
+            if (amount['Menu Principal']! > 0) ...[
+              Divider(),
+              ...specialOptions.keys.map((key) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      key,
+                      style: TextStyle(fontSize: 20.0),
+                      textAlign: TextAlign.center,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.remove, size: 30.0),
+                      onPressed: () {
+                        setState(() {
+                          if (specialOptions[key]! > 0) {
+                            specialOptions[key] = specialOptions[key]! - 1;
+                          }
+                        });
+                      },
+                    ),
+                    Text(
+                      '${specialOptions[key]}',
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.add, size: 30.0),
+                      onPressed: () {
+                        setState(() {
+                          if (specialOptions[key]! <
+                              amount['Menu Principal']!) {
+                            specialOptions[key] = specialOptions[key]! + 1;
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                );
+              }).toList(),
+            ],
+            SizedBox(height: 20), // Separación entre los elementos de cada menú
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  iconSize: 50.0,
+                  onPressed: () {
+                    if (currentClassIndex > 0) {
+                      setState(() {
+                        currentClassIndex--;
+                      });
+                    } else {
+                      // Navega a la página anterior o realiza otra acción cuando se está en la primera clase
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  iconSize: 50.0,
+                  onPressed: () {
+                    Navigator.pop(
+                      context,
+                      {'clase': widget.clase, 'menu': amount},
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
