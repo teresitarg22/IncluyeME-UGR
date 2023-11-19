@@ -26,6 +26,131 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/*class LeftImage extends StatefulWidget {
+  const LeftImage({Key? key, required this.defaultImage}) : super(key: key);
+
+  final String defaultImage;
+
+  @override
+  _LeftImageState createState() => _LeftImageState();
+}
+
+/*class _LeftImageState extends State<LeftImage> {
+  late String _leftImagePath;
+  int _key = 0; // Campo para forzar la reconstrucción del widget
+
+  @override
+  void initState() {
+    super.initState();
+    _leftImagePath = widget.defaultImage;
+  }
+
+  void updateLeftImage(String imagePath) {
+    setState(() {
+      _leftImagePath = imagePath;
+      _key++; // Incrementa el valor para forzar la reconstrucción
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Si necesitas realizar alguna acción en el tap de la imagen izquierda
+      },
+      child: Container(
+        key: Key(_key
+            .toString()), // Asigna un nuevo key para forzar la reconstrucción
+        width: 100,
+        child: Image.asset(
+          _leftImagePath,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}*/
+
+class _LeftImageState extends State<LeftImage> {
+  late String _leftImagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _leftImagePath = widget.defaultImage;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // If you want to do something when the left image is tapped,
+        // you can add the logic here.
+      },
+      child: Container(
+        width: 100,
+        child: Image.asset(
+          _leftImagePath,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+  void updateLeftImage(String imagePath) {
+    setState(() {
+      _leftImagePath = imagePath;
+    });
+  }
+}*/
+
+class LeftImage extends StatefulWidget {
+  final String defaultImage;
+  final Function(String) updateLeftImage;
+
+  const LeftImage({
+    Key? key,
+    required this.defaultImage,
+    required this.updateLeftImage,
+  }) : super(key: key);
+
+  @override
+  _LeftImageState createState() => _LeftImageState();
+}
+
+class _LeftImageState extends State<LeftImage> {
+  late String _leftImagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _leftImagePath = widget.defaultImage;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // If you want to do something when the left image is tapped,
+        // you can add the logic here.
+      },
+      child: Container(
+        width: 100,
+        child: Image.asset(
+          _leftImagePath,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+  void updateLeftImage(String imagePath) {
+    setState(() {
+      _leftImagePath = imagePath;
+    });
+  }
+}
+
 class TaskCommand extends StatefulWidget {
   final String? clase;
   const TaskCommand({super.key, required this.clase});
@@ -36,20 +161,22 @@ class TaskCommand extends StatefulWidget {
 
 class _CreateTaskCommandState extends State<TaskCommand> {
   List<String> menus = [
-    'menu.png',
-    'no_carne.png',
-    'puré.png',
-    'fruta_triturada.png',
-    'yogur.png',
-    'fruta.png'
+    'assets/menu.png',
+    'assets/no_carne.png',
+    'assets/puré.png',
+    'assets/fruta_triturada.png',
+    'assets/yogur.png',
+    'assets/fruta.png'
   ]; // Lista de menús
   Map<String, Map<String, int>> amount =
       {}; // Mapa para guardar la cantidad seleccionada de cada menú por clase
   Map<String, int> numeros = {};
-  List<String> classroom = ['Clase 1', 'Clase 2', 'Clase 3']; // Lista de clases
-  int currentClassIndex = 0; // Índice de la clase actual
+  //List<String> classroom = ['Clase 1', 'Clase 2', 'Clase 3']; // Lista de clases
+  //int currentClassIndex = 0; // Índice de la clase actual
 
   String current_class = "Clase1";
+  //String _imagePath = 'assets/cero.png';
+  Map<String, String> contador = {};
 
   @override
   void initState() {
@@ -61,11 +188,18 @@ class _CreateTaskCommandState extends State<TaskCommand> {
       amount[current_class]![menu] = 0;
     }
 
-    numeros["uno.png"] = 1;
-    numeros["dos.png"] = 2;
-    numeros["tres.png"] = 3;
-    numeros["cuatro.png"] = 4;
-    numeros["cinco.png"] = 5;
+    numeros["assets/uno.png"] = 1;
+    numeros["assets/dos.png"] = 2;
+    numeros["assets/tres.png"] = 3;
+    numeros["assets/cuatro.png"] = 4;
+    numeros["assets/cinco.png"] = 5;
+
+    contador["assets/menu.png"] = 'assets/cero.png';
+    contador["assets/no_carne.png"] = 'assets/cero.png';
+    contador["assets/puré.png"] = 'assets/cero.png';
+    contador["assets/fruta_triturada.png"] = 'assets/cero.png';
+    contador["assets/yogur.png"] = 'assets/cero.png';
+    contador["assets/fruta.png"] = 'assets/cero.png';
 
     /*
     for (var clas in classroom) {
@@ -89,7 +223,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Selecciona las comandas para ${classroom[currentClassIndex]}',
+          'Selecciona las comandas para Clase1',
         ),
         backgroundColor: const Color.fromARGB(255, 41, 218, 129),
       ),
@@ -107,13 +241,30 @@ class _CreateTaskCommandState extends State<TaskCommand> {
     );
   }
 
-  /*Widget buildRowWithImages(String mainImagePath, List<String> repeatedImages) {
+  void changeImage() {
+    setState(() {
+      // Cambia la ruta de la imagen cuando se llama a esta función
+      // Nueva imagen
+    });
+  }
+
+  Widget buildRowWithImages(String mainImagePath, List<String> repeatedImages) {
+    String? selectedImagePath; // Ruta de la imagen seleccionada
+    final leftImageKey = GlobalKey<_LeftImageState>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
+          Container(
+            width: 100, // Ancho de la imagen izquierda
+            child: Image.asset(
+              contador[mainImagePath]!, // Ruta de tu imagen izquierda
+              fit: BoxFit.contain,
+            ),
+          ),
           Expanded(
-            flex: 2, // Usa más espacio para la imagen principal
+            flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
               child: Image.asset(
@@ -122,45 +273,130 @@ class _CreateTaskCommandState extends State<TaskCommand> {
               ),
             ),
           ),
-          SizedBox(
-              width:
-                  16.0), // Separación entre la imagen principal y las repetidas
+          SizedBox(width: 16.0),
           Expanded(
-            flex: 4, // Usa más espacio para las imágenes repetidas
+            flex: 4,
             child: Row(
               children: repeatedImages.map((imagePath) {
                 return Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: InkWell(
-                      onTap: () {
-                        // Aquí puedes implementar la lógica de selección
-                        setState(() {
-                          // Lógica de selección de imagen
-                          if (amount.containsKey(current_class)) {
-                            // Verificar si mainImagePath y imagePath existen en amount[current_class]
-                            if (amount[current_class] != null &&
-                                amount[current_class]![mainImagePath] != null &&
-                                numeros[imagePath] != null) {
-                              // Asignar el valor si no son nulos
-                              amount[current_class]![mainImagePath] =
-                                  numeros[imagePath]!;
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedImagePath = imagePath;
+                            if (amount.containsKey(current_class)) {
+                              if (amount[current_class] != null &&
+                                  amount[current_class]![mainImagePath] !=
+                                      null &&
+                                  numeros[imagePath] != null) {
+                                amount[current_class]![mainImagePath] =
+                                    numeros[imagePath]!;
+                              }
                             }
-                          }
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black, // Color del borde seleccionado
-                            width: 2.0, // Ancho del borde
+
+                            contador[mainImagePath] = imagePath;
+                            changeImage();
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                            color: selectedImagePath == imagePath
+                                ? Colors.grey.withOpacity(0.5)
+                                : Colors.transparent,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+/*
+  Widget buildRowWithImages(String mainImagePath, List<String> repeatedImages) {
+    String? selectedImagePath; // Ruta de la imagen seleccionada
+    final leftImageKey = GlobalKey<_LeftImageState>();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          LeftImage(
+            key: leftImageKey,
+            defaultImage: 'assets/cero.png',
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Image.asset(
+                mainImagePath,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          SizedBox(width: 16.0),
+          Expanded(
+            flex: 4,
+            child: Row(
+              children: repeatedImages.map((imagePath) {
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedImagePath = imagePath;
+                            if (amount.containsKey(current_class)) {
+                              if (amount[current_class] != null &&
+                                  amount[current_class]![mainImagePath] !=
+                                      null &&
+                                  numeros[imagePath] != null) {
+                                amount[current_class]![mainImagePath] =
+                                    numeros[imagePath]!;
+                              }
+                            }
+                            leftImageKey.currentState
+                                ?.updateLeftImage(imagePath);
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                            color: selectedImagePath == imagePath
+                                ? Colors.grey.withOpacity(0.5)
+                                : Colors.transparent,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
@@ -174,7 +410,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
       ),
     );
   }*/
-
+/*
   Widget buildRowWithImages(String mainImagePath, List<String> repeatedImages) {
     String? selectedImagePath; // Ruta de la imagen seleccionada
 
@@ -182,6 +418,13 @@ class _CreateTaskCommandState extends State<TaskCommand> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
+          Container(
+            width: 100, // Ancho de la imagen izquierda
+            child: Image.asset(
+              'assets/cero.png', // Ruta de tu imagen izquierda
+              fit: BoxFit.contain,
+            ),
+          ),
           Expanded(
             flex: 2,
             child: Padding(
@@ -251,16 +494,19 @@ class _CreateTaskCommandState extends State<TaskCommand> {
         ],
       ),
     );
-  }
+  }*/
 
 /*
+
   Widget buildRowWithImages(String mainImagePath, List<String> repeatedImages) {
+    String? selectedImagePath; // Ruta de la imagen seleccionada
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           Expanded(
-            flex: 2, // Usa más espacio para la imagen principal
+            flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
               child: Image.asset(
@@ -269,19 +515,56 @@ class _CreateTaskCommandState extends State<TaskCommand> {
               ),
             ),
           ),
-          SizedBox(
-              width:
-                  16.0), // Separación entre la imagen principal y las repetidas
+          SizedBox(width: 16.0),
           Expanded(
-            flex: 4, // Usa más espacio para las imágenes repetidas
+            flex: 4,
             child: Row(
               children: repeatedImages.map((imagePath) {
                 return Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.contain,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            print('Tapped: $imagePath');
+
+                            selectedImagePath = imagePath;
+
+                            if (amount.containsKey(current_class)) {
+                              // Verificar si mainImagePath y imagePath existen en amount[current_class]
+                              if (amount[current_class] != null &&
+                                  amount[current_class]![mainImagePath] !=
+                                      null &&
+                                  numeros[imagePath] != null) {
+                                // Asignar el valor si no son nulos
+                                amount[current_class]![mainImagePath] =
+                                    numeros[imagePath]!;
+                              }
+                            }
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                            color: selectedImagePath == imagePath
+                                ? Colors.grey
+                                    .withOpacity(0.5) // Fondo seleccionado
+                                : Colors.transparent,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 );
