@@ -16,6 +16,16 @@ class Controller {
   }
 
   // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
+    return await _logicDatabase.listaAulas();
+  }
+
+  // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> fotoAula(String aula) async {
+    return await _logicDatabase.fotoAula(aula);
+  }
+
+  // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> getEstudiante(
       String nombre, String apellidos) async {
     return await _logicDatabase.comprobarEstudiante(nombre, apellidos);
