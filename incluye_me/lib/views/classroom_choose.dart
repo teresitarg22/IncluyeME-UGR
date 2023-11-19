@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'command_task.dart';
 import '../controllers/registro_controller.dart';
+import 'summary_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +32,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
   String? _selectedClase;
   RegistroController controlador = RegistroController();
   List<String> _classList = [];
+  Map<String, Map<String, int>> amount = {};
 
   Future<void> loadClass() async {
     if (_classList.isNotEmpty) return;
@@ -99,9 +101,24 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                         // result es el dato que pasaste de vuelta desde TaskCommand
                         if (result != null) {
                           setState(() {
-                            _classList.remove(result);
+                            Map<String, int> amount_aux = result['menu'];
+                            
+                            amount[result['clase']] = amount_aux ; 
+                            
+                            
+                            _classList.remove(result['clase']);
                             _selectedClase =
                                 _classList.isNotEmpty ? _classList[0] : null;
+                           
+                            if (_classList.isEmpty) {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return SummaryPage(
+                                  amount: amount,
+                                );
+                              }));
+                            }
+                            
                           });
                         }
                       });
@@ -115,7 +132,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                     icon: Icon(Icons.arrow_back),
                     iconSize: 50.0,
                     onPressed: () {
-                        Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                   ),
                 ),
