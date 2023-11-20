@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class TaskCommand extends StatefulWidget {
   final String? clase;
-  const TaskCommand({Key? key, required this.clase});
+  final Map<String, int >? menus;
+  final  Map<String, int>? specialOptions; 
+  const TaskCommand({Key? key, required this.clase, this.menus, this.specialOptions});
 
   @override
   _CreateTaskCommandState createState() => _CreateTaskCommandState();
@@ -18,15 +20,23 @@ class _CreateTaskCommandState extends State<TaskCommand> {
     'Fruta triturada': 0,
     'Yogur': 0
   };
-  int currentClassIndex = 0;
 
   @override
   void initState() {
     super.initState();
 
-    for (var menu in menus) {
-      amount[menu] = 0;
-    }
+    if (widget.menus == null) {
+      for (var menu in menus) {
+        amount[menu] = 0;
+      }
+    } else {
+      for (var menu in menus) {
+        amount[menu] = widget.menus![widget.clase]! ; 
+      }
+      this.specialOptions = widget.specialOptions!;
+    } 
+
+
   }
 
   @override
@@ -139,13 +149,10 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                   icon: Icon(Icons.arrow_back),
                   iconSize: 50.0,
                   onPressed: () {
-                    if (currentClassIndex > 0) {
-                      setState(() {
-                        currentClassIndex--;
-                      });
-                    } else {
-                      // Navega a la página anterior o realiza otra acción cuando se está en la primera clase
-                    }
+                    Navigator.pop(
+                      context,
+                      {'devolver': widget.clase},
+                    );
                   },
                 ),
                 IconButton(
@@ -154,7 +161,11 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                   onPressed: () {
                     Navigator.pop(
                       context,
-                      {'clase': widget.clase, 'menu': amount , 'specialOptions': specialOptions},
+                      {
+                        'clase': widget.clase,
+                        'menu': amount,
+                        'specialOptions': specialOptions
+                      },
                     );
                   },
                 ),
