@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/command_task_image.dart';
 import '../controllers/usuario_controller.dart';

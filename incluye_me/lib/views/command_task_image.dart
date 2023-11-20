@@ -1,31 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/classroom_choose_image.dart';
-import '../views/user_list.dart';
-import '../views/home_view.dart';
-import 'classroom_choose_image.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    String user = "";
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => TaskCommandImage(clase: "clase1"),
-        '/registroPage': (context) => const HomeScreen(),
-        '/userList': (context) =>
-            UserListPage(userName: user, userSurname: user),
-        '/classroomChoose': (context) => ClaseDropdownImage(),
-      },
-    );
-  }
-}
 
 class TaskCommandImage extends StatefulWidget {
   final String? clase;
