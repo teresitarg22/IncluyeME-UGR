@@ -1,125 +1,115 @@
 import 'package:flutter/material.dart';
-import 'package:postgres/postgres.dart';
-import 'registro.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
+import '../controllers/usuario_controller.dart';
+import '../controllers/session_controller.dart';
 
-// -------------------------- DATA BASE --------------------------
-
-// Create the connection as a global variable
-final connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // database host
-  5432, // database port
-  'srvvjedp', // database name
-  username: 'srvvjedp', // database username
-  password: 'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // database user's password
-);
-
-Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
-  List<Map<String, Map<String, dynamic>>> results = [];
-
-  try {
-    // Check if the connection is closed before attempting to open it
-    if (connection.isClosed) {
-      await connection.open();
-      print('Connected to the database');
-    }
-
-    results = await connection.mappedResultsQuery(query);
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    // Do not close the connection here
-    print('Query executed');
-  }
-
-  return results;
-}
-
-// -----------------------------------------------------
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => UserListPage(),
-        '/registroPage': (context) => HomeScreen(),
-      },
-    );
-  }
-}
-
-// -----------------------------------------------------
-
+// --------------------------------------------
+// Clase para la página de lista de usuarios
 class UserListPage extends StatefulWidget {
+  final String userName;
+  final String userSurname;
+
+  const UserListPage(
+      {super.key, required this.userName, required this.userSurname});
+
   @override
   _UserListPageState createState() => _UserListPageState();
 }
 
+// ------------------------------------------------------------------
+
 class _UserListPageState extends State<UserListPage> {
-  final _formKey = GlobalKey<FormState>();
+  bool isAdmin = false;
   var estudiantes = [];
-  var supervisor = [];
+  var personal = [];
   var usuarios = [];
+  Controller controlador = Controller();
+
+  SessionController sessionController = SessionController();
 
   String? selectedFilter = "Estudiantes";
 
+  // -----------------------------
+  void userLogout() async {
+    await sessionController.logout();
+    Navigator.of(context).pushReplacementNamed('/');
+  }
+
+  // -----------------------------
   @override
   void initState() {
     super.initState();
-    loadUsersIds();
+    initializeData();
   }
 
+  // -----------------------------
+  Future<void> initializeData() async {
+    await loadUsersIds();
+    await initializeAdminStatus();
+  }
+
+  // -----------------------------
   Future<void> loadUsersIds() async {
-    estudiantes = await request('SELECT * FROM estudiante');
-    supervisor = await request('SELECT * FROM personal');
-    usuarios.addAll(estudiantes);
-    usuarios.addAll(supervisor);
-    setState(() {});
+    estudiantes = await controlador.listaEstudiantes();
+    personal = await controlador.listaPersonal();
+
+    setState(() {
+      usuarios.addAll(estudiantes);
+      usuarios.addAll(personal);
+    });
   }
 
+  // -----------------------------
+  Future<void> initializeAdminStatus() async {
+    bool adminStatus =
+        await controlador.esAdmin(widget.userName, widget.userSurname);
+    setState(() => isAdmin = adminStatus);
+  }
+
+  // -----------------------------
   @override
   Widget build(BuildContext context) {
+    return isAdmin ? buildAdminUI() : buildNonAdminUI();
+  }
+
+  // ---------------------------------------------------------
+  // Lógica para construir la interfaz de administrador.
+  Widget buildAdminUI() {
     var filteredUsers = [];
     bool esEstudiante = true;
-    String user = "estudiante";
+    String tipo = "estudiante";
 
     if (selectedFilter == "Personal") {
-      filteredUsers = supervisor;
+      filteredUsers = personal;
       esEstudiante = false;
-      user = "personal";
+      tipo = "personal";
     } else if (selectedFilter == "Estudiantes") {
       filteredUsers = estudiantes;
       esEstudiante = true;
-      user = "estudiante";
+      tipo = "estudiante";
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Usuarios'),
-        backgroundColor: Color(0xFF29DA81),
+        title: const Text('Lista de Usuarios'),
+        backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
             onPressed: () {
-              // Abre un cuadro de diálogo para la búsqueda
+              // Abre un cuadro de diálogo para la búsqueda.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   String query =
-                      ''; // Variable para almacenar la consulta de búsqueda
+                      ''; // Variable para almacenar la consulta de búsqueda.
 
                   return AlertDialog(
-                    title: Text('Buscar por Nombre'),
+                    title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
                         query =
-                            text; // Almacena la consulta a medida que se escribe
+                            text; // Almacena la consulta a medida que se escribe.
                       },
                     ),
                     actions: [
@@ -127,36 +117,36 @@ class _UserListPageState extends State<UserListPage> {
                         onPressed: () {
                           // Cierra el cuadro de diálogo y realiza la búsqueda
                           Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query"
-                          var searchResults = usuarios
-                              .where((user) =>
-                                  (user['estudiante'] != null &&
-                                      user['estudiante']['nombre'] != null &&
-                                      user['estudiante']['nombre']
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase())) ||
-                                  (user['personal'] != null &&
-                                      user['personal']['nombre'] != null &&
-                                      user['personal']['nombre']
-                                          .toLowerCase()
-                                          .contains(query.toLowerCase())))
-                              .toList();
-                          // Filtra la lista de usuarios según "query"
+                          // Lógica de búsqueda con "query".
+                          var searchResults = usuarios.where((user) {
+                            final estudianteNombre =
+                                user['estudiante']?['nombre']?.toLowerCase() ??
+                                    '';
+                            final personalNombre =
+                                user['personal']?['nombre']?.toLowerCase() ??
+                                    '';
+
+                            return estudianteNombre
+                                    .contains(query.toLowerCase()) ||
+                                personalNombre.contains(query.toLowerCase());
+                          }).toList();
+
+                          // Filtra la lista de usuarios según "query".
                           setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda
+                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
                             filteredUsers.clear();
                             filteredUsers.addAll(searchResults
                                 .cast<Map<String, Map<String, dynamic>>>());
                           });
                         },
-                        child: Text('Buscar'),
+                        child: const Text('Buscar'),
                       ),
                     ],
                   );
                 },
               );
             },
-            icon: Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search), // Icono de lupa.
           ),
           DropdownButton<String?>(
             value: selectedFilter,
@@ -181,39 +171,61 @@ class _UserListPageState extends State<UserListPage> {
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
+                final nombre = filteredUsers[index][tipo]?['nombre'];
+
+                if (nombre != null) {
+                  controlador
+                      .esUsuarioEstudiante(
+                          filteredUsers[index][tipo]?['nombre'],
+                          filteredUsers[index][tipo]?['apellidos'])
+                      .then((valorEsEstudiante) {
+                    esEstudiante = valorEsEstudiante;
+                    if (esEstudiante) {
+                      tipo = "estudiante";
+                    } else {
+                      tipo = "personal";
+                    }
+                  });
+                }
+
                 return InkWell(
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return UserDetailsPage(
-                        nombre: filteredUsers[index][user]['nombre'],
+                        nombre: filteredUsers[index][tipo]['nombre'],
+                        apellidos: filteredUsers[index][tipo]['apellidos'],
                         esEstudiante: esEstudiante,
+                        userName: widget.userName,
+                        userSurname: widget.userSurname,
                       );
                     }));
                   },
                   child: Card(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                     child: ListTile(
                       title: GestureDetector(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
-                              filteredUsers[index][user]['nombre'],
-                              style: TextStyle(
+                              "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
+                              style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18, // Tamaño de fuente más grande
-                                fontWeight: FontWeight.bold, // Texto en negrita
+                                fontSize: 18, // Tamaño de fuente más grande.
+                                fontWeight:
+                                    FontWeight.bold, // Texto en negrita.
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                           ],
                         ),
                       ),
-                      subtitle: Text(filteredUsers[index][user]['correo']),
-                      leading: Icon(
+                      subtitle:
+                          Text(filteredUsers[index][tipo]?['correo'] ?? ''),
+                      leading: const Icon(
                         Icons.person,
                         size: 45,
                       ),
@@ -222,44 +234,52 @@ class _UserListPageState extends State<UserListPage> {
                         children: [
                           // ------------------------------------
                           IconButton(
-                            icon: Icon(Icons.edit,
+                            icon: const Icon(Icons.edit,
                                 color: Color.fromARGB(255, 76, 76, 76)),
                             onPressed: () {
                               // Nos dirigimos a la interfaz de edición de usuario:
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => EditUserPage(
-                                        nombre: filteredUsers[index][user]
-                                            ['nombre'],
-                                        isStudent: esEstudiante)),
+                                          nombre: filteredUsers[index][tipo]
+                                              ['nombre'],
+                                          apellidos: filteredUsers[index][tipo]
+                                              ['apellidos'],
+                                          esEstudiante: esEstudiante,
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
+                                        )),
                               );
                             },
                           ),
                           // -----------------
-                          SizedBox(width: 30.0),
+                          const SizedBox(width: 30.0),
                           // -----------------
                           IconButton(
-                              icon: Icon(Icons.delete,
+                              icon: const Icon(Icons.delete,
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
+                                // Hacer la función asíncrona
+
                                 // Mostrar un diálogo de confirmación
                                 bool confirmar = await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Confirmar Eliminación'),
-                                      content: Text(
+                                      title:
+                                          const Text('Confirmar Eliminación'),
+                                      content: const Text(
                                           '¿Seguro que quiere eliminar al usuario?'),
                                       actions: <Widget>[
                                         TextButton(
-                                          child: Text('Sí'),
+                                          child: const Text('Sí'),
                                           onPressed: () {
                                             Navigator.of(context).pop(
                                                 true); // Confirma la eliminación
                                           },
                                         ),
                                         TextButton(
-                                          child: Text('No'),
+                                          child: const Text('No'),
                                           onPressed: () {
                                             Navigator.of(context).pop(
                                                 false); // Cancela la eliminación
@@ -272,10 +292,9 @@ class _UserListPageState extends State<UserListPage> {
 
                                 if (confirmar) {
                                   // Realizar la actualización en la base de datos
-                                  String updateQuery =
-                                      "DELETE FROM usuario WHERE nombre = '${filteredUsers[index][user]['nombre']}' and apellidos = '${filteredUsers[index][user]['apellidos']}'";
-                                  // Luego, ejecuta la consulta en tu base de datos PostgreSQL
-                                  request(updateQuery);
+                                  controlador.eliminarEstudiante(
+                                      filteredUsers[index][tipo]['nombre'],
+                                      filteredUsers[index][tipo]['apellidos']);
 
                                   //Actualizar la vista
                                   setState(() {
@@ -290,13 +309,12 @@ class _UserListPageState extends State<UserListPage> {
                     ),
                   ),
                 );
-                //}
-                return Container();
               },
             ),
           ),
+          // ---------------------------------------------------------------------
           Container(
-            margin: EdgeInsets.only(top: 16.0, bottom: 30.0),
+            margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
             child: ElevatedButton(
               // --------------------------
               onPressed: () {
@@ -304,14 +322,14 @@ class _UserListPageState extends State<UserListPage> {
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF29DA81),
+                backgroundColor: const Color(0xFF29DA81),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
               ),
               // --------------------------
-              child: Row(
+              child: const Row(
                 // Usamos un Row para colocar el icono y el texto horizontalmente.
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -326,19 +344,34 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF29DA81),
+        backgroundColor: const Color(0xFF29DA81),
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.pushNamed(context, '/userList');
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserListPage(
+                userName: widget.userName,
+                userSurname: widget.userSurname,
+              );
+            }));
           } else if (index == 1) {
-            // Lógica para la pestaña "Tareas"
+            // Lógica para la pestaña "Tareas".
           } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos"
+            // Lógica para la pestaña "Gráficos".
           } else if (index == 3) {
-            // Lógica para la pestaña "Chat"
+            // Lógica para la pestaña "Chat".
           } else if (index == 4) {
-            // Lógica para la pestaña "Perfil"
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserDetailsPage(
+                nombre: widget.userName,
+                apellidos: widget.userSurname,
+                esEstudiante: false,
+                userName: widget.userName,
+                userSurname: widget.userSurname,
+              );
+            }));
+          } else if (index == 5) {
+            userLogout();
           }
         },
         items: const <BottomNavigationBarItem>[
@@ -362,6 +395,190 @@ class _UserListPageState extends State<UserListPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.white),
             label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout, color: Colors.white),
+            label: 'Cerrar Sesión',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // -------------------------------------------------------------------------
+  // Lógica para construir la interfaz no administrador
+  Widget buildNonAdminUI() {
+    var filteredUsers = estudiantes;
+    bool esEstudiante = true;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lista de Alumnos'),
+        backgroundColor: const Color(0xFF29DA81),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Abre un cuadro de diálogo para la búsqueda.
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  String query =
+                      ''; // Variable para almacenar la consulta de búsqueda.
+
+                  return AlertDialog(
+                    title: const Text('Buscar por Nombre'),
+                    content: TextField(
+                      onChanged: (text) {
+                        query =
+                            text; // Almacena la consulta a medida que se escribe.
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Cierra el cuadro de diálogo y realiza la búsqueda.
+                          Navigator.of(context).pop();
+                          // Lógica de búsqueda con "query".
+                          var searchResults = estudiantes
+                              .where((user) =>
+                                  user['nombre'] != null &&
+                                  user['nombre']
+                                      .toLowerCase()
+                                      .contains(query.toLowerCase()))
+                              .toList();
+                          // Filtra la lista de usuarios según "query".
+                          setState(() {
+                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
+                            filteredUsers.clear();
+                            filteredUsers.addAll(searchResults
+                                .cast<Map<String, Map<String, dynamic>>>());
+                          });
+                        },
+                        child: const Text('Buscar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.search), // Icono de lupa
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredUsers.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return UserDetailsPage(
+                        nombre: filteredUsers[index]['estudiante']['nombre'],
+                        apellidos: filteredUsers[index]['estudiante']
+                            ['apellidos'],
+                        esEstudiante: esEstudiante,
+                        userName: widget.userName,
+                        userSurname: widget.userSurname,
+                      );
+                    }));
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.only(
+                        top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
+                    child: ListTile(
+                      title: GestureDetector(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 76, 76, 76),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                          ],
+                        ),
+                      ),
+                      subtitle:
+                          Text(filteredUsers[index]['estudiante']['correo']),
+                      leading: const Icon(
+                        Icons.person,
+                        size: 45,
+                      ),
+                      trailing: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF29DA81),
+        currentIndex: 0,
+        onTap: (int index) {
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserListPage(
+                userName: widget.userName,
+                userSurname: widget.userSurname,
+              );
+            }));
+          } else if (index == 1) {
+            // Lógica para la pestaña "Tareas"
+          } else if (index == 2) {
+            // Lógica para la pestaña "Gráficos"
+          } else if (index == 3) {
+            // Lógica para la pestaña "Chat"
+          } else if (index == 4) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UserDetailsPage(
+                nombre: widget.userName,
+                apellidos: widget.userSurname,
+                esEstudiante: false,
+                userName: widget.userSurname,
+                userSurname: widget.userSurname,
+              );
+            }));
+          } else if (index == 5) {
+            userLogout();
+          }
+        },
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            backgroundColor: Color(0xFF29DA81),
+            icon: Icon(Icons.people, color: Colors.white),
+            label: 'Usuarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment, color: Colors.white),
+            label: 'Tareas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart, color: Colors.white),
+            label: 'Gráficos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat, color: Colors.white),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.white),
+            label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout, color: Colors.white),
+            label: 'Cerrar Sesión',
           ),
         ],
       ),

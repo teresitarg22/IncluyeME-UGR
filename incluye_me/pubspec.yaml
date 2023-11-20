@@ -54,6 +54,7 @@ dev_dependencies:
   flutter_form_builder: ^9.1.1 
   convert: ^3.0.1
   image: ^3.0.2
+  shared_preferences: ^2.0.6
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

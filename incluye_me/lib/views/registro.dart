@@ -3,65 +3,71 @@ import 'registro_alumno.dart';
 import 'registro_personal.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Selección de Rol'),
-        backgroundColor: Color.fromARGB(255, 41, 218, 129),
+        title: const Text('Selección de Rol'),
+        backgroundColor: const Color.fromARGB(255, 41, 218, 129),
       ),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
+              // --------------------------
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AlumnoRegistration(),
+                      builder: (context) => const AlumnoRegistration(),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF29DA81),
-                  minimumSize: Size(
+                  backgroundColor: const Color(0xFF29DA81),
+                  minimumSize: const Size(
                       double.infinity, 100), // Ajusta la altura como desees
                 ),
-                child: Row(
+                // --------------------------
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.school), // Icono de estudiante
-                    SizedBox(width: 8), // Espacio entre el icono y el texto
+                    Icon(Icons.school), // Icono de estudiante.
+                    SizedBox(width: 8),
                     Text(
-                      'Alumno',
+                      'Estudiante',
                       style: TextStyle(fontSize: 24),
                     ), // Texto del botón
                   ],
                 ),
               ),
             ),
-            SizedBox(width: 20), // Espacio entre los botones
+            const SizedBox(width: 20),
             Expanded(
+              // --------------------------
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfesorRegistration(),
+                      builder: (context) => const ProfesorRegistration(),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF29DA81),
-                  minimumSize: Size(
+                  backgroundColor: const Color(0xFF29DA81),
+                  minimumSize: const Size(
                       double.infinity, 100), // Ajusta la altura como desees
                 ),
-                child: Row(
+                // --------------------------
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.work), // Icono de estudiante
+                    Icon(Icons.work), // Icono de estudiante.
                     SizedBox(width: 8), // Espacio entre el icono y el texto
                     Text(
                       'Personal',

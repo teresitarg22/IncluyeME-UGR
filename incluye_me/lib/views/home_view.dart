@@ -3,11 +3,13 @@ import 'package:incluye_me/views/registro_alumno.dart';
 import 'package:incluye_me/views/registro_personal.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Selección de Rol'),
+        title: const Text('Selección de Rol'),
       ),
       body: Center(
         child: Row(
@@ -18,26 +20,26 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AlumnoRegistration()));
+                        builder: (context) => const AlumnoRegistration()));
               },
-              child: Text('Alumno'),
+              child: const Text('Estudiante'),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ProfesorRegistration()));
+                        builder: (context) => const ProfesorRegistration()));
               },
-              child: Text('Personal'),
+              child: const Text('Personal'),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: Text('LogIn'),
+              child: const Text('LogIn'),
             ),
           ],
         ),
