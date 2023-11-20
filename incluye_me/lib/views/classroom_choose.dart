@@ -32,7 +32,8 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
   String? _selectedClase;
   RegistroController controlador = RegistroController();
   List<String> _classList = [];
-  Map<String, Map<String, int>> amount = {};
+  Map<String, Map<String, Map<String, int>>> amount = {} ; 
+  Map<String, int> menus = {};
 
   Future<void> loadClass() async {
     if (_classList.isNotEmpty) return;
@@ -57,7 +58,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
             appBar: AppBar(
               title: Text(
                 'Selecciona una Clase',
-                style: TextStyle(fontSize: 28), 
+                style: TextStyle(fontSize: 28),
               ),
               backgroundColor: const Color.fromARGB(255, 41, 218, 129),
             ),
@@ -69,7 +70,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                     children: [
                       Text(
                         'Selecciona una Clase:',
-                        style: TextStyle(fontSize: 25), 
+                        style: TextStyle(fontSize: 25),
                       ),
                       SizedBox(height: 20),
                       DropdownButton<String>(
@@ -79,15 +80,14 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                             _selectedClase = value;
                           });
                         },
-                       
                         items: _classList.map((clase) {
                           return DropdownMenuItem<String>(
                             value: clase,
                             child: Container(
-                              width: 300, 
+                              width: 300,
                               child: Text(
                                 clase,
-                                style: TextStyle(fontSize: 20), 
+                                style: TextStyle(fontSize: 20),
                               ),
                             ),
                           );
@@ -103,34 +103,60 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                     icon: Icon(Icons.arrow_forward),
                     iconSize: 50.0,
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return TaskCommand(
-                          clase: _selectedClase,
+                      if (_selectedClase == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration:
+                                Duration(hours: 24), // Duración indefinida
+                            content: Text(
+                              'Es necesario seleccionar una clase',
+                              textAlign: TextAlign.center, // Centra el texto
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 30), // Aumenta el tamaño del texto
+                            ),
+                            backgroundColor: Colors.white,
+                          ),
                         );
-                      })).then((result) {
-                        // result es el dato que pasaste de vuelta desde TaskCommand
-                        if (result != null) {
-                          setState(() {
-                            Map<String, int> amount_aux = result['menu'];
-                            
-                            amount[result['clase']] = amount_aux ; 
-                            
-                            _classList.remove(result['clase']);
-                            _selectedClase =
-                                _classList.isNotEmpty ? _classList[0] : null;
-                           
-                            if (_classList.isEmpty) {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return SummaryPage(
-                                  amount: amount,
-                                );
-                              }));
-                            }
-                          });
-                        }
-                      });
+                      } else {
+                        ScaffoldMessenger.of(context)
+                            .hideCurrentSnackBar(); // Oculta el SnackBar cuando se selecciona una clase
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return TaskCommand(
+                            clase: _selectedClase,
+                          );
+                        })).then((result) {
+                          // result es el dato que pasaste de vuelta desde TaskCommand
+                          if (result != null) {
+                            setState(() {
+                              Map<String,int> amount_aux = result['menu'];
+                              Map<String, Map<String, int>> amount_aux2 = {};
+                              for (var key in amount_aux.keys) {
+                                amount_aux2[key] = result['specialOptions'];
+                                menus[result['clase']] = amount_aux[key]!;  
+                              }
+                              
+
+                              amount[result['clase']] = amount_aux2;
+
+                              _classList.remove(result['clase']);
+                              _selectedClase =
+                                  _classList.isNotEmpty ? _classList[0] : null;
+
+                              if (_classList.isEmpty) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return SummaryPage(
+                                    amount: amount,
+                                    menus: menus,
+                                  );
+                                }));
+                              }
+                            });
+                          }
+                        });
+                      }
                     },
                   ),
                 ),

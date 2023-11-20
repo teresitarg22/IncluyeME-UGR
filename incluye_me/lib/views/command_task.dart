@@ -9,9 +9,15 @@ class TaskCommand extends StatefulWidget {
 }
 
 class _CreateTaskCommandState extends State<TaskCommand> {
-  List<String> menus = ['Menu Principal', 'Menu Vegano'];
+  List<String> menus = ['Menu Principal'];
   Map<String, int> amount = {};
-  Map<String, int> specialOptions = {'Sin Carne': 0, 'Triturados': 0};
+  Map<String, int> specialOptions = {
+    'Sin Carne': 0,
+    'Triturados': 0,
+    'Fruta': 0,
+    'Fruta triturada': 0,
+    'Yogur': 0
+  };
   int currentClassIndex = 0;
 
   @override
@@ -109,7 +115,12 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                       icon: Icon(Icons.add, size: 30.0),
                       onPressed: () {
                         setState(() {
-                          if (specialOptions[key]! <
+                          if (key == 'Fruta Triturada') {
+                            if (specialOptions['Fruta Triturada']! <
+                                specialOptions['Fruta']!) {
+                              specialOptions[key] = specialOptions[key]! + 1;
+                            }
+                          } else if (specialOptions[key]! <
                               amount['Menu Principal']!) {
                             specialOptions[key] = specialOptions[key]! + 1;
                           }
@@ -143,7 +154,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                   onPressed: () {
                     Navigator.pop(
                       context,
-                      {'clase': widget.clase, 'menu': amount},
+                      {'clase': widget.clase, 'menu': amount , 'specialOptions': specialOptions},
                     );
                   },
                 ),
