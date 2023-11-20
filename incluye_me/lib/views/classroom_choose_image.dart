@@ -2,10 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/command_task_image.dart';
-import 'command_task.dart';
 import '../controllers/usuario_controller.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
+import 'sumary_page_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,113 +31,109 @@ class ClaseDropdownImage extends StatefulWidget {
 }
 
 class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
+  String? _selectedClase;
   final Controller controlador = Controller();
-  var aulas = [];
+  List<String> aulas = [];
+  Map<String, Map<String, int>> amount = {};
   //Map<String, File> fotos = {};
-  int sizeAulas = 0;
-  String _selectedClase = '';
 
   @override
   void initState() {
     super.initState();
-    buscarAulas();
+    //buscarAulas();
   }
 
-  Future<void> buscarAulas() async {
-    aulas = await controlador.listaAulas();
-
-    setState(() {
-      sizeAulas = aulas.length;
-    });
-
-    /*Future.forEach(aulas, (aula) {
-      return getImageFromDatabase(aula['aula']['nombre']);
-    });*/
-  }
-
-  /*Future<void> getImageFromDatabase(String aula) async {
-    // Obtener los bytes de la imagen desde la base de datos
-    // bytes es la variable donde se obtienen los bytes desde la base de datos
-    List<Map<String, Map<String, dynamic>>> datos =
-        await controlador.fotoAula(aula);
-    late Uint8List bytes;
-
-    if (datos.isNotEmpty) {
-      final imagen = datos[0]['personal']?['foto'];
-      bytes = Uint8List.fromList(imagen);
-
-      // Crear un archivo temporal para la imagen
-      final tempDir = await getTemporaryDirectory();
-      final tempPath = tempDir.path;
-      final tempFile = File('$tempPath/$aula.png');
-
-      // Escribir los bytes en el archivo temporal
-      if (bytes.isNotEmpty) {
-        await tempFile.writeAsBytes(bytes);
-      }
-
-      setState(() {
-        fotos[aula] = tempFile;
-      });
+  Future<void> loadClass() async {
+    if (aulas.isNotEmpty) return;
+    for (var _class in await controlador.listaAulas()) {
+      aulas.add(_class['aula']!['nombre'].toString());
     }
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Selecciona una clase')),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(60.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 32.0,
-          crossAxisSpacing: 32.0,
-          childAspectRatio: 1.0,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          if (index >= 0 && index < sizeAulas) {
-            _selectedClase = aulas[index]['aula']['nombre'];
-            /*if (!fotos.containsKey(_selectedClase)) {
-              getImageFromDatabase(_selectedClase);
-            }*/
-          }
-
-          return Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  if (index >= 0 && index < sizeAulas) {
-                    _selectedClase = aulas[index]['aula']['nombre'];
-                    /*if (!fotos.containsKey(_selectedClase)) {
-                      getImageFromDatabase(_selectedClase);
-                    }*/
-                  }
-
-                  Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return TaskCommandImage(
-                      clase: _selectedClase,
-                    );
-                  }));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  side: const BorderSide(width: 1.0),
-                ),
-                child: Image.asset('assets/aula.png'),
-
-                //child: fotos.containsKey(_selectedClase)
-//? Image.file(fotos[_selectedClase]!)
-                //: Image.asset('assets/usuario_sin_foto.png'),
-                //child: Image.asset('assets/usuario_sin_foto.png'),
+    return FutureBuilder(
+      future: loadClass(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.error != null) {
+          // Si algo sale mal...
+          return Center(child: Text('Ha ocurrido un error!'));
+        } else {
+          // Cuando los datos están listos, muestra tu widget
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Selecciona una Clase',
+                style: TextStyle(fontSize: 28),
               ),
-              SizedBox(height: 8),
-              Text(_selectedClase),
-            ],
+              backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+            ),
+            body: GridView.builder(
+              padding: const EdgeInsets.all(60.0),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 32.0,
+                crossAxisSpacing: 32.0,
+                childAspectRatio: 1.0,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                if (index >= 0 && index < aulas.length) {
+                  _selectedClase = aulas[index];
+                }
+
+                return Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (index >= 0 && index < aulas.length) {
+                          _selectedClase = aulas[index];
+                        }
+
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return TaskCommandImage(
+                            clase: _selectedClase,
+                          );
+                        })).then((result) {
+                          if (result != null) {
+                            setState(() {
+                              Map<String, int> amount_aux = result['menu'];
+                              amount[result['clase']] = amount_aux;
+                              aulas.remove(result['clase']);
+
+                              _selectedClase =
+                                  aulas.isNotEmpty ? aulas[0] : null;
+
+                              if (aulas.isEmpty) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return SummaryPageImage(
+                                    amount: amount,
+                                  );
+                                }));
+                              }
+                            });
+                          }
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(width: 1.0),
+                      ),
+                      child: Image.asset('assets/aula.png'),
+                    ),
+                    SizedBox(height: 8),
+                    Text(_selectedClase!),
+                  ],
+                );
+              },
+              itemCount: aulas.length,
+            ),
           );
-        },
-        itemCount: sizeAulas,
-      ),
+        }
+      },
     );
   }
 }

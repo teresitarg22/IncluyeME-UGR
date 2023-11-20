@@ -57,7 +57,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
             appBar: AppBar(
               title: Text(
                 'Selecciona una Clase',
-                style: TextStyle(fontSize: 28), 
+                style: TextStyle(fontSize: 28),
               ),
               backgroundColor: const Color.fromARGB(255, 41, 218, 129),
             ),
@@ -69,7 +69,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                     children: [
                       Text(
                         'Selecciona una Clase:',
-                        style: TextStyle(fontSize: 25), 
+                        style: TextStyle(fontSize: 25),
                       ),
                       SizedBox(height: 20),
                       DropdownButton<String>(
@@ -79,15 +79,14 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                             _selectedClase = value;
                           });
                         },
-                       
                         items: _classList.map((clase) {
                           return DropdownMenuItem<String>(
                             value: clase,
                             child: Container(
-                              width: 300, 
+                              width: 300,
                               child: Text(
                                 clase,
-                                style: TextStyle(fontSize: 20), 
+                                style: TextStyle(fontSize: 20),
                               ),
                             ),
                           );
@@ -113,13 +112,13 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                         if (result != null) {
                           setState(() {
                             Map<String, int> amount_aux = result['menu'];
-                            
-                            amount[result['clase']] = amount_aux ; 
-                            
+
+                            amount[result['clase']] = amount_aux;
+
                             _classList.remove(result['clase']);
                             _selectedClase =
                                 _classList.isNotEmpty ? _classList[0] : null;
-                           
+
                             if (_classList.isEmpty) {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {

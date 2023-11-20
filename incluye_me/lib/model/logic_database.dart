@@ -158,10 +158,4 @@ class LogicDatabase {
     await request(
         "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
   }
-
-  // ----------------------------------------------------
-  // Funcion para obtener la lista de aulas
-  Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
-    return await request("SELECT * FROM aula");
-  }
 }

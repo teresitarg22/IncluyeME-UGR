@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:incluye_me/views/classroom_choose_image.dart';
 import '../views/user_list.dart';
 import '../views/home_view.dart';
-import 'classroom_choose.dart';
+import 'classroom_choose_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 
 class TaskCommandImage extends StatefulWidget {
   final String? clase;
-  const TaskCommandImage({super.key, required this.clase});
+  const TaskCommandImage({Key? key, required this.clase});
 
   @override
   _CreateTaskImageCommandState createState() => _CreateTaskImageCommandState();
@@ -44,11 +44,10 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
     'assets/yogur.png',
     'assets/fruta.png'
   ]; // Lista de menús
-  Map<String, Map<String, int>> amount =
-      {}; // Mapa para guardar la cantidad seleccionada de cada menú por clase
+
+  Map<String, int> amount = {};
   Map<String, int> numeros = {};
-  //List<String> classroom = ['Clase 1', 'Clase 2', 'Clase 3']; // Lista de clases
-  //int currentClassIndex = 0; // Índice de la clase actual
+  int currentClassIndex = 0;
 
   late String current_class;
   Map<String, String> contador = {};
@@ -59,10 +58,10 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
 
     current_class = widget.clase!;
 
-    amount[current_class] = {};
+    amount = {};
 
     for (var menu in menus) {
-      amount[current_class]![menu] = 0;
+      amount[menu] = 0;
     }
 
     numeros["assets/uno.png"] = 1;
@@ -77,14 +76,6 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
     contador["assets/fruta_triturada.png"] = 'assets/cero.png';
     contador["assets/yogur.png"] = 'assets/cero.png';
     contador["assets/fruta.png"] = 'assets/cero.png';
-
-    /*
-    for (var clas in classroom) {
-      amount[clas] = {};
-      for (var menu in menus) {
-        amount[clas]![menu] = 0;
-      }
-    }*/
   }
 
   @override
@@ -112,7 +103,36 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
           buildRowWithImages('assets/puré.png', repeatedImages),
           buildRowWithImages('assets/fruta_triturada.png', repeatedImages),
           buildRowWithImages('assets/yogur.png', repeatedImages),
-          buildRowWithImages('assets/fruta.png', repeatedImages)
+          buildRowWithImages('assets/fruta.png', repeatedImages),
+          SizedBox(height: 20), // Separación entre los elementos de cada menú
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                iconSize: 50.0,
+                onPressed: () {
+                  if (currentClassIndex > 0) {
+                    setState(() {
+                      currentClassIndex--;
+                    });
+                  } else {
+                    // Navega a la página anterior o realiza otra acción cuando se está en la primera clase
+                  }
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.arrow_forward),
+                iconSize: 50.0,
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                    {'clase': current_class, 'menu': amount},
+                  );
+                },
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -160,13 +180,10 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
                         onTap: () {
                           setState(() {
                             selectedImagePath = imagePath;
-                            if (amount.containsKey(current_class)) {
-                              if (amount[current_class] != null &&
-                                  amount[current_class]![mainImagePath] !=
-                                      null &&
+                            if (amount.containsKey(mainImagePath)) {
+                              if (amount[mainImagePath] != null &&
                                   numeros[imagePath] != null) {
-                                amount[current_class]![mainImagePath] =
-                                    numeros[imagePath]!;
+                                amount[mainImagePath] = numeros[imagePath]!;
                               }
                             }
 
