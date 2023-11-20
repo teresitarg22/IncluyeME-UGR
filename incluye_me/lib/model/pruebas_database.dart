@@ -19,11 +19,6 @@ void main() {
   
   DataBaseDriver().connect().verifyPassword("profesor1@email.com", "12345").then((value) => print(value));
 
-  
-
-
-
-
 
 }
 
@@ -39,7 +34,7 @@ class DataBaseDriver {
       username: 'srvvjedp', // nombre de usuario de la base de datos
       password:
       'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
-    );
+    )
     return this;
   }
 
