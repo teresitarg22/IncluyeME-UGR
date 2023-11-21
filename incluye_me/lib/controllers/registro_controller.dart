@@ -1,8 +1,10 @@
-import '../model/logic_database.dart';
+import 'package:incluye_me/globals/globals.dart';
+
+
 import 'package:flutter/material.dart';
 
 class RegistroController {
-  final LogicDatabase _logicDatabase = LogicDatabase();
+
 
   // ----------------------------------------------------
 
@@ -17,7 +19,7 @@ class RegistroController {
       String mayMin,
       String selectedOptions,
       bool sabeLeer) async {
-    await _logicDatabase.registrarEstudiante(
+    await dbDriver.registrarEstudiante(
         nombre,
         apellidos,
         imagenesContrasenia,
@@ -40,37 +42,37 @@ class RegistroController {
       var image,
       bool esAdmin,
       var aulasProfesor) async {
-    await _logicDatabase.registrarProfesor(
+    await dbDriver.registrarProfesor(
         nombre, apellidos, correoElectronicoProfesor, passwd, image, esAdmin);
     if (aulasProfesor.isNotEmpty) {
       for (var aula in aulasProfesor) {
         // Verificar si el aula ya existe
-        var aulaResult = await _logicDatabase.comprobarAula(aula);
+        var aulaResult = await dbDriver.comprobarAula(aula);
         // Si el aula no existe, insertarla
-        if (aulaResult.isEmpty) {
-          await _logicDatabase.insertarAula(aula);
+        if (aulaResult!.isEmpty) {
+          await dbDriver.insertarAula(aula);
         }
-        await _logicDatabase.insertarImparteEn(aula, nombre, apellidos);
+        await dbDriver.insertarImparteEn(aula, nombre, apellidos);
       }
     }
   }
 
   // ----------------------------------------------------
-  Future<List<Map<String, Map<String, dynamic>>>> comprobarEstudianteController(
+  Future<List<Map<String, Map<String, dynamic>>>?> comprobarEstudianteController(
       String nombre, String apellidos) async {
-    return await _logicDatabase.comprobarEstudiante(nombre, apellidos);
+    return await dbDriver.comprobarEstudiante(nombre, apellidos);
   }
 
   // ----------------------------------------------------
   Future<List<Map<String, Map<String, dynamic>>>> comprobarPersonalController(
       String nombre, String apellidos) async {
-    return await _logicDatabase.comprobarPersonal(nombre, apellidos);
+    return await dbDriver.comprobarPersonal(nombre, apellidos);
   }
 
   // ----------------------------------------------------
   Future<List<Map<String, Map<String, dynamic>>>>
       comprobarPersonalCorreoController(String correo) async {
-    return await _logicDatabase.comprobarPersonalCorreo(correo);
+    return await dbDriver.comprobarPersonalCorreo(correo);
   }
 
   // ----------------------------------------------------

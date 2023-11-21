@@ -1,35 +1,35 @@
-import '../model/logic_database.dart';
+import 'package:incluye_me/globals/globals.dart';
+
 
 // -------------------------------------------
 
 class Controller {
-  final LogicDatabase _logicDatabase = LogicDatabase();
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> listaEstudiantes() async {
-    return await _logicDatabase.listaEstudiantes();
+    return await dbDriver.listaEstudiantes();
   }
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> listaPersonal() async {
-    return await _logicDatabase.listaPersonal();
+    return await dbDriver.listaPersonal();
   }
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> getEstudiante(
       String nombre, String apellidos) async {
-    return await _logicDatabase.comprobarEstudiante(nombre, apellidos);
+    return await dbDriver.comprobarEstudiante(nombre, apellidos);
   }
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> getPersonal(
       String nombre, String apellidos) async {
-    return await _logicDatabase.comprobarPersonal(nombre, apellidos);
+    return await dbDriver.comprobarPersonal(nombre, apellidos);
   }
 
   // -----------------------------
   Future<bool> esAdmin(String nombre, String apellidos) async {
-    var value = await _logicDatabase.comprobarPersonal(nombre, apellidos);
+    var value = await dbDriver.comprobarPersonal(nombre, apellidos);
 
     if (value.isNotEmpty) {
       var personalData = value[0]['personal'];
@@ -44,7 +44,7 @@ class Controller {
 
   // -----------------------------
   Future<bool> esUsuarioEstudiante(String nombre, String apellidos) async {
-    var value = await _logicDatabase.comprobarEstudiante(nombre, apellidos);
+    var value = await dbDriver.comprobarEstudiante(nombre, apellidos);
 
     if (value.isNotEmpty) {
       var estudianteData = value[0]['estudiante'];
@@ -61,7 +61,7 @@ class Controller {
 
   // -----------------------------
   Future<void> eliminarEstudiante(String nombre, String apellidos) async {
-    await _logicDatabase.eliminarEstudiante(nombre, apellidos);
+    await dbDriver.eliminarEstudiante(nombre, apellidos);
   }
 
   // -----------------------------
