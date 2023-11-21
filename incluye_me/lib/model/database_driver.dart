@@ -171,4 +171,22 @@ class DataBaseDriver {
         "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 
+
+  Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
+    return await request("SELECT * FROM aula");
+  }
+
+  Future<void> insertarTarea(String nombre, DateTime fecha) async {
+    await request(
+        "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+  }
+   // ----------------------------------------------------
+  // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega 
+  Future<void> insertarAsginada(String nombre, DateTime fecha) async {
+    await request(
+        "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+  }
+
+  
+
 }

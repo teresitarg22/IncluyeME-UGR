@@ -1,10 +1,8 @@
 import 'package:incluye_me/globals/globals.dart';
 
-
 // -------------------------------------------
 
 class Controller {
-
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> listaEstudiantes() async {
     return await dbDriver.listaEstudiantes();
@@ -62,5 +60,10 @@ class Controller {
   // -----------------------------
   Future<void> eliminarEstudiante(String nombre, String apellidos) async {
     await dbDriver.eliminarEstudiante(nombre, apellidos);
+  }
+
+  // -----------------------------
+  Future<void> insertarTarea(String nombre, DateTime tarea) async {
+    await dbDriver.insertarTarea(nombre, tarea);
   }
 }

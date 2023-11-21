@@ -75,6 +75,10 @@ class RegistroController {
     return await dbDriver.comprobarPersonalCorreo(correo);
   }
 
+    Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
+    return await dbDriver.listaAulas();
+  }
+
   // ----------------------------------------------------
   void llevarMostrarUsuarios(BuildContext context) {
     Navigator.of(context).pop();
