@@ -3,33 +3,33 @@ import 'package:incluye_me/views/task_list.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
 import './user_list.dart';
-import '../controllers/usuario_controller.dart';
+import '../controllers/task_controller.dart';
+import 'mostrar_usuario.dart';
 
 // ----------------------------------------------------------
 
-class UserDetailsPage extends StatefulWidget {
-  final String nombre;
-  final String apellidos;
-  final bool esEstudiante;
+class TaskDetailsPage extends StatefulWidget {
+  final int taskID;
+  final String tipo;
   final String userName;
   final String userSurname;
 
-  const UserDetailsPage(
+  const TaskDetailsPage(
       {super.key,
-      required this.nombre,
-      required this.apellidos,
-      required this.esEstudiante,
+      required this.taskID,
       required this.userName,
+      required this.tipo,
       required this.userSurname});
   @override
-  _UserDetailsPageState createState() => _UserDetailsPageState();
+  _TaskDetailsPageState createState() => _TaskDetailsPageState();
 }
 
 // -----------------------------------------------------------------------
 
-class _UserDetailsPageState extends State<UserDetailsPage> {
+class _TaskDetailsPageState extends State<TaskDetailsPage> {
   final Controller controlador = Controller();
   var resultado;
+  String tipo = "";
   User? user;
 
   @override
@@ -41,7 +41,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   // -----------------------------------------------------------------------------------------
   // Buscamos en la BD los detalles del usuario, teniendo en cuenta si es estudiante o no.
   Future<void> buscarDatosUsuario() async {
-    if (widget.esEstudiante == true) {
+    if (widget.tipo == 'general') {
       // ------------------------
       // ESTUDIANTE
       resultado =
@@ -62,7 +62,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
             sabeLeer: detalles['sabeLeer'] ?? false);
       });
-    } else {
+    } else if (widget.tipo == 'material') {
       // ------------------------
       // PERSONAL
       resultado =
@@ -78,6 +78,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
             foto: "",
             contrasenia: detalles['contrasenia']);
       });
+    } else if (widget.tipo == "comanda") {
+    } else {
+      print("ERROR: No se ha podido encontrar el tipo de tarea.");
     }
   }
 
@@ -85,7 +88,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalles del Usuario'),
+        title: const Text('Detalles de la Tarea'),
         backgroundColor: const Color(0xFF29DA81),
       ),
       body: Padding(

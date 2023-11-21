@@ -129,4 +129,53 @@ class LogicDatabase {
     await request(
         "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
+
+  // ----------------------------------------------------
+  // Función para mostrar las tareas de comanda
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareasComanda() async {
+    return await request("SELECT * FROM comanda");
+  }
+
+  // ----------------------------------------------------
+  // Función para mostrar las tareas generales
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareasGenerales() async {
+    return await request("SELECT * FROM general");
+  }
+
+  // ----------------------------------------------------
+  // Función para mostrar las tareas de material
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareasMaterial() async {
+    return await request("SELECT * FROM material");
+  }
+
+  // ----------------------------------------------------
+  // Función para eliminar una tarea
+  Future<void> eliminarTarea(int id) async {
+    await request("DELETE FROM tarea WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Funicón para saber el tipo de tarea
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaGeneral(int id) async {
+    return await request("SELECT * FROM general WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para saber el tipo de tarea
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaMaterial(
+      int id) async {
+    return await request("SELECT * FROM material WHERE id = $id ");
+  }
+
+  // ----------------------------------------------------
+  // Función para saber el tipo de tarea
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaComanda(int id) async {
+    return await request("SELECT * FROM comanda WHERE id = $id ");
+  }
+
+  // ----------------------------------------------------
+  // Función para mostrar todas las tareas
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareas() async {
+    return await request("SELECT * FROM tarea");
+  }
 }

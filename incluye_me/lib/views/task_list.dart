@@ -1,35 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/task_list.dart';
+import 'package:incluye_me/views/task_view.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
-import '../controllers/usuario_controller.dart';
 import '../controllers/session_controller.dart';
+import '../controllers/task_controller.dart';
+import 'user_list.dart';
+import 'edit_user.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
-class UserListPage extends StatefulWidget {
+class TaskListPage extends StatefulWidget {
   final String userName;
   final String userSurname;
 
-  const UserListPage(
+  const TaskListPage(
       {super.key, required this.userName, required this.userSurname});
 
   @override
-  _UserListPageState createState() => _UserListPageState();
+  _TaskListPageState createState() => _TaskListPageState();
 }
 
 // ------------------------------------------------------------------
 
-class _UserListPageState extends State<UserListPage> {
+class _TaskListPageState extends State<TaskListPage> {
   bool isAdmin = false;
-  var estudiantes = [];
-  var personal = [];
-  var usuarios = [];
+  var tareas = [];
+  var material = [];
+  String tipo = ""; // Variable para almacenar el tipo de tarea
+  bool asignada = false; // Variable para almacenar si la tarea está asignada
+
   Controller controlador = Controller();
 
   SessionController sessionController = SessionController();
 
-  String? selectedFilter = "Estudiantes";
+  String? selectedFilter = "Todas";
 
   // -----------------------------
   void userLogout() async {
@@ -46,19 +50,14 @@ class _UserListPageState extends State<UserListPage> {
 
   // -----------------------------
   Future<void> initializeData() async {
-    await loadUsersIds();
+    await loadTaskIds();
     await initializeAdminStatus();
   }
 
   // -----------------------------
-  Future<void> loadUsersIds() async {
-    estudiantes = await controlador.listaEstudiantes();
-    personal = await controlador.listaPersonal();
-
-    setState(() {
-      usuarios.addAll(estudiantes);
-      usuarios.addAll(personal);
-    });
+  Future<void> loadTaskIds() async {
+    tareas = await controlador.listaTareas();
+    material = await controlador.listaTareasMaterial();
   }
 
   // -----------------------------
@@ -77,23 +76,9 @@ class _UserListPageState extends State<UserListPage> {
   // ---------------------------------------------------------
   // Lógica para construir la interfaz de administrador.
   Widget buildAdminUI() {
-    var filteredUsers = [];
-    bool esEstudiante = true;
-    String tipo = "estudiante";
-
-    if (selectedFilter == "Personal") {
-      filteredUsers = personal;
-      esEstudiante = false;
-      tipo = "personal";
-    } else if (selectedFilter == "Estudiantes") {
-      filteredUsers = estudiantes;
-      esEstudiante = true;
-      tipo = "estudiante";
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Usuarios'),
+        title: const Text('Lista de Tareas'),
         backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
@@ -117,27 +102,28 @@ class _UserListPageState extends State<UserListPage> {
                       TextButton(
                         onPressed: () {
                           // Cierra el cuadro de diálogo y realiza la búsqueda
-                          Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query".
-                          var searchResults = usuarios.where((user) {
-                            final estudianteNombre =
-                                user[0]?['nombre']?.toLowerCase() ?? '';
-                            final personalNombre =
-                                user['personal']?['nombre']?.toLowerCase() ??
-                                    '';
+                          // Navigator.of(context).pop();
+                          // // Lógica de búsqueda con "query".
+                          // var searchResults = tareas.where((user) {
+                          //   final estudianteNombre =
+                          //       user['estudiante']?['nombre']?.toLowerCase() ??
+                          //           '';
+                          //   final personalNombre =
+                          //       user['personal']?['nombre']?.toLowerCase() ??
+                          //           '';
 
-                            return estudianteNombre
-                                    .contains(query.toLowerCase()) ||
-                                personalNombre.contains(query.toLowerCase());
-                          }).toList();
+                          //   return estudianteNombre
+                          //           .contains(query.toLowerCase()) ||
+                          //       personalNombre.contains(query.toLowerCase());
+                          // }).toList();
 
-                          // Filtra la lista de usuarios según "query".
-                          setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
-                            filteredUsers.clear();
-                            filteredUsers.addAll(searchResults
-                                .cast<Map<String, Map<String, dynamic>>>());
-                          });
+                          // // Filtra la lista de usuarios según "query".
+                          // setState(() {
+                          //   // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
+                          //   tareas.clear();
+                          //   tareas.addAll(searchResults
+                          //       .cast<Map<String, Map<String, dynamic>>>());
+                          // });
                         },
                         child: const Text('Buscar'),
                       ),
@@ -148,54 +134,26 @@ class _UserListPageState extends State<UserListPage> {
             },
             icon: const Icon(Icons.search), // Icono de lupa.
           ),
-          DropdownButton<String?>(
-            value: selectedFilter,
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedFilter = newValue;
-              });
-            },
-            items: <String?>['Estudiantes', 'Personal']
-                .map<DropdownMenuItem<String?>>((String? value) {
-              return DropdownMenuItem<String?>(
-                value: value,
-                child: Text(value ?? ''),
-              );
-            }).toList(),
-          ),
         ],
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: filteredUsers.length,
+              itemCount: tareas.length,
               itemBuilder: (BuildContext context, int index) {
-                final nombre = filteredUsers[index][tipo]?['nombre'];
-
-                if (nombre != null) {
-                  controlador
-                      .esUsuarioEstudiante(
-                          filteredUsers[index][tipo]?['nombre'],
-                          filteredUsers[index][tipo]?['apellidos'])
-                      .then((valorEsEstudiante) {
-                    esEstudiante = valorEsEstudiante;
-                    if (esEstudiante) {
-                      tipo = "estudiante";
-                    } else {
-                      tipo = "personal";
-                    }
-                  });
-                }
-
+                controlador
+                    .tipoTarea(tareas[index]['tarea']['id'])
+                    .then((resultado) {
+                  tipo = resultado;
+                });
                 return InkWell(
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return UserDetailsPage(
-                        nombre: filteredUsers[index][tipo]['nombre'],
-                        apellidos: filteredUsers[index][tipo]['apellidos'],
-                        esEstudiante: esEstudiante,
+                      return TaskDetailsPage(
+                        taskID: tareas[index]['id'],
+                        tipo: tipo,
                         userName: widget.userName,
                         userSurname: widget.userSurname,
                       );
@@ -211,7 +169,7 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             const SizedBox(height: 4),
                             Text(
-                              "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
+                              "${tareas[index]?['tarea']?['nombre']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18, // Tamaño de fuente más grande.
@@ -223,8 +181,7 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle:
-                          Text(filteredUsers[index][tipo]?['correo'] ?? ''),
+                      subtitle: Text(tipo),
                       leading: const Icon(
                         Icons.person,
                         size: 45,
@@ -238,18 +195,6 @@ class _UserListPageState extends State<UserListPage> {
                                 color: Color.fromARGB(255, 76, 76, 76)),
                             onPressed: () {
                               // Nos dirigimos a la interfaz de edición de usuario:
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => EditUserPage(
-                                          nombre: filteredUsers[index][tipo]
-                                              ['nombre'],
-                                          apellidos: filteredUsers[index][tipo]
-                                              ['apellidos'],
-                                          esEstudiante: esEstudiante,
-                                          userName: widget.userName,
-                                          userSurname: widget.userSurname,
-                                        )),
-                              );
                             },
                           ),
                           // -----------------
@@ -269,7 +214,7 @@ class _UserListPageState extends State<UserListPage> {
                                       title:
                                           const Text('Confirmar Eliminación'),
                                       content: const Text(
-                                          '¿Seguro que quiere eliminar al usuario?'),
+                                          '¿Seguro que quiere eliminar la tarea?'),
                                       actions: <Widget>[
                                         TextButton(
                                           child: const Text('Sí'),
@@ -292,15 +237,14 @@ class _UserListPageState extends State<UserListPage> {
 
                                 if (confirmar) {
                                   // Realizar la actualización en la base de datos
-                                  controlador.eliminarEstudiante(
-                                      filteredUsers[index][tipo]['nombre'],
-                                      filteredUsers[index][tipo]['apellidos']);
+                                  controlador.eliminarTarea(
+                                      tareas[index]['tarea']['id']);
 
                                   //Actualizar la vista
                                   setState(() {
                                     // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
                                     // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
-                                    filteredUsers.removeAt(index);
+                                    tareas.removeAt(index);
                                   });
                                 }
                               }),
@@ -313,33 +257,90 @@ class _UserListPageState extends State<UserListPage> {
             ),
           ),
           // ---------------------------------------------------------------------
-          Container(
-            margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
-            child: ElevatedButton(
-              // --------------------------
-              onPressed: () {
-                Navigator.pushNamed(context, '/registroPage');
-              },
-              // --------------------------
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF29DA81),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+          Stack(
+            children: [
+              // Botón principal
+              ElevatedButton(
+                onPressed: () {
+                  // Acciones cuando se pulsa el botón principal
+                  Navigator.pushNamed(context, '/registroPage');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF29DA81),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  padding: const EdgeInsets.all(16.0),
                 ),
-                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.add),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'Nueva Tarea',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
-              // --------------------------
-              child: const Row(
-                // Usamos un Row para colocar el icono y el texto horizontalmente.
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.add),
-                  SizedBox(width: 8.0),
-                  Text('Nuevo Usuario',
-                      style: TextStyle(fontSize: 16)), // El texto del botón.
-                ],
+              // Botón "Petición de materiales"
+              Positioned(
+                top: 16, // Ajusta la posición vertical según sea necesario
+                left: 16, // Ajusta la posición horizontal según sea necesario
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/materialesPage');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF29DA81),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.inventory),
+                      SizedBox(width: 8.0),
+                      Text(
+                        'Petición de materiales',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              // Botón "Tarea General"
+              Positioned(
+                top: 16, // Ajusta la posición vertical según sea necesario
+                right: 16, // Ajusta la posición horizontal según sea necesario
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/tareaGeneralPage');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF29DA81),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: const EdgeInsets.all(16.0),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.assignment),
+                      SizedBox(width: 8.0),
+                      Text(
+                        'Tarea General',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -413,12 +414,12 @@ class _UserListPageState extends State<UserListPage> {
   // -------------------------------------------------------------------------
   // Lógica para construir la interfaz no administrador
   Widget buildNonAdminUI() {
-    var filteredUsers = estudiantes;
-    bool esEstudiante = true;
+    var tareas = material;
+    tipo = "material";
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Alumnos'),
+        title: const Text('Lista de Tareas'),
         backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
@@ -442,22 +443,22 @@ class _UserListPageState extends State<UserListPage> {
                       TextButton(
                         onPressed: () {
                           // Cierra el cuadro de diálogo y realiza la búsqueda.
-                          Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query".
-                          var searchResults = estudiantes
-                              .where((user) =>
-                                  user['nombre'] != null &&
-                                  user['nombre']
-                                      .toLowerCase()
-                                      .contains(query.toLowerCase()))
-                              .toList();
-                          // Filtra la lista de usuarios según "query".
-                          setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
-                            filteredUsers.clear();
-                            filteredUsers.addAll(searchResults
-                                .cast<Map<String, Map<String, dynamic>>>());
-                          });
+                          // Navigator.of(context).pop();
+                          // // Lógica de búsqueda con "query".
+                          // var searchResults = estudiantes
+                          //     .where((user) =>
+                          //         user['nombre'] != null &&
+                          //         user['nombre']
+                          //             .toLowerCase()
+                          //             .contains(query.toLowerCase()))
+                          //     .toList();
+                          // // Filtra la lista de usuarios según "query".
+                          // setState(() {
+                          //   // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
+                          //   tareas.clear();
+                          //   tareas.addAll(searchResults
+                          //       .cast<Map<String, Map<String, dynamic>>>());
+                          // });
                         },
                         child: const Text('Buscar'),
                       ),
@@ -474,17 +475,15 @@ class _UserListPageState extends State<UserListPage> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: filteredUsers.length,
+              itemCount: tareas.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return UserDetailsPage(
-                        nombre: filteredUsers[index]['estudiante']['nombre'],
-                        apellidos: filteredUsers[index]['estudiante']
-                            ['apellidos'],
-                        esEstudiante: esEstudiante,
+                      return TaskDetailsPage(
+                        taskID: tareas[index]['tarea']['id'],
+                        tipo: tipo,
                         userName: widget.userName,
                         userSurname: widget.userSurname,
                       );
@@ -500,7 +499,7 @@ class _UserListPageState extends State<UserListPage> {
                           children: [
                             const SizedBox(height: 4),
                             Text(
-                              "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
+                              "${tareas[index]['estudiante']?['nombre']} ${tareas[index]['estudiante']?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
                                 fontSize: 18,
@@ -511,8 +510,7 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
-                      subtitle:
-                          Text(filteredUsers[index]['estudiante']['correo']),
+                      subtitle: Text(tareas[index]['estudiante']['correo']),
                       leading: const Icon(
                         Icons.person,
                         size: 45,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:incluye_me/model/user.dart';
 import 'package:incluye_me/model/estudiante.dart';
+import 'package:incluye_me/views/task_list.dart';
 import './mostrar_usuario.dart';
 import './user_list.dart';
 import '../controllers/usuario_controller.dart';
@@ -372,7 +373,12 @@ class _EditUserPageState extends State<EditUserPage> {
                     );
                   }));
                 } else if (index == 1) {
-                  // Lógica para la pestaña "Tareas"
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return TaskListPage(
+                      userName: widget.userName,
+                      userSurname: widget.userSurname,
+                    );
+                  }));
                 } else if (index == 2) {
                   // Lógica para la pestaña "Gráficos"
                 } else if (index == 3) {
