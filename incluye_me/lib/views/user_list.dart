@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../globals/globals.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
 import '../controllers/usuario_controller.dart';
@@ -528,12 +529,16 @@ class _UserListPageState extends State<UserListPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
+            String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+            if (currentRouteName != '/userList') {
+              print(currentRouteName);
+              print("Test");
+              Navigator.pushReplacementNamed(context, '/userList', arguments: {
+                'userName': teacher!.getName(),
+                'userSurname': teacher!.getSurnames(),
+              });
+            }
+
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {

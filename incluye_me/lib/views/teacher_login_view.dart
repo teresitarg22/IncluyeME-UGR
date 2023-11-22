@@ -3,6 +3,8 @@ import 'package:incluye_me/globals/globals.dart';
 import 'package:incluye_me/model/database_driver.dart';
 import 'package:incluye_me/views/user_list.dart';
 
+import '../model/teacher.dart';
+
 class TeacherLoginView extends StatefulWidget {
   const TeacherLoginView({super.key});
 
@@ -57,20 +59,28 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     }
   }
 
-  void login(nombre, apellido){
+  Future<void> login(email) async {
+    var teacherData = await dbDriver.requestDataFromPersonal(email);
+    teacher = Teacher.fromJson(teacherData[0]['personal']!); //Convierte el usuario logueado en variable global
+
     _showSuccessDialog();
     Future.delayed(const Duration(seconds: 2), () {
-    Navigator.pop(context);
-    Future.delayed(const Duration(seconds: 1), () {
-    Navigator.pop(context);
-    Navigator.pushReplacement(context,
-    MaterialPageRoute(builder: (context) {
-    return UserListPage(
-    userName: nombre,
-    userSurname: apellido,
-    );
-    }));
-    });
+      Navigator.pop(context);
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.pop(context);
+        /*Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UserListPage(
+                    userName: teacher!.getName(),
+                    userSurname: teacher!.getSurnames(),
+                  )),
+        );*/
+        Navigator.pushReplacementNamed(context, '/userList', arguments: {
+          'userName': teacher!.getName(),
+          'userSurname': teacher!.getSurnames(),
+        });
+      });
     });
   }
 
@@ -180,7 +190,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     await dbDriver?.verifyPassword(email, password).then((value) => {
           if (value == true)
             {
-              login(nombre, apellido),
+              login(email),
             }
           else
             {

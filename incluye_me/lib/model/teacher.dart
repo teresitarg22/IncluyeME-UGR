@@ -4,7 +4,7 @@
 
 
 class Teacher {
-  String photo;
+  var photo;
   bool isAdmin;
   String name;
   String surnames;
@@ -27,4 +27,18 @@ class Teacher {
       correo: json['correo'],
     );
   }
+
+  @override
+  String toString() {
+    return 'Teacher{photo: $photo, isAdmin: $isAdmin, name: $name, surnames: $surnames, correo: $correo}';
+  }
+
+  getName(){
+    return name;
+  }
+
+  getSurnames(){
+    return surnames;
+  }
+
 }
