@@ -16,6 +16,8 @@ class UserListPage extends StatefulWidget {
 
   @override
   _UserListPageState createState() => _UserListPageState();
+
+
 }
 
 // ------------------------------------------------------------------
@@ -538,7 +540,6 @@ class _UserListPageState extends State<UserListPage> {
                 'userSurname': teacher!.getSurnames(),
               });
             }
-
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
@@ -546,15 +547,12 @@ class _UserListPageState extends State<UserListPage> {
           } else if (index == 3) {
             // Lógica para la pestaña "Chat"
           } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userSurname,
-                userSurname: widget.userSurname,
-              );
-            }));
+            String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+            if (currentRouteName != '/userDetails') {
+              print(currentRouteName);
+              print("Test");
+              Navigator.pushReplacementNamed(context, '/userDetails');
+            }
           } else if (index == 5) {
             userLogout();
           }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/controllers/session_controller.dart';
+import '../globals/globals.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
 import './user_list.dart';
@@ -31,10 +33,18 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   var resultado;
   User? user;
 
+  // --------------------------
+  SessionController sessionController = SessionController();
+
   @override
   void initState() {
     super.initState();
     buscarDatosUsuario();
+  }
+
+  void userLogout() async {
+    await sessionController.logout();
+    Navigator.of(context).pushReplacementNamed('/');
   }
 
   // -----------------------------------------------------------------------------------------
@@ -359,12 +369,15 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
+            String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+            if (currentRouteName != '/userList') {
+              print(currentRouteName);
+              print("Test");
+              Navigator.pushReplacementNamed(context, '/userList', arguments: {
+                'userName': teacher!.getName(),
+                'userSurname': teacher!.getSurnames(),
+              });
+            }
           } else if (index == 1) {
             // Lógica para la pestaña "Tareas"
           } else if (index == 2) {
@@ -372,15 +385,14 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           } else if (index == 3) {
             // Lógica para la pestaña "Chat"
           } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
+            String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+            if (currentRouteName != '/userDetails') {
+              print(currentRouteName);
+              print("Test");
+              Navigator.pushReplacementNamed(context, '/userDetails');
+            }
+          } else if (index == 5) {
+            userLogout();
           }
         },
         items: const <BottomNavigationBarItem>[
@@ -404,6 +416,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.white),
             label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout, color: Colors.white),
+            label: 'Cerrar Sesión',
           ),
         ],
       ),

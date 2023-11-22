@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/mostrar_usuario.dart';
 import 'package:incluye_me/views/start_view.dart';
 import 'globals/globals.dart';
 import 'views/registro.dart';
@@ -35,8 +36,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const StartView(),
         '/registroPage': (context) => const HomeScreen(),
-        '/userList': (context) =>
-            UserListPage(userName: user, userSurname: user)
+        '/userList': (context) => UserListPage(userName: user, userSurname: user),
+        '/userDetails': (context) => UserDetailsPage(nombre: teacher!.name, apellidos: teacher!.surnames, esEstudiante: false, userName: teacher!.name, userSurname: teacher!.surnames),
       },
     );
   }
