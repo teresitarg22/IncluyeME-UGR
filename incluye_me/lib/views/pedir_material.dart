@@ -28,6 +28,17 @@ class _PedirMaterialState extends State<PedirMaterial> {
     });
   }
 
+  void addMaterialToStudent()
+  {
+
+  }
+
+  List<String> aulaList = ["Aula 1", "Aula 2", "Aula 3"];
+  String selectedAula = "Aula 1";
+
+  List<String> studentList = ["Student 1", "Student 2", "Student 3"];
+  String selectedStudent = "Student 1";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,22 +75,28 @@ class _PedirMaterialState extends State<PedirMaterial> {
                 for (var controllers in controllersList)
                   TableRow(
                     children: [
-                      DropdownButton<String>(
-                        value: controllers[0].text,
-                        items: dropdownItems.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            controllers[0].text = value!;
-                          });
-                        },
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child : DropdownButton<String>(
+                          value: controllers[0].text,
+                          items: dropdownItems.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              controllers[0].text = value!;
+                            });
+                          },
+                        ),
                       ),
-                      TextFormField(
-                        controller: controllers[1],
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child : TextFormField(
+                          controller: controllers[1],
+                        ),
                       ),
                     ],
                   ),
@@ -88,6 +105,45 @@ class _PedirMaterialState extends State<PedirMaterial> {
           ),
           // Ajouter de l'espace en bas
           SizedBox(height: 16),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center, // Center the children horizontally
+              children: [
+                DropdownButton<String>(
+                  value: selectedStudent,
+                  items: studentList.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedStudent = value!;
+                    });
+                  },
+                ),
+                DropdownButton<String>(
+                  value: selectedAula,
+                  items: aulaList.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedAula = value!;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+          child: Text("Asignar a este alumno"),
+          onPressed: addMaterialToStudent
+          )
         ],
       ),
       // Bouton flottant en bas à droite
