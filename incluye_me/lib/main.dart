@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/start_view.dart';
 import 'globals/globals.dart';
-import 'model/database_driver.dart';
 import 'views/registro.dart';
 import 'views/user_list.dart';
 

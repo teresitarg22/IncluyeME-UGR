@@ -57,6 +57,23 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     }
   }
 
+  void login(nombre, apellido){
+    _showSuccessDialog();
+    Future.delayed(const Duration(seconds: 2), () {
+    Navigator.pop(context);
+    Future.delayed(const Duration(seconds: 1), () {
+    Navigator.pop(context);
+    Navigator.pushReplacement(context,
+    MaterialPageRoute(builder: (context) {
+    return UserListPage(
+    userName: nombre,
+    userSurname: apellido,
+    );
+    }));
+    });
+    });
+  }
+
   // --------------------------
   @override
   Widget build(BuildContext context) {
@@ -163,20 +180,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     await dbDriver?.verifyPassword(email, password).then((value) => {
           if (value == true)
             {
-              _showSuccessDialog(),
-              Future.delayed(const Duration(seconds: 2), () {
-                Navigator.pop(context);
-                Future.delayed(const Duration(seconds: 1), () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return UserListPage(
-                      userName: nombre,
-                      userSurname: apellido,
-                    );
-                  }));
-                });
-              })
+              login(nombre, apellido),
             }
           else
             {
@@ -188,3 +192,5 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
         });
   }
 }
+
+
