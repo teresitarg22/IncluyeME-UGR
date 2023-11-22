@@ -146,7 +146,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     return showDialog<void>(
       context: context,
       barrierDismissible:
-          false, // El usuario debe tocar el botón para cerrar el diálogo.
+      false, // El usuario debe tocar el botón para cerrar el diálogo.
       builder: (BuildContext context) {
         return const AlertDialog(
           title: Row(
@@ -179,28 +179,28 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    var nombre;
-    var apellido;
 
     await dbDriver?.requestDataFromPersonal(email).then((value) {
-      nombre = value[0]['personal']?['nombre'];
-      apellido = value[0]['personal']?['apellidos'];
+      if (value.isEmpty) {
+        setState(() {
+          _errorMessage = 'Email no registrado';
+        });
+      }
     });
 
     await dbDriver?.verifyPassword(email, password).then((value) => {
-          if (value == true)
-            {
-              login(email),
-            }
-          else
-            {
-              setState(() {
-                _passwordErrorMessage =
-                    'Contraseña incorrecta o email no registrado';
-              })
-            }
-        });
+      if (value == true)
+        {
+          login(email),
+        }
+      else
+        {
+          setState(() {
+            _passwordErrorMessage =
+            'Contraseña incorrecta o email no registrado';
+          })
+        }
+    });
   }
 }
-
 
