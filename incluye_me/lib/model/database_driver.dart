@@ -2,24 +2,6 @@ import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
 
-main() async {
-
-  //Pide solo los campos de la tabla estudiante
-
-  print('--------------------------------------------------');
-  print('Pide solo los campos de la tabla estudiante');
-  print('--------------------------------------------------');
-
-  DataBaseDriver dbDriver =  DataBaseDriver();
-
-  for (int i = 0; i < 10; i++) {
-    var result = await dbDriver.requestStructure('estudiante');
-  }
-
-  dbDriver.close();
-  return 0;
-}
-
 
 class DataBaseDriver {
   final PostgreSQLConnection? connection = PostgreSQLConnection(

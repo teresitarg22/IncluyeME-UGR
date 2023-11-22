@@ -11,6 +11,20 @@ void main() {
   runApp(const MyApp());
 }
 
+
+//Código de testeo para cerrar la base de datos cuando la app se cierra
+class LifecycleWatcher extends WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      // Aquí es donde cierras la base de datos
+      dbDriver.close();
+    }
+  }
+}
+
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
