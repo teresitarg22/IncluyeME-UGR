@@ -44,6 +44,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Tarea Material'),
+        backgroundColor: const Color(0xFF29DA81),
       ),
       body: Column(
         children: [
@@ -141,6 +142,9 @@ class _PedirMaterialState extends State<PedirMaterial> {
             ),
           ),
           ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF29DA81)),
+          ),
           child: Text("Asignar a este alumno"),
           onPressed: addMaterialToStudent
           )
@@ -150,7 +154,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
       floatingActionButton: FloatingActionButton(
         onPressed: addLine,
         child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xFF29DA81)
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

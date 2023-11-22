@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/pedir_material.dart';
 import 'package:incluye_me/views/student_login_view.dart';
 import 'teacher_login_view.dart';
 
@@ -69,26 +68,6 @@ class StartView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             // -----------------------------------------------
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 20), // Aumentar el relleno
-                  textStyle: const TextStyle(
-                      fontSize: 20), // Aumentar el tamaño del texto
-                ),
-                onPressed: () {
-                  // Navegar a la pantalla de logIn para profesores
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PedirMaterial()),
-                  );
-                },
-                child: const Text('Task'),
-              ),
-            )
           ],
         ),
       ),

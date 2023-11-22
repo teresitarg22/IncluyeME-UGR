@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
+import 'asignacion_tareas.dart';
 import '../controllers/usuario_controller.dart';
 import '../controllers/session_controller.dart';
 
@@ -355,7 +356,15 @@ class _UserListPageState extends State<UserListPage> {
               );
             }));
           } else if (index == 1) {
-            // Lógica para la pestaña "Tareas".
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return TareaDetailsPage(
+                nombre: widget.userName,
+                apellidos: widget.userSurname,
+                esEstudiante: false,
+                userName: widget.userSurname,
+                userSurname: widget.userSurname,
+              );
+            }));
           } else if (index == 2) {
             // Lógica para la pestaña "Gráficos".
           } else if (index == 3) {
@@ -535,7 +544,15 @@ class _UserListPageState extends State<UserListPage> {
               );
             }));
           } else if (index == 1) {
-            // Lógica para la pestaña "Tareas"
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return TareaDetailsPage(
+                nombre: widget.userName,
+                apellidos: widget.userSurname,
+                esEstudiante: false,
+                userName: widget.userSurname,
+                userSurname: widget.userSurname,
+              );
+            }));
           } else if (index == 2) {
             // Lógica para la pestaña "Gráficos"
           } else if (index == 3) {
