@@ -374,7 +374,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                             await controlador.comprobarEstudianteController(
                                 _nombre!, _apellidos!);
 
-                        if (comprobacion.isNotEmpty) {
+                        if (comprobacion!.isNotEmpty) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
