@@ -23,9 +23,9 @@ class StartView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // ----------------------------------------------
               ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    15.0), // Ajusta el radio según tu preferencia
+                borderRadius: BorderRadius.circular(15.0),
                 child: const Image(
                   image: AssetImage("assets/logo.png"),
                   height: 300,
@@ -33,6 +33,7 @@ class StartView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
+              // ----------------------------------------------
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -57,6 +58,7 @@ class StartView extends StatelessWidget {
                   ),
                 ),
               ),
+              // ----------------------------------------------
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),

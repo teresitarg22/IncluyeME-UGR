@@ -85,7 +85,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles del Usuario'),
-        backgroundColor: const Color(0xFF29DA81),
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -100,7 +99,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 77, 131, 105),
+                      color: Color.fromRGBO(33, 150, 243, 1),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -127,7 +126,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           'Información personal',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Colors.blue,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -180,7 +179,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromRGBO(33, 150, 243, 1)
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -197,7 +195,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           'Autentificación',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Colors.blue,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -251,7 +249,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           widget.esEstudiante ? 'Accesibilidad' : "",
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Colors.blue,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -356,7 +354,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
@@ -386,7 +384,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
+            backgroundColor: Colors.blue,
             icon: Icon(Icons.people, color: Colors.white),
             label: 'Usuarios',
           ),

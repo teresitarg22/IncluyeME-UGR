@@ -93,7 +93,6 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Usuarios'),
-        backgroundColor: const Color(0xFF29DA81),
         actions: [
           IconButton(
             onPressed: () {
@@ -296,7 +295,7 @@ class _UserListPageState extends State<UserListPage> {
                                       filteredUsers[index][tipo]['nombre'],
                                       filteredUsers[index][tipo]['apellidos']);
 
-                                  //Actualizar la vista
+                                  //ActualizackgroundColor: const Colors.blue),ista
                                   setState(() {
                                     // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
                                     // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
@@ -322,7 +321,7 @@ class _UserListPageState extends State<UserListPage> {
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF29DA81),
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -344,7 +343,7 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
@@ -376,7 +375,7 @@ class _UserListPageState extends State<UserListPage> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
+            backgroundColor: Colors.blue,
             icon: Icon(Icons.people, color: Colors.white),
             label: 'Usuarios',
           ),
@@ -414,7 +413,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Alumnos'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -524,7 +523,7 @@ class _UserListPageState extends State<UserListPage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         currentIndex: 0,
         onTap: (int index) {
           if (index == 0) {
@@ -556,7 +555,7 @@ class _UserListPageState extends State<UserListPage> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
+            backgroundColor: Colors.blue,
             icon: Icon(Icons.people, color: Colors.white),
             label: 'Usuarios',
           ),
