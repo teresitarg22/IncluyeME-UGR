@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:postgres/postgres.dart';
 
+// -------------------------- BASE DE DATOS  --------------------------
 
 class DataBaseDriver {
   final PostgreSQLConnection? connection = PostgreSQLConnection(
@@ -147,6 +146,19 @@ class DataBaseDriver {
   }
 
   // ----------------------------------------------------
+  // Funcion para sacar lista de aulas.
+  Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
+    return await request("SELECT * FROM aula");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para sacar foto del aula.
+  Future<List<Map<String, Map<String, dynamic>>>> fotoAula(String aula) async {
+    return await request(
+        "SELECT * FROM personal, imparte_en WHERE personal.nombre = imparte_en.nombre_personal AND personal.apellidos = imparte_en.apellidos_personal AND imparte_en.nombre_aula='$aula'");
+  }
+
+  // ----------------------------------------------------
   // Funcion para elimiar estudiante.
   Future<void> eliminarEstudiante(String nombre, String apellidos) async {
     await request(
@@ -157,18 +169,23 @@ class DataBaseDriver {
   Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
     return await request("SELECT * FROM aula");
   }
+  // ----------------------------------------------------
+  // Funcion para añadir a la tabla tarea el nombre de la tarea la fecha de entrega
 
   Future<void> insertarTarea(String nombre, DateTime fecha) async {
     await request(
         "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
   }
    // ----------------------------------------------------
-  // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega 
+  // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
+
+  // ----------------------------------------------------
+  // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
+
   Future<void> insertarAsginada(String nombre, DateTime fecha) async {
     await request(
         "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
   }
 
-  
 
 }
