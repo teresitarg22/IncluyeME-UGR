@@ -35,9 +35,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   var resultado;
   User? user;
 
-  // --------------------------
-  SessionController sessionController = SessionController();
-
   @override
   void initState() {
     super.initState();

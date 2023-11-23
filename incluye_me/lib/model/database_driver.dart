@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
 
-
+// -------------------------------------------------------------------------
 
 class DataBaseDriver {
+  // ----------------------------------------------------
   final PostgreSQLConnection? connection = PostgreSQLConnection(
   'flora.db.elephantsql.com', // host de la base de datos
   5432, // puerto de la base de datos
@@ -20,10 +21,13 @@ class DataBaseDriver {
     if (connection?.isClosed == true) await connection?.open();
   }
 
+  // ----------------------------------------------------
   close() {
     connection?.close();
   }
 
+  // ----------------------------------------------------
+  // Función para hacer una petición a la BD.
   Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
     List<Map<String, Map<String, dynamic>>> results = [];
     await connect();
@@ -40,26 +44,24 @@ class DataBaseDriver {
     return results;
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> requestStructure(
-      String table) async {
-    return await request(
-        "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
+  Future<List<Map<String, Map<String, dynamic>>>> requestStructure(String table) async {
+    return await request("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
   }
 
+  // ----------------------------------------------------
+  // Obtener tablas.
   Future<List<Map<String, Map<String, dynamic>>>> requestTables() async {
-    return await request(
-        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
+    return await request("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> requestDataFromPersonal(
-      String email) async {
-    return await request(
-        "SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
+  Future<List<Map<String, Map<String, dynamic>>>> requestDataFromPersonal(String email) async {
+    return await request("SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
   }
 
+  // ----------------------------------------------------
+  // Verificar contraseña.
   Future<bool> verifyPassword(String email, String password) async {
-    var result = await request(
-        "SELECT contrasenia FROM personal WHERE correo = '$email'");
+    var result = await request("SELECT contrasenia FROM personal WHERE correo = '$email'");
     if (result.isEmpty) {
       return false;
     }
@@ -67,6 +69,8 @@ class DataBaseDriver {
     return passwd == password;
   }
 
+  // ----------------------------------------------------
+  // Registrar estudiante en la base de datos.
   Future<void> registrarEstudiante(
       String nombre,
       String apellidos,
@@ -83,7 +87,7 @@ class DataBaseDriver {
   }
 
   // ----------------------------------------------------
-  //Registrar profesor en la base de datos
+  // Registrar profesor en la base de datos.
   Future<void> registrarProfesor(String nombre, String apellidos, String correo,
       var contrasena, var foto, bool esAdmin) async {
     await request(
@@ -91,7 +95,7 @@ class DataBaseDriver {
   }
 
   // ----------------------------------------------------
-  // Comprobar si estudiante ya existe por nombre y apellidos
+  // Comprobar si estudiante ya existe por nombre y apellidos.
   Future<List<Map<String, Map<String, dynamic>>>> comprobarEstudiante(
       String nombre, String apellidos) async {
     return await request(
@@ -99,7 +103,7 @@ class DataBaseDriver {
   }
 
   // ----------------------------------------------------
-  // Comprobar si existe personal por nombre y apellidos (profesor o administrador)
+  // Comprobar si existe personal por nombre y apellidos (profesor o administrador).
   Future<List<Map<String, Map<String, dynamic>>>> comprobarPersonal(
       String nombre, String apellidos) async {
     return await request(
@@ -107,7 +111,7 @@ class DataBaseDriver {
   }
 
   // ----------------------------------------------------
-  // Comprobar si existe personal por correo
+  // Comprobar si existe personal por correo.
   Future<List<Map<String, Map<String, dynamic>>>> comprobarPersonalCorreo(
       String correo) async {
     return await request("SELECT * FROM personal WHERE correo = '$correo'");
