@@ -158,7 +158,7 @@ class _EditUserPageState extends State<EditUserPage> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Edit User'),
-              backgroundColor: const Color(0xFF29DA81),
+              backgroundColor: Colors.blue,
             ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -193,7 +193,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 77, 131, 105),
+                          color: Colors.blue,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -245,7 +245,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         items: multiSelectOptions,
                         initialValue: selectedOptions,
                         title: const Text("Selecciona opciones"),
-                        selectedColor: Colors.green,
+                        selectedColor: Colors.blue,
                         buttonText: const Text(
                             'Preferencias para mostrar el contenido'),
                         onConfirm: (values) {
@@ -347,8 +347,7 @@ class _EditUserPageState extends State<EditUserPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 98, 186, 142),
+                          backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -362,7 +361,7 @@ class _EditUserPageState extends State<EditUserPage> {
               ),
             ),
             bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: const Color(0xFF29DA81), // Color personalizado
+              backgroundColor: Colors.blue, // Color personalizado
               currentIndex: 0,
               onTap: (int index) {
                 if (index == 0) {
@@ -397,7 +396,7 @@ class _EditUserPageState extends State<EditUserPage> {
               },
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  backgroundColor: Color(0xFF29DA81), // Color personalizado
+                  backgroundColor: Colors.blue, // Color personalizado
                   icon: Icon(Icons.people, color: Colors.white),
                   label: 'Usuarios',
                 ),

@@ -130,7 +130,11 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                       );
                     }
                   },
-                  child: const Text('Aceptar'),
+                  child: FractionallySizedBox(
+                    widthFactor:
+                        0.15, // Ajusta este valor según tus necesidades
+                    child: Image.asset('assets/sí.png'),
+                  ),
                 ),
                 // --------------------------
                 ElevatedButton(
@@ -140,7 +144,11 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                       selectedSymbols.clear();
                     });
                   },
-                  child: const Text('Borrar selección'),
+                  child: FractionallySizedBox(
+                    widthFactor:
+                        0.15, // Ajusta este valor según tus necesidades
+                    child: Image.asset('assets/no.png'),
+                  ),
                 ),
               ],
             ),
