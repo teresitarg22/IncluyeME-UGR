@@ -264,10 +264,17 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                                 TextButton(
                                   child: const Text('Aceptar'),
                                   onPressed: () {
-                                    for (var fecha in _dates) {
-                                      controlador.insertarTarea(
-                                          "comanda", fecha);
+                                    if(_selectedOption == 'Semanal'){
+                                      for (var fecha in _dates) {
+                                        controlador.insertarTarea(
+                                            "comanda", fecha);
+                                      }
                                     }
+                                    else{
+                                      controlador.insertarTarea(
+                                          "comanda", _selectedDate!);
+                                    }
+                                    
                                   },
                                 ),
                               ],
