@@ -3,72 +3,86 @@ import 'package:incluye_me/views/student_login_view.dart';
 import 'teacher_login_view.dart';
 
 class StartView extends StatelessWidget {
-  const StartView({super.key});
+  const StartView({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Esta es la AppBar
-        title: const Text(
-            'Bienvenido a Incluye-Me'), // El título que aparecerá en la barra
+        title: const Text('Bienvenido a Incluye-Me'),
         backgroundColor: Colors.blue,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Image(
-                image: AssetImage("assets/logo.png"), height: 300, width: 300),
-            const SizedBox(
-                height: 40), // Espacio adicional antes de los botones.
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 20), // Aumentar el relleno.
-                  textStyle: const TextStyle(
-                      fontSize: 20), // Aumentar el tamaño del texto.
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const StudentLoginView()),
-                  );
-                },
-                child: const Text(
-                  'Estudiantes',
-                  style: TextStyle(color: Colors.white, fontSize: 50),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/fondo.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // ----------------------------------------------
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15.0),
+                child: const Image(
+                  image: AssetImage("assets/logo.png"),
+                  height: 300,
+                  width: 300,
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            // -----------------------------------------------
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 20), // Aumentar el relleno
-                  textStyle: const TextStyle(
-                      fontSize: 20), // Aumentar el tamaño del texto
+              const SizedBox(height: 40),
+              // ----------------------------------------------
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const StudentLoginView()),
+                    );
+                  },
+                  child: const Text(
+                    'Estudiantes',
+                    style: TextStyle(color: Colors.white, fontSize: 50),
+                  ),
                 ),
-                onPressed: () {
-                  // Navegar a la pantalla de logIn para profesores
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const TeacherLoginView()),
-                  );
-                },
-                child: const Text('Profesores'),
               ),
-            ),
-            const SizedBox(height: 20),
-            // -----------------------------------------------
-          ],
+              // ----------------------------------------------
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 20),
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TeacherLoginView()),
+                    );
+                  },
+                  child: const Text('Profesores'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

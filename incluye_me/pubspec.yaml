@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   postgres: ^2.1.0
+  path_provider: ^2.0.14 
+  path: ^1.8.0  
     
 
 
@@ -55,6 +57,7 @@ dev_dependencies:
   convert: ^3.0.1
   image: ^3.0.2
   shared_preferences: ^2.0.6
+  flutter_typeahead: ^4.8.0
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

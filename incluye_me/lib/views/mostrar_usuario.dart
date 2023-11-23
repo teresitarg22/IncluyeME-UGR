@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/controllers/session_controller.dart';
+import '../components/bottom_navigation_bar.dart';
+import '../globals/globals.dart';
+import 'package:incluye_me/views/task_list.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
 import './user_list.dart';
@@ -180,6 +184,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Color.fromRGBO(33, 150, 243, 1)
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -354,59 +359,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               ]),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
-        currentIndex: 0,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 1) {
-            // Lógica para la pestaña "Tareas"
-          } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos"
-          } else if (index == 3) {
-            // Lógica para la pestaña "Chat"
-          } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          }
-        },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
-            icon: Icon(Icons.people, color: Colors.white),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment, color: Colors.white),
-            label: 'Tareas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.white),
-            label: 'Gráficos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Perfil',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomNavigationBar(),
     );
   }
 }

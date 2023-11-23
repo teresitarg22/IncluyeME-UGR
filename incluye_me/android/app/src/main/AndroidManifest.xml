@@ -19,9 +19,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT_SCAN" />
 
     <application
-        android:label="registrar_usuario"
+        android:label="incluye_me"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/logo">
 
         <activity
             android:name=".MainActivity"

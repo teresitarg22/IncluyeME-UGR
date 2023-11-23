@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/model/pruebas_database.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/model/database_driver.dart';
 import 'package:incluye_me/views/user_list.dart';
+
+import '../model/teacher.dart';
 
 class TeacherLoginView extends StatefulWidget {
   const TeacherLoginView({super.key});
@@ -54,6 +57,31 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
         _passwordErrorMessage = null;
       });
     }
+  }
+
+  Future<void> login(email) async {
+    var teacherData = await dbDriver.requestDataFromPersonal(email);
+    teacher = Teacher.fromJson(teacherData[0]['personal']!); //Convierte el usuario logueado en variable global
+
+    _showSuccessDialog();
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pop(context);
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.pop(context);
+        /*Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UserListPage(
+                    userName: teacher!.getName(),
+                    userSurname: teacher!.getSurnames(),
+                  )),
+        );*/
+        Navigator.pushReplacementNamed(context, '/userList', arguments: {
+          'userName': teacher!.getName(),
+          'userSurname': teacher!.getSurnames(),
+        });
+      });
+    });
   }
 
   // --------------------------
@@ -118,7 +146,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     return showDialog<void>(
       context: context,
       barrierDismissible:
-          false, // El usuario debe tocar el botón para cerrar el diálogo.
+        false, // El usuario debe tocar el botón para cerrar el diálogo.
       builder: (BuildContext context) {
         return const AlertDialog(
           title: Row(
@@ -151,38 +179,28 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    var nombre;
-    var apellido;
-    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) {
-      nombre = value[0]['personal']?['nombre'];
-      apellido = value[0]['personal']?['apellidos'];
+
+    await dbDriver?.requestDataFromPersonal(email).then((value) {
+      if (value.isEmpty) {
+        setState(() {
+          _errorMessage = 'Email no registrado';
+        });
+      }
     });
 
-    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
-          if (value == true)
-            {
-              _showSuccessDialog(),
-              Future.delayed(const Duration(seconds: 2), () {
-                Navigator.pop(context);
-                Future.delayed(const Duration(seconds: 1), () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return UserListPage(
-                      userName: nombre,
-                      userSurname: apellido,
-                    );
-                  }));
-                });
-              })
-            }
-          else
-            {
-              setState(() {
-                _passwordErrorMessage =
-                    'Contraseña incorrecta o email no registrado';
-              })
-            }
-        });
+    await dbDriver?.verifyPassword(email, password).then((value) => {
+      if (value == true)
+        {
+          login(email),
+        }
+      else
+        {
+          setState(() {
+            _passwordErrorMessage =
+            'Contraseña incorrecta o email no registrado';
+          })
+        }
+    });
   }
 }
+
