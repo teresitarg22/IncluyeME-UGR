@@ -28,59 +28,30 @@ class TaskDetailsPage extends StatefulWidget {
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
   final Controller controlador = Controller();
-  var resultado;
-  String tipo = "";
+  bool asignada = false;
+  var tarea_asignada;
+  var tarea;
   User? user;
 
   @override
   void initState() {
     super.initState();
-    buscarDatosUsuario();
+    _getTarea();
+    initializeData();
   }
 
-  // -----------------------------------------------------------------------------------------
-  // Buscamos en la BD los detalles del usuario, teniendo en cuenta si es estudiante o no.
-  Future<void> buscarDatosUsuario() async {
-    if (widget.tipo == 'general') {
-      // ------------------------
-      // ESTUDIANTE
-      resultado =
-          await controlador.getEstudiante(widget.nombre, widget.apellidos);
+  void initializeData() async {
+    asignada = await controlador.esTareaAsignada(widget.taskID);
+    tarea_asignada = await controlador.getTareaAsignada(widget.taskID);
+  }
 
-      setState(() {
-        var detalles = resultado[0]['estudiante'];
-
-        user = Estudiante(
-            nombre: detalles['nombre'],
-            apellidos: detalles['apellidos'],
-            correo: detalles['correo'],
-            foto: "",
-            contrasenia: detalles['contrasenia'],
-            tipo_letra: detalles['tipo_letra'] ?? '',
-            maymin: detalles['maymin'] ?? '',
-            formato: detalles['formato'] ?? '',
-            contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
-            sabeLeer: detalles['sabeLeer'] ?? false);
-      });
-    } else if (widget.tipo == 'material') {
-      // ------------------------
-      // PERSONAL
-      resultado =
-          await controlador.getPersonal(widget.nombre, widget.apellidos);
-
-      setState(() {
-        var detalles = resultado[0]['personal'];
-
-        user = User(
-            nombre: detalles['nombre'],
-            apellidos: detalles['apellidos'],
-            correo: detalles['correo'],
-            foto: "",
-            contrasenia: detalles['contrasenia']);
-      });
+  Future<void> _getTarea() async {
+    if (widget.tipo == "general") {
+      tarea = await controlador.getTareaGeneral(widget.taskID);
+    } else if (widget.tipo == "material") {
+      tarea = await controlador.getTareaMaterial(widget.taskID);
     } else if (widget.tipo == "comanda") {
-    } else {
-      print("ERROR: No se ha podido encontrar el tipo de tarea.");
+      tarea = await controlador.getTareaComanda(widget.taskID);
     }
   }
 
@@ -100,7 +71,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               children: <Widget>[
                 ListTile(
                   title: Text(
-                    '${user?.nombre} ${user?.apellidos}',
+                    tarea[0][widget.tipo]['nombre'],
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -109,16 +80,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                /*user?.foto != null
-              ? Image.memory(
-                 Uint8List.fromList(
-                    // Convierte la cadena Base64 a Uint8List
-                    base64.decode(user!.foto!),
-                  ),
-                  width: 100, // ajusta el ancho según tus necesidades
-                  height: 100, // ajusta la altura según tus necesidades
-                )
-              : const Text('Sin foto'),*/
                 const Divider(height: 1, color: Colors.grey),
                 Container(
                   width: double.infinity,
@@ -127,16 +88,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Información personal',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
-                        // -----------------------------
                         Row(
                           children: [
                             const Text(
@@ -148,7 +99,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '${user?.nombre}',
+                              tarea[0][widget.tipo]['nombre'],
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -160,7 +111,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         Row(
                           children: [
                             const Text(
-                              'Apellido:',
+                              'Asignada:',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -168,7 +119,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '${user?.apellidos}',
+                              asignada ? 'Sí' : 'No',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -179,16 +130,36 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         // -----------------------------
                         Row(
                           children: [
-                            const Text(
-                              'Email:',
-                              style: TextStyle(
+                            Text(
+                              asignada ? 'Asignada a:' : '',
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '${user?.correo}',
+                              '${tarea_asignada[0]['asignada']['nombre']} ${tarea_asignada[0]['asignada']['apellidos']}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        // -----------------------------
+                        Row(
+                          children: [
+                            Text(
+                              asignada ? 'Completada:' : '',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              tarea[0][widget.tipo]['completada'] ? 'Sí' : 'No',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -196,161 +167,10 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        const Text(
-                          'Autentificación',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
                         // -----------------------------
-                        Row(
-                          children: [
-                            const Text(
-                              'Contraseña:',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              user?.contrasenia ?? 'No tiene',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        // -----------------------------
-                        Row(
-                          children: [
-                            Text(
-                              widget.esEstudiante
-                                  ? 'Contraseña de iconos'
-                                  : "No tiene",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.esEstudiante
-                                  ? (user as Estudiante?)?.contrasenia_iconos ??
-                                      ''
-                                  : '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          widget.esEstudiante ? 'Accesibilidad' : "",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
-                        // -----------------------------
-                        Row(
-                          children: [
-                            Text(
-                              widget.esEstudiante ? 'Tipo de letra:' : "",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.esEstudiante
-                                  ? (user as Estudiante?)?.tipo_letra ?? ''
-                                  : '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        // -----------------------------
-                        Row(
-                          children: [
-                            Text(
-                              widget.esEstudiante
-                                  ? 'Mayúsculas y minúsculas:'
-                                  : "",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.esEstudiante
-                                  ? (user as Estudiante?)?.maymin ?? ''
-                                  : '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        // -----------------------------
-                        Row(
-                          children: [
-                            Text(
-                              widget.esEstudiante ? 'Formato:' : "",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.esEstudiante
-                                  ? (user as Estudiante?)?.formato ?? ''
-                                  : '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        // -----------------------------
-                        Row(
-                          children: [
-                            Text(
-                              widget.esEstudiante ? 'Sabe Leer:' : "",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.esEstudiante
-                                  ? ((user as Estudiante?)?.sabeLeer ?? false)
-                                      ? 'Sí'
-                                      : 'No'
-                                  : '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
+                        //if(widget.tipo == "comanda")
+                        //if(widget.tipo == "general")
+                        //if(widget.tipo == "material")
                       ],
                     ),
                   ]),

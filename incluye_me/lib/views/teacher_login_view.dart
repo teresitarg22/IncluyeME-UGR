@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/model/pruebas_database.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/model/database_driver.dart';
 import 'package:incluye_me/views/user_list.dart';
 
 class TeacherLoginView extends StatefulWidget {
@@ -153,12 +154,13 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
 
     var nombre;
     var apellido;
-    DataBaseDriver().connect().requestDataFromPersonal(email).then((value) {
+
+    await dbDriver?.requestDataFromPersonal(email).then((value) {
       nombre = value[0]['personal']?['nombre'];
       apellido = value[0]['personal']?['apellidos'];
     });
 
-    DataBaseDriver().connect().verifyPassword(email, password).then((value) => {
+    await dbDriver?.verifyPassword(email, password).then((value) => {
           if (value == true)
             {
               _showSuccessDialog(),

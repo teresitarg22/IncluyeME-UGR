@@ -1,30 +1,50 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
-// -------------------------- BASE DE DATOS  --------------------------
+main() async {
+  //Pide solo los campos de la tabla estudiante
 
-class LogicDatabase {
-  // Crear la conexión como una variable global
-  final connection = PostgreSQLConnection(
+  print('--------------------------------------------------');
+  print('Pide solo los campos de la tabla estudiante');
+  print('--------------------------------------------------');
+
+  DataBaseDriver dbDriver = DataBaseDriver();
+
+  for (int i = 0; i < 10; i++) {
+    var result = await dbDriver.requestStructure('estudiante');
+  }
+
+  dbDriver.close();
+  return 0;
+}
+
+class DataBaseDriver {
+  final PostgreSQLConnection? connection = PostgreSQLConnection(
     'flora.db.elephantsql.com', // host de la base de datos
     5432, // puerto de la base de datos
     'srvvjedp', // nombre de la base de datos
     username: 'srvvjedp', // nombre de usuario de la base de datos
     password:
-        'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos
-  );
+        'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos;
+  ); // ;
 
-  // -------------------
+  // Constructor
+
+  connect() async {
+    if (connection?.isClosed == true) await connection?.open();
+  }
+
+  close() {
+    connection?.close();
+  }
+
   Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
     List<Map<String, Map<String, dynamic>>> results = [];
+    await connect();
 
     try {
-      // Verificar si la conexión está cerrada antes de intentar abrirla
-      if (connection.isClosed) {
-        await connection.open();
-        print('Connected to the database');
-      }
-
-      results = await connection.mappedResultsQuery(query);
+      results = await connection!.mappedResultsQuery(query);
     } catch (e) {
       print('Error: $e');
     } finally {
@@ -35,8 +55,33 @@ class LogicDatabase {
     return results;
   }
 
-  // ----------------------------------------------------
-  //Registrar estudiante en la base de datos
+  Future<List<Map<String, Map<String, dynamic>>>> requestStructure(
+      String table) async {
+    return await request(
+        "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> requestTables() async {
+    return await request(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> requestDataFromPersonal(
+      String email) async {
+    return await request(
+        "SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
+  }
+
+  Future<bool> verifyPassword(String email, String password) async {
+    var result = await request(
+        "SELECT contrasenia FROM personal WHERE correo = '$email'");
+    if (result.isEmpty) {
+      return false;
+    }
+    var passwd = result[0]['personal']?["contrasenia"];
+    return passwd == password;
+  }
+
   Future<void> registrarEstudiante(
       String nombre,
       String apellidos,
@@ -177,5 +222,40 @@ class LogicDatabase {
   // Función para mostrar todas las tareas
   Future<List<Map<String, Map<String, dynamic>>>> listaTareas() async {
     return await request("SELECT * FROM tarea");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea general
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaGeneral(
+      int id) async {
+    return await request("SELECT * FROM general WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea material
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaMaterial(
+      int id) async {
+    return await request("SELECT * FROM material WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea comanda
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaComanda(
+      int id) async {
+    return await request("SELECT * FROM comanda WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para saber si una tarea está asignada
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaAsignada(
+      int id) async {
+    return await request("SELECT * FROM asignada WHERE id_tarea = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener la infmación de una tarea asignada
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaAsignada(
+      int id) async {
+    return await request("SELECT * FROM asignada WHERE id_tarea = $id");
   }
 }
