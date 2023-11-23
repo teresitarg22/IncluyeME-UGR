@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/pedir_material.dart';
 import 'package:incluye_me/views/registro_alumno.dart';
 import 'package:incluye_me/views/registro_personal.dart';
 
@@ -33,6 +34,16 @@ class HomeScreen extends StatelessWidget {
                         builder: (context) => const ProfesorRegistration()));
               },
               child: const Text('Personal'),
+            ),
+            const SizedBox(width: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PedirMaterial()));
+              },
+              child: const Text('Material'),
             ),
             const SizedBox(width: 20),
             ElevatedButton(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../components/bottom_navigation_bar.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
+import 'asignacion_tareas.dart';
 import '../controllers/usuario_controller.dart';
 import '../controllers/session_controller.dart';
 
@@ -123,7 +124,8 @@ class _UserListPageState extends State<UserListPage> {
                           // Lógica de búsqueda con "query".
                           var searchResults = usuarios.where((user) {
                             final estudianteNombre =
-                                user[0]?['nombre']?.toLowerCase() ?? '';
+                                user['estudiante']?['nombre']?.toLowerCase() ??
+                                    '';
                             final personalNombre =
                                 user['personal']?['nombre']?.toLowerCase() ??
                                     '';
