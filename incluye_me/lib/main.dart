@@ -10,7 +10,7 @@ import 'views/add_general_task.dart';
 // -------------------------------------------------------------------
 
 void main() {
-  runApp(const MyApp2());
+  runApp(const MyApp());
 }
 
 
