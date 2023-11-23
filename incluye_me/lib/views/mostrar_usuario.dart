@@ -191,6 +191,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Color.fromRGBO(33, 150, 243, 1)
                               ),
                             ),
                             const SizedBox(width: 8),
