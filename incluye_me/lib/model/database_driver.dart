@@ -165,10 +165,6 @@ class DataBaseDriver {
         "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 
-
-  Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
-    return await request("SELECT * FROM aula");
-  }
   // ----------------------------------------------------
   // Funcion para añadir a la tabla tarea el nombre de la tarea la fecha de entrega
 
@@ -186,6 +182,4 @@ class DataBaseDriver {
     await request(
         "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
   }
-
-
 }

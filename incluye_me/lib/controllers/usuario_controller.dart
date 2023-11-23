@@ -15,12 +15,12 @@ class Controller {
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
-    return await _logicDatabase.listaAulas();
+    return await dbDriver.listaAulas();
   }
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> fotoAula(String aula) async {
-    return await _logicDatabase.fotoAula(aula);
+    return await dbDriver.fotoAula(aula);
   }
 
   // -----------------------------
