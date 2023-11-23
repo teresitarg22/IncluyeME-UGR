@@ -146,7 +146,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     return showDialog<void>(
       context: context,
       barrierDismissible:
-      false, // El usuario debe tocar el botón para cerrar el diálogo.
+        false, // El usuario debe tocar el botón para cerrar el diálogo.
       builder: (BuildContext context) {
         return const AlertDialog(
           title: Row(
