@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:postgres/postgres.dart';
 
-// -------------------------- BASE DE DATOS  --------------------------
+
 
 class DataBaseDriver {
   final PostgreSQLConnection? connection = PostgreSQLConnection(
@@ -38,20 +40,26 @@ class DataBaseDriver {
     return results;
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> requestStructure(String table) async {
-    return await request("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
+  Future<List<Map<String, Map<String, dynamic>>>> requestStructure(
+      String table) async {
+    return await request(
+        "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
   }
 
   Future<List<Map<String, Map<String, dynamic>>>> requestTables() async {
-    return await request("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
+    return await request(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> requestDataFromPersonal(String email) async {
-    return await request("SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
+  Future<List<Map<String, Map<String, dynamic>>>> requestDataFromPersonal(
+      String email) async {
+    return await request(
+        "SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
   }
 
   Future<bool> verifyPassword(String email, String password) async {
-    var result = await request("SELECT contrasenia FROM personal WHERE correo = '$email'");
+    var result = await request(
+        "SELECT contrasenia FROM personal WHERE correo = '$email'");
     if (result.isEmpty) {
       return false;
     }
@@ -165,6 +173,89 @@ class DataBaseDriver {
         "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 
+  // ----------------------------------------------------
+  // Función para mostrar las tareas de comanda
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareasComanda() async {
+    return await request("SELECT * FROM comanda");
+  }
+
+  // ----------------------------------------------------
+  // Función para mostrar las tareas generales
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareasGenerales() async {
+    return await request("SELECT * FROM general");
+  }
+
+  // ----------------------------------------------------
+  // Función para mostrar las tareas de material
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareasMaterial() async {
+    return await request("SELECT * FROM material");
+  }
+
+  // ----------------------------------------------------
+  // Función para eliminar una tarea
+  Future<void> eliminarTarea(int id) async {
+    await request("DELETE FROM tarea WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Funicón para saber el tipo de tarea
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaGeneral(int id) async {
+    return await request("SELECT * FROM general WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para saber el tipo de tarea
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaMaterial(
+      int id) async {
+    return await request("SELECT * FROM material WHERE id = $id ");
+  }
+
+  // ----------------------------------------------------
+  // Función para saber el tipo de tarea
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaComanda(int id) async {
+    return await request("SELECT * FROM comanda WHERE id = $id ");
+  }
+
+  // ----------------------------------------------------
+  // Función para mostrar todas las tareas
+  Future<List<Map<String, Map<String, dynamic>>>> listaTareas() async {
+    return await request("SELECT * FROM tarea");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea general
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaGeneral(
+      int id) async {
+    return await request("SELECT * FROM general WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea material
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaMaterial(
+      int id) async {
+    return await request("SELECT * FROM material WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea comanda
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaComanda(
+      int id) async {
+    return await request("SELECT * FROM comanda WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para saber si una tarea está asignada
+  Future<List<Map<String, Map<String, dynamic>>>> esTareaAsignada(
+      int id) async {
+    return await request("SELECT * FROM asignada WHERE id_tarea = $id");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener la infmación de una tarea asignada
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaAsignada(
+      int id) async {
+    return await request("SELECT * FROM asignada WHERE id_tarea = $id");
+  }
   // ----------------------------------------------------
   // Funcion para añadir a la tabla tarea el nombre de la tarea la fecha de entrega
 

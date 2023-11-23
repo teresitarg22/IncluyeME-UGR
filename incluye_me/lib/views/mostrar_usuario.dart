@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:incluye_me/controllers/session_controller.dart';
 import '../components/bottom_navigation_bar.dart';
 import '../globals/globals.dart';
+import 'package:incluye_me/views/task_list.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
 import './user_list.dart';
@@ -41,11 +42,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   void initState() {
     super.initState();
     buscarDatosUsuario();
-  }
-
-  void userLogout() async {
-    await sessionController.logout();
-    Navigator.of(context).pushReplacementNamed('/');
   }
 
   // -----------------------------------------------------------------------------------------
