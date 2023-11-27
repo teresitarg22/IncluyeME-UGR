@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../globals/globals.dart';
+import '../views/task_list.dart';
+import '../views/user_list.dart';
+import '../views/mostrar_usuario.dart';
+import 'package:incluye_me/main.dart';
 
 class CustomNavigationBar extends StatefulWidget {
+  final String userName;
+  final String userSurname;
+
+  const CustomNavigationBar(
+      {required this.userName, required this.userSurname});
+
   @override
   _CustomNavigationBarState createState() => _CustomNavigationBarState();
 }
@@ -13,7 +23,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: const Color(0xFF29DA81),
+      backgroundColor: Colors.blue,
       currentIndex: _currentIndex,
       onTap: (int index) {
         setState(() {
@@ -22,56 +32,65 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         });
 
         if (index == 0) {
-          navigateToRoute(
-              context,
-              '/userList',
-              () => {
-                    'userName': teacher!.getName(),
-                    'userSurname': teacher!.getSurnames(),
-                  });
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return UserListPage(
+              userName: widget.userName,
+              userSurname: widget.userSurname,
+            );
+          }));
         } else if (index == 1) {
-          navigateToRoute(context, '/tasks');
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return TaskListPage(
+              userName: widget.userName,
+              userSurname: widget.userSurname,
+            );
+          }));
         } else if (index == 2) {
           // Lógica para la pestaña "Gráficos"
         } else if (index == 3) {
           // Lógica para la pestaña "Chat"
         } else if (index == 4) {
-          navigateToRoute(
-              context,
-              '/userDetails');
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return UserDetailsPage(
+              nombre: widget.userName,
+              apellidos: widget.userSurname,
+              esEstudiante: false,
+              userName: widget.userName,
+              userSurname: widget.userSurname,
+            );
+          }));
         } else if (index == 5) {
-          teacher = null;
-          Navigator.pushReplacementNamed(context, '/');
+          Navigator.pushNamed(context, '/');
         }
       },
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          backgroundColor: Color(0xFF29DA81),
+          backgroundColor: Colors.blue,
           icon: Icon(Icons.people, color: Colors.white),
           label: 'Usuarios',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Color(0xFF29DA81),
+          backgroundColor: Colors.blue,
           icon: Icon(Icons.assignment, color: Colors.white),
           label: 'Tareas',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Color(0xFF29DA81),
+          backgroundColor: Colors.blue,
           icon: Icon(Icons.bar_chart, color: Colors.white),
           label: 'Gráficos',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Color(0xFF29DA81),
+          backgroundColor: Colors.blue,
           icon: Icon(Icons.chat, color: Colors.white),
           label: 'Chat',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Color(0xFF29DA81),
+          backgroundColor: Colors.blue,
           icon: Icon(Icons.person, color: Colors.white),
           label: 'Perfil',
         ),
         BottomNavigationBarItem(
-          backgroundColor: Color(0xFF29DA81),
+          backgroundColor: Colors.blue,
           icon: Icon(Icons.logout, color: Colors.white),
           label: 'Cerrar Sesión',
         ),

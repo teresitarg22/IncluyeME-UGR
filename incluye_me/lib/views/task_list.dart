@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/task_view.dart';
-import 'mostrar_usuario.dart';
 import '../controllers/session_controller.dart';
 import '../controllers/task_controller.dart';
-import 'user_list.dart';
+import '../components/bottom_navigation_bar.dart';
+import 'pedir_material.dart';
+import '../views/add_general_task.dart';
+import '../model/general_task.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -31,6 +33,14 @@ class _TaskListPageState extends State<TaskListPage> {
   Controller controlador = Controller();
 
   SessionController sessionController = SessionController();
+  //-------------------------------
+  List<Tarea> tasks = []; // Lista de tareas
+
+  void _addTask(Tarea tarea) {
+    setState(() {
+      tasks.add(tarea);
+    });
+  }
 
   // -----------------------------
   void userLogout() async {
@@ -77,7 +87,7 @@ class _TaskListPageState extends State<TaskListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Tareas'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -164,7 +174,7 @@ class _TaskListPageState extends State<TaskListPage> {
                   },
                   child: Card(
                     color: tipo == "material"
-                        ? const Color.fromARGB(255, 255, 235, 205)
+                        ? Color.fromARGB(255, 223, 205, 255)
                         : tipo == "general"
                             ? Colors.blue[100]
                             : Colors.green[100],
@@ -191,7 +201,7 @@ class _TaskListPageState extends State<TaskListPage> {
                       ),
                       subtitle: Text(tipo),
                       leading: const Icon(
-                        Icons.person,
+                        Icons.task_rounded,
                         size: 45,
                       ),
                       trailing: Row(
@@ -204,14 +214,20 @@ class _TaskListPageState extends State<TaskListPage> {
                                   : "No asignada"),
                           // ------------------------------------
                           IconButton(
-                            icon: const Icon(Icons.edit,
+                            icon: const Icon(Icons.people_alt_rounded,
                                 color: Color.fromARGB(255, 76, 76, 76)),
                             onPressed: () {
                               // Nos dirigimos a la interfaz de edición de usuario:
                             },
                           ),
                           // -----------------
-                          const SizedBox(width: 30.0),
+                          IconButton(
+                            icon: const Icon(Icons.edit,
+                                color: Color.fromARGB(255, 76, 76, 76)),
+                            onPressed: () {
+                              // Nos dirigimos a la interfaz de edición de usuario:
+                            },
+                          ),
                           // -----------------
                           IconButton(
                               icon: const Icon(Icons.delete,
@@ -278,8 +294,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 child: Container(
                   margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
                   decoration: BoxDecoration(
-                    color: const Color(
-                        0xFF29DA81), // Cambia el color del fondo del menú
+                    color: Colors.blue, // Cambia el color del fondo del menú
                     borderRadius: BorderRadius.circular(
                         8.0), // Ajusta los bordes redondos
                   ),
@@ -287,13 +302,29 @@ class _TaskListPageState extends State<TaskListPage> {
                     icon: const Icon(Icons.add),
                     color: Colors.white,
                     onSelected: (String value) {
-                      // Acciones cuando se selecciona una opción del menú desplegable
-                      Navigator.pushNamed(context, value);
+                      if (value == 'PedirMaterial') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PedirMaterial(
+                                userName: widget.userName,
+                                userSurname: widget.userSurname),
+                          ),
+                        );
+                      } else if (value == 'TareaGeneral') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                AddTaskView(onAddTask: _addTask),
+                          ),
+                        );
+                      }
                     },
                     itemBuilder: (BuildContext context) {
                       return <PopupMenuEntry<String>>[
                         const PopupMenuItem<String>(
-                          value: '/materialesPage',
+                          value: 'PedirMaterial',
                           child: Row(
                             children: [
                               Icon(Icons.inventory),
@@ -303,22 +334,12 @@ class _TaskListPageState extends State<TaskListPage> {
                           ),
                         ),
                         const PopupMenuItem<String>(
-                          value: '/tareaGeneralPage',
+                          value: 'TareaGeneral',
                           child: Row(
                             children: [
                               Icon(Icons.assignment),
                               SizedBox(width: 8.0),
                               Text('Tarea General'),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: '/tareaComandaPage',
-                          child: Row(
-                            children: [
-                              Icon(Icons.assignment),
-                              SizedBox(width: 8.0),
-                              Text('Tarea Comanda'),
                             ],
                           ),
                         ),
@@ -331,70 +352,8 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
-        currentIndex: 0,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 1) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return TaskListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos".
-          } else if (index == 3) {
-            // Lógica para la pestaña "Chat".
-          } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 5) {
-            userLogout();
-          }
-        },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
-            icon: Icon(Icons.people, color: Colors.white),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment, color: Colors.white),
-            label: 'Tareas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.white),
-            label: 'Gráficos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Perfil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.logout, color: Colors.white),
-            label: 'Cerrar Sesión',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 
@@ -407,7 +366,7 @@ class _TaskListPageState extends State<TaskListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Tareas'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -477,11 +436,7 @@ class _TaskListPageState extends State<TaskListPage> {
                     }));
                   },
                   child: Card(
-                    color: tipo == "material"
-                        ? const Color.fromARGB(255, 255, 235, 205)
-                        : tipo == "general"
-                            ? Colors.blue[100]
-                            : Colors.green[100],
+                    color: Color.fromARGB(255, 223, 205, 255),
                     margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                     child: ListTile(
@@ -588,11 +543,17 @@ class _TaskListPageState extends State<TaskListPage> {
             child: ElevatedButton(
               // --------------------------
               onPressed: () {
-                Navigator.pushNamed(context, '/registroPage');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PedirMaterial(
+                          userName: widget.userName,
+                          userSurname: widget.userSurname),
+                    ));
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF29DA81),
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -613,70 +574,8 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
-        currentIndex: 0,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 1) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return TaskListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos"
-          } else if (index == 3) {
-            // Lógica para la pestaña "Chat"
-          } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userSurname,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 5) {
-            userLogout();
-          }
-        },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
-            icon: Icon(Icons.people, color: Colors.white),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment, color: Colors.white),
-            label: 'Tareas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.white),
-            label: 'Gráficos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Perfil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.logout, color: Colors.white),
-            label: 'Cerrar Sesión',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }

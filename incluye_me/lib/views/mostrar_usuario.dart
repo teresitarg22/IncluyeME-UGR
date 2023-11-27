@@ -92,7 +92,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles del Usuario'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -185,10 +185,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const Text(
                               'Email:',
                               style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromRGBO(33, 150, 243, 1)
-                              ),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(33, 150, 243, 1)),
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -362,7 +361,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               ]),
         ),
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }
