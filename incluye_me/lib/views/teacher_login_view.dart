@@ -57,58 +57,97 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     }
   }
 
-  // --------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Profesores'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('Inicio de sesión',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            // --------------------------
-            TextField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: const OutlineInputBorder(),
-                errorText: _errorMessage,
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage('assets/fondo2.png'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.5), // Ajusta la opacidad aquí
+              BlendMode.dstATop,
             ),
-            const SizedBox(height: 16),
-            // --------------------------
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                border: const OutlineInputBorder(),
-                errorText: _passwordErrorMessage,
-              ),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // --------------------------
+                // Icono
+                const Icon(
+                  Icons.supervised_user_circle_rounded,
+                  size: 150,
+                  color: Colors.blue,
+                ),
+                // --------------------------
+                const SizedBox(height: 16),
+                // --------------------------
+                const Text(
+                  '¡Bienvenido!',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                // --------------------------
+                const SizedBox(height: 16),
+                // --------------------------
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    errorText: _errorMessage,
+                  ),
+                ),
+                // --------------------------
+                const SizedBox(height: 16),
+                // --------------------------
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    errorText: _passwordErrorMessage,
+                  ),
+                ),
+                // --------------------------
+                const SizedBox(height: 24),
+                // --------------------------
+                ElevatedButton(
+                  onPressed: () {
+                    _handleLogin();
+                  },
+                  child: const Text('Iniciar sesión'),
+                ),
+                // --------------------------
+                TextButton(
+                  onPressed: () {
+                    // Acción para recuperar contraseña
+                  },
+                  child: const Text(
+                    '¿Olvidaste tu contraseña?',
+                    style: TextStyle(
+                        fontSize: 12, color: Color.fromARGB(255, 7, 90, 158)),
+                  ),
+                ),
+                // --------------------------
+                const SizedBox(height: 150),
+                // --------------------------
+              ],
             ),
-            const SizedBox(height: 24),
-            // --------------------------
-            ElevatedButton(
-              onPressed: () {
-                _handleLogin();
-              },
-              child: const Text('Login'),
-            ),
-            // --------------------------
-            TextButton(
-              onPressed: () {
-                // Acción para recuperar contraseña
-              },
-              child: const Text('¿Olvidaste tu contraseña?'),
-            ),
-          ],
+          ),
         ),
       ),
     );
