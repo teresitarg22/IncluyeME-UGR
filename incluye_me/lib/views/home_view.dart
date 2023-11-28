@@ -38,16 +38,6 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(width: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PedirMaterial()));
-              },
-              child: const Text('Material'),
-            ),
-            const SizedBox(width: 20),
-            ElevatedButton(
-              onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
               child: const Text('LogIn'),

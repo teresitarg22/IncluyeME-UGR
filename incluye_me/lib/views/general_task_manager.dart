@@ -28,8 +28,9 @@ class _TaskViewState extends State<TaskView> {
       ),
       body: tasks.isEmpty
           ? Center(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+              child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -56,8 +57,7 @@ class _TaskViewState extends State<TaskView> {
                   ),
                 ],
               ),
-            )
-          )
+            ))
           : ListView.builder(
               itemCount: tasks.length,
               itemBuilder: (context, index) {
@@ -93,7 +93,7 @@ class _TaskViewState extends State<TaskView> {
         child: Icon(Icons.add),
         backgroundColor: const Color(0xFF29DA81),
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      //bottomNavigationBar: CustomNavigationBar(userName:widget.userName, userSurname:widget.userSurname),
     );
   }
 }

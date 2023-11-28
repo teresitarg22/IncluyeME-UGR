@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../components/bottom_navigation_bar.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
-import 'asignacion_tareas.dart';
 import '../controllers/usuario_controller.dart';
 import '../controllers/session_controller.dart';
 
@@ -17,8 +16,6 @@ class UserListPage extends StatefulWidget {
 
   @override
   _UserListPageState createState() => _UserListPageState();
-
-
 }
 
 // ------------------------------------------------------------------
@@ -97,7 +94,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Usuarios'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -326,7 +323,7 @@ class _UserListPageState extends State<UserListPage> {
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF29DA81),
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -347,7 +344,8 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 
@@ -360,7 +358,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Alumnos'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -469,7 +467,8 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }
