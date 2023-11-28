@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
-
+import 'package:incluye_me/model/general_task.dart';
 
 
 class DataBaseDriver {
@@ -182,7 +182,7 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Función para mostrar las tareas generales
   Future<List<Map<String, Map<String, dynamic>>>> listaTareasGenerales() async {
-    return await request("SELECT * FROM general");
+    return await request("SELECT * FROM tareas_generales");
   }
 
   // ----------------------------------------------------
@@ -200,7 +200,7 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Funicón para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaGeneral(int id) async {
-    return await request("SELECT * FROM general WHERE id = $id");
+    return await request("SELECT * FROM tareas_generales WHERE id = $id");
   }
 
   // ----------------------------------------------------
@@ -226,7 +226,7 @@ class DataBaseDriver {
   // Función para obtener una tarea general
   Future<List<Map<String, Map<String, dynamic>>>> getTareaGeneral(
       int id) async {
-    return await request("SELECT * FROM general WHERE id = $id");
+    return await request("SELECT * FROM tareas_generales WHERE id = $id");
   }
 
   // ----------------------------------------------------
@@ -273,4 +273,50 @@ class DataBaseDriver {
     await request(
         "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
   }
+
+  // ----------------------------------------------------
+  // Funcion para añadir a la tabla de tarea_general el id de la tarea y los indices de los pasos
+  Future<void> insertarTareaGeneral(List<int> indicesPasos, String nombre, String propietario) async {
+    // Convertir la lista de enteros en una cadena con el formato de arreglo de PostgreSQL
+    String indicesPasosFormatted = '{' + indicesPasos.join(',') + '}';
+
+    try {
+      await request(
+          "INSERT INTO tareas_generales (indices_pasos, nombre, propietario) VALUES ('$indicesPasosFormatted', '$nombre', '$propietario')"
+      );
+    } catch (e) {
+      print('Error al insertar tarea general: $e');
+      throw Exception('No se pudo insertar la tarea general');
+    }
+  }
+
+
+
+  Future<int> insertarPaso(Paso paso) async {
+    try {
+      var result = await request(
+          "INSERT INTO pasos (descripcion, propietario, imagen) VALUES ('${paso.descripcion}', '${paso.propietario}', '${paso.imagen}') RETURNING id"
+      );
+
+      // Verificar si el resultado no está vacío y tiene la estructura esperada
+      if (result.isNotEmpty && result[0].containsKey('pasos') && result[0]['pasos']!.containsKey('id')) {
+        return result[0]['pasos']!['id'];
+      } else {
+        print('Resultado inesperado: $result');
+        throw Exception('No se pudo insertar el paso');
+      }
+    } catch (e) {
+      print('Error al insertar paso: $e');
+    throw Exception('No se pudo insertar el paso');
+    }
+  }
+
+
+  // Obtener paso por id
+  Future<Paso> getPaso(int id) async {
+    List<Map<String, Map<String, dynamic>>> data = await request("SELECT * FROM pasos WHERE id = $id");
+    return Paso.fromJson(data);
+  }
 }
+
+

@@ -6,11 +6,12 @@ import 'views/registro.dart';
 import 'views/user_list.dart';
 import 'views/general_task_manager.dart';
 import 'views/add_general_task.dart';
+import 'controllers/task_controller.dart';
 
 // -------------------------------------------------------------------
 
 void main() {
-  runApp(const MyApp2());
+  runApp(const MyApp());
 }
 
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/registroPage': (context) => const HomeScreen(),
         '/userList': (context) => UserListPage(userName: user, userSurname: user),
         '/userDetails': (context) => UserDetailsPage(nombre: teacher!.name, apellidos: teacher!.surnames, esEstudiante: false, userName: teacher!.name, userSurname: teacher!.surnames),
-        '/tasks': (context) => TaskView(),
+        '/tasks': (context) => TaskView(controller: Controller()),
       },
     );
   }

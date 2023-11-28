@@ -3,21 +3,54 @@ import 'package:flutter/material.dart';
 import '../globals/globals.dart';
 import '../components/bottom_navigation_bar.dart';
 import '../model/general_task.dart';
+import '../controllers/task_controller.dart';
 import '../views/add_general_task.dart';
 
 class TaskView extends StatefulWidget {
+  final Controller controller;
+
+  TaskView({Key? key, required this.controller}) : super(key: key);
+
   @override
   _TaskViewState createState() => _TaskViewState();
 }
 
 class _TaskViewState extends State<TaskView> {
-  List<Tarea> tasks = []; // Lista de tareas
+  List<Tarea> tasks = [];
 
-  void _addTask(Tarea tarea) {
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  void _loadTasks() async {
+    var tareasData = await widget.controller.listaTareasGenerales();
+    List<Tarea> tareasList = [];
+
+    for (var tareaData in tareasData) {
+      Tarea tarea = Tarea.fromJson(tareaData);
+
+      // Obtener los detalles completos de los pasos a partir de los IDs
+      List<Paso> pasos = await widget.controller.obtenerDetallesPasos(tarea.indicesPasos);
+
+      tarea.setPasos(pasos); // Ajusta la tarea con sus pasos
+
+      tareasList.add(tarea);
+    }
+
     setState(() {
-      tasks.add(tarea);
+      tasks = tareasList;
     });
   }
+
+
+  void _addTask(Tarea tarea) async {
+    // Aquí los pasos ya han sido insertados y tienes los IDs en tarea.indicesPasos
+    await widget.controller.addTareaGeneral(tarea.indicesPasos, tarea.titulo, tarea.propietario);
+    _loadTasks();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +61,9 @@ class _TaskViewState extends State<TaskView> {
       ),
       body: tasks.isEmpty
           ? Center(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+              child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -44,7 +78,7 @@ class _TaskViewState extends State<TaskView> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              AddTaskView(onAddTask: _addTask),
+                              AddTaskView(onAddTask: _addTask, controller: widget.controller)
                         ),
                       );
                     },
@@ -56,8 +90,7 @@ class _TaskViewState extends State<TaskView> {
                   ),
                 ],
               ),
-            )
-          )
+            ))
           : ListView.builder(
               itemCount: tasks.length,
               itemBuilder: (context, index) {
@@ -71,8 +104,8 @@ class _TaskViewState extends State<TaskView> {
                     children: tasks[index].pasos.map((paso) {
                       return ListTile(
                         title: Text(paso.descripcion),
-                        leading: paso.imagen.isNotEmpty
-                            ? Image.asset(paso.imagen, width: 50, height: 50)
+                        leading: paso.imagen?.isNotEmpty == true
+                            ? Image.asset(paso.imagen!, width: 50, height: 50)
                             : null,
                       );
                     }).toList(),
@@ -86,7 +119,7 @@ class _TaskViewState extends State<TaskView> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddTaskView(onAddTask: _addTask),
+              builder: (context) => AddTaskView(onAddTask: _addTask, controller: widget.controller)
             ),
           );
         },

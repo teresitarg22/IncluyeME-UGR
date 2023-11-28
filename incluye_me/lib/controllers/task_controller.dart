@@ -1,5 +1,5 @@
 import 'package:incluye_me/globals/globals.dart';
-
+import 'package:incluye_me/model/general_task.dart';
 // -------------------------------------------
 
 class Controller {
@@ -93,4 +93,29 @@ class Controller {
       int id) async {
     return await dbDriver.getTareaAsignada(id);
   }
+
+  // -----------------------------
+  Future<void> addTareaGeneral(List<int> indicesPasos, String nombre, String propietario) async {
+    await dbDriver.insertarTareaGeneral(indicesPasos, nombre, propietario);
+  }
+
+  Future<List<int>> insertarPasosYObtenerIds(List<Paso> pasos) async {
+    List<int> ids = [];
+    for (var paso in pasos) {
+      int id = await dbDriver.insertarPaso(paso);
+      ids.add(id);
+    }
+    return ids;
+  }
+
+  Future<List<Paso>> obtenerDetallesPasos(List<int> idsPasos) async {
+    List<Paso> detallesPasos = [];
+    for (var idPaso in idsPasos) {
+      Paso paso = await dbDriver.getPaso(idPaso);
+      detallesPasos.add(paso);
+    }
+    return detallesPasos;
+  }
+
+  // -----------------------------
 }
