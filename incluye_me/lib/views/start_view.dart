@@ -24,8 +24,8 @@ class StartView extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
+            shrinkWrap: true,
             children: [
               // ----------------------------------------------
               ClipRRect(

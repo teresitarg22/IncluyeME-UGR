@@ -144,213 +144,220 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: tareas.length,
-              itemBuilder: (BuildContext context, int index) {
-                controlador
-                    .tipoTarea(tareas[index]['tarea']['id'])
-                    .then((resultado) {
-                  tipo = resultado;
-                });
-                // controlador
-                //     .esTareaAsignada(tareas[index]['tarea']['id'])
-                //     .then((resultado) {
-                //   asignada = resultado;
-                // });
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return TaskDetailsPage(
-                        taskID: tareas[index]['id'],
-                        tipo: tipo,
-                        userName: widget.userName,
-                        userSurname: widget.userSurname,
-                      );
-                    }));
-                  },
-                  child: Card(
-                    color: tipo == "material"
-                        ? Color.fromARGB(255, 223, 205, 255)
-                        : tipo == "general"
-                            ? Colors.blue[100]
-                            : Colors.green[100],
-                    margin: const EdgeInsets.only(
-                        top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
-                    child: ListTile(
-                      title: GestureDetector(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 4),
-                            Text(
-                              "${tareas[index]?['tarea']?['nombre']}",
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18, // Tamaño de fuente más grande.
-                                fontWeight:
-                                    FontWeight.bold, // Texto en negrita.
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: tareas.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      controlador
+                          .tipoTarea(tareas[index]['tarea']['id'])
+                          .then((resultado) {
+                        tipo = resultado;
+                      });
+                      // controlador
+                      //     .esTareaAsignada(tareas[index]['tarea']['id'])
+                      //     .then((resultado) {
+                      //   asignada = resultado;
+                      // });
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return TaskDetailsPage(
+                              taskID: tareas[index]['id'],
+                              tipo: tipo,
+                              userName: widget.userName,
+                              userSurname: widget.userSurname,
+                            );
+                          }));
+                        },
+                        // ---------------------------------------
+                        child: Card(
+                          color: tipo == "material"
+                              ? const Color.fromARGB(255, 223, 205, 255)
+                              : tipo == "general"
+                                  ? Colors.blue[100]
+                                  : Colors.green[100],
+                          margin: const EdgeInsets.only(
+                              top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
+                          child: ListTile(
+                            title: GestureDetector(
+                              // ----------------------
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "${tareas[index]?['tarea']?['nombre']}",
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 76, 76, 76),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 4),
-                          ],
-                        ),
-                      ),
-                      subtitle: Text(tipo),
-                      leading: const Icon(
-                        Icons.task_rounded,
-                        size: 45,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(tareas[index]['tarea']['completada'] == true
-                              ? "Completada"
-                              : asignada
-                                  ? "Asignada"
-                                  : "No asignada"),
-                          // ------------------------------------
-                          IconButton(
-                            icon: const Icon(Icons.people_alt_rounded,
-                                color: Color.fromARGB(255, 76, 76, 76)),
-                            onPressed: () {
-                              // Nos dirigimos a la interfaz de edición de usuario:
-                            },
-                          ),
-                          // -----------------
-                          IconButton(
-                            icon: const Icon(Icons.edit,
-                                color: Color.fromARGB(255, 76, 76, 76)),
-                            onPressed: () {
-                              // Nos dirigimos a la interfaz de edición de usuario:
-                            },
-                          ),
-                          // -----------------
-                          IconButton(
-                              icon: const Icon(Icons.delete,
-                                  color: Color.fromARGB(255, 76, 76, 76)),
-                              onPressed: () async {
-                                // Hacer la función asíncrona
-
-                                // Mostrar un diálogo de confirmación
-                                bool confirmar = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title:
-                                          const Text('Confirmar Eliminación'),
-                                      content: const Text(
-                                          '¿Seguro que quiere eliminar la tarea?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('Sí'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                true); // Confirma la eliminación
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: const Text('No'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                false); // Cancela la eliminación
-                                          },
-                                        ),
-                                      ],
-                                    );
+                            // -----------------------
+                            subtitle: Text(tipo),
+                            leading: const Icon(
+                              Icons.task_rounded,
+                              size: 45,
+                            ),
+                            // -----------------------
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                    tareas[index]['tarea']['completada'] == true
+                                        ? "Completada"
+                                        : asignada
+                                            ? "Asignada"
+                                            : "No asignada"),
+                                // ------------------------------------
+                                IconButton(
+                                  icon: const Icon(Icons.people_alt_rounded,
+                                      color: Color.fromARGB(255, 76, 76, 76)),
+                                  onPressed: () {
+                                    // Nos dirigimos a la interfaz de edición:
                                   },
-                                );
+                                ),
+                                // -----------------
+                                IconButton(
+                                  icon: const Icon(Icons.edit,
+                                      color: Color.fromARGB(255, 76, 76, 76)),
+                                  onPressed: () {
+                                    // Nos dirigimos a la interfaz de edición:
+                                  },
+                                ),
+                                // -----------------
+                                IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Color.fromARGB(255, 76, 76, 76)),
+                                    onPressed: () async {
+                                      // Mostrar un diálogo de confirmación
+                                      bool confirmar = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Confirmar Eliminación'),
+                                            content: const Text(
+                                                '¿Seguro que quiere eliminar la tarea?'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Sí'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      true); // Confirma la eliminación
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('No'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      false); // Cancela la eliminación
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
 
-                                if (confirmar) {
-                                  // Realizar la actualización en la base de datos
-                                  controlador.eliminarTarea(
-                                      tareas[index]['tarea']['id']);
+                                      if (confirmar) {
+                                        // Actualización en la base de datos:
+                                        controlador.eliminarTarea(
+                                            tareas[index]['tarea']['id']);
 
-                                  //Actualizar la vista
-                                  setState(() {
-                                    // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
-                                    // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
-                                    tareas.removeAt(index);
-                                  });
-                                }
-                              }),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          // ---------------------------------------------------------------------
-          Column(
-            children: [
-              Positioned(
-                top: 10,
-                left: 0,
-                child: Container(
-                  margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
-                  decoration: BoxDecoration(
-                    color: Colors.blue, // Cambia el color del fondo del menú
-                    borderRadius: BorderRadius.circular(
-                        8.0), // Ajusta los bordes redondos
-                  ),
-                  child: PopupMenuButton<String>(
-                    icon: const Icon(Icons.add),
-                    color: Colors.white,
-                    onSelected: (String value) {
-                      if (value == 'PedirMaterial') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PedirMaterial(
-                                userName: widget.userName,
-                                userSurname: widget.userSurname),
-                          ),
-                        );
-                      } else if (value == 'TareaGeneral') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                AddTaskView(onAddTask: _addTask),
-                          ),
-                        );
-                      }
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return <PopupMenuEntry<String>>[
-                        const PopupMenuItem<String>(
-                          value: 'PedirMaterial',
-                          child: Row(
-                            children: [
-                              Icon(Icons.inventory),
-                              SizedBox(width: 8.0),
-                              Text('Petición de materiales'),
-                            ],
+                                        // Actualizar la vista:
+                                        setState(() {
+                                          tareas.removeAt(index);
+                                        });
+                                      }
+                                    }),
+                              ],
+                            ),
                           ),
                         ),
-                        const PopupMenuItem<String>(
-                          value: 'TareaGeneral',
-                          child: Row(
-                            children: [
-                              Icon(Icons.assignment),
-                              SizedBox(width: 8.0),
-                              Text('Tarea General'),
-                            ],
-                          ),
-                        ),
-                      ];
+                      );
                     },
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                // ---------------------------------------------------------------------
+                Stack(
+                  children: [
+                    Positioned(
+                      top: 10,
+                      left: 0,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: PopupMenuButton<String>(
+                          icon: const Icon(Icons.add),
+                          color: Colors.white,
+                          onSelected: (String value) {
+                            if (value == 'PedirMaterial') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PedirMaterial(
+                                      userName: widget.userName,
+                                      userSurname: widget.userSurname),
+                                ),
+                              );
+                            } else if (value == 'TareaGeneral') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AddTaskView(onAddTask: _addTask),
+                                ),
+                              );
+                            }
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return <PopupMenuEntry<String>>[
+                              const PopupMenuItem<String>(
+                                value: 'PedirMaterial',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.inventory),
+                                    SizedBox(width: 8.0),
+                                    Text('Petición de materiales'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'TareaGeneral',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.assignment),
+                                    SizedBox(width: 8.0),
+                                    Text('Tarea General'),
+                                  ],
+                                ),
+                              ),
+                            ];
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: CustomNavigationBar(
           userName: widget.userName, userSurname: widget.userSurname),
@@ -417,162 +424,173 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: tareas.length,
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return TaskDetailsPage(
-                        taskID: tareas[index][tipo]['id'],
-                        tipo: tipo,
-                        userName: widget.userName,
-                        userSurname: widget.userSurname,
-                      );
-                    }));
-                  },
-                  child: Card(
-                    color: Color.fromARGB(255, 223, 205, 255),
-                    margin: const EdgeInsets.only(
-                        top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
-                    child: ListTile(
-                      title: GestureDetector(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 4),
-                            Text(
-                              "${tareas[index]?['tarea']?['nombre']}",
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18, // Tamaño de fuente más grande.
-                                fontWeight:
-                                    FontWeight.bold, // Texto en negrita.
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: tareas.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return TaskDetailsPage(
+                              taskID: tareas[index][tipo]['id'],
+                              tipo: tipo,
+                              userName: widget.userName,
+                              userSurname: widget.userSurname,
+                            );
+                          }));
+                        },
+                        child: Card(
+                          color: Color.fromARGB(255, 223, 205, 255),
+                          margin: const EdgeInsets.only(
+                              top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
+                          child: ListTile(
+                            title: GestureDetector(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "${tareas[index]?['tarea']?['nombre']}",
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 76, 76, 76),
+                                      fontSize:
+                                          18, // Tamaño de fuente más grande.
+                                      fontWeight:
+                                          FontWeight.bold, // Texto en negrita.
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 4),
-                          ],
-                        ),
-                      ),
-                      subtitle: Text(tipo),
-                      leading: const Icon(
-                        Icons.person,
-                        size: 45,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(tareas[index]['tarea']['completada'] == true
-                              ? "Completada"
-                              : asignada
-                                  ? "Asignada"
-                                  : "No asignada"),
-                          // ------------------------------------
-                          IconButton(
-                            icon: const Icon(Icons.edit,
-                                color: Color.fromARGB(255, 76, 76, 76)),
-                            onPressed: () {
-                              // Nos dirigimos a la interfaz de edición de usuario:
-                            },
-                          ),
-                          // -----------------
-                          const SizedBox(width: 30.0),
-                          // -----------------
-                          IconButton(
-                              icon: const Icon(Icons.delete,
-                                  color: Color.fromARGB(255, 76, 76, 76)),
-                              onPressed: () async {
-                                // Hacer la función asíncrona
-
-                                // Mostrar un diálogo de confirmación
-                                bool confirmar = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title:
-                                          const Text('Confirmar Eliminación'),
-                                      content: const Text(
-                                          '¿Seguro que quiere eliminar la tarea?'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('Sí'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                true); // Confirma la eliminación
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: const Text('No'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop(
-                                                false); // Cancela la eliminación
-                                          },
-                                        ),
-                                      ],
-                                    );
+                            subtitle: Text(tipo),
+                            leading: const Icon(
+                              Icons.person,
+                              size: 45,
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                    tareas[index]['tarea']['completada'] == true
+                                        ? "Completada"
+                                        : asignada
+                                            ? "Asignada"
+                                            : "No asignada"),
+                                // ------------------------------------
+                                IconButton(
+                                  icon: const Icon(Icons.edit,
+                                      color: Color.fromARGB(255, 76, 76, 76)),
+                                  onPressed: () {
+                                    // Nos dirigimos a la interfaz de edición de usuario:
                                   },
-                                );
+                                ),
+                                // -----------------
+                                const SizedBox(width: 30.0),
+                                // -----------------
+                                IconButton(
+                                    icon: const Icon(Icons.delete,
+                                        color: Color.fromARGB(255, 76, 76, 76)),
+                                    onPressed: () async {
+                                      // Hacer la función asíncrona
 
-                                if (confirmar) {
-                                  // Realizar la actualización en la base de datos
-                                  controlador.eliminarTarea(
-                                      tareas[index]['tarea']['id']);
+                                      // Mostrar un diálogo de confirmación
+                                      bool confirmar = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Confirmar Eliminación'),
+                                            content: const Text(
+                                                '¿Seguro que quiere eliminar la tarea?'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Sí'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      true); // Confirma la eliminación
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('No'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      false); // Cancela la eliminación
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
 
-                                  //Actualizar la vista
-                                  setState(() {
-                                    // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
-                                    // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
-                                    tareas.removeAt(index);
-                                  });
-                                }
-                              }),
-                        ],
+                                      if (confirmar) {
+                                        // Realizar la actualización en la base de datos
+                                        controlador.eliminarTarea(
+                                            tareas[index]['tarea']['id']);
+
+                                        //Actualizar la vista
+                                        setState(() {
+                                          // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
+                                          // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
+                                          tareas.removeAt(index);
+                                        });
+                                      }
+                                    }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
+                  child: ElevatedButton(
+                    // --------------------------
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PedirMaterial(
+                                userName: widget.userName,
+                                userSurname: widget.userSurname),
+                          ));
+                    },
+                    // --------------------------
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
+                      padding: const EdgeInsets.all(16.0),
+                    ),
+                    // --------------------------
+                    child: const Row(
+                      // Usamos un Row para colocar el icono y el texto horizontalmente.
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.add),
+                        SizedBox(width: 8.0),
+                        Text('Nueva Tarea Reparto Material',
+                            style:
+                                TextStyle(fontSize: 16)), // El texto del botón.
+                      ],
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 16.0, bottom: 30.0),
-            child: ElevatedButton(
-              // --------------------------
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PedirMaterial(
-                          userName: widget.userName,
-                          userSurname: widget.userSurname),
-                    ));
-              },
-              // --------------------------
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                padding: const EdgeInsets.all(16.0),
-              ),
-              // --------------------------
-              child: const Row(
-                // Usamos un Row para colocar el icono y el texto horizontalmente.
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.add),
-                  SizedBox(width: 8.0),
-                  Text('Nueva Tarea Reparto Material',
-                      style: TextStyle(fontSize: 16)), // El texto del botón.
-                ],
-              ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: CustomNavigationBar(
           userName: widget.userName, userSurname: widget.userSurname),
