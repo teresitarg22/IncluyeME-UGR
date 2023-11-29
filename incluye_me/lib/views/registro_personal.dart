@@ -101,7 +101,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                         _pickImage(); // Llama a la función para seleccionar una imagen
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF29DA81),
+                        backgroundColor: Colors.blue,
                       ),
                       child: const Text('Elige una foto'),
                     ),
@@ -146,7 +146,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF29DA81),
+                    backgroundColor: Colors.blue,
                   ),
                   child: const Text('Añadir Aulas del Profesor'),
                 ),
@@ -358,7 +358,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF29DA81),
+                      backgroundColor: Colors.blue,
                     ),
                     child: const Text('Registrarse'),
                   ),

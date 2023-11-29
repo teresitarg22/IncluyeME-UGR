@@ -142,7 +142,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                           ..writeAsBytesSync(img.encodePng(niIdea!));*/
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF29DA81),
+                        backgroundColor: Colors.blue,
                       ),
                       child: const Text('Elige una foto'),
                     ),
@@ -209,7 +209,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                   items: multiSelectOptions,
                   initialValue: selectedOptions,
                   title: const Text("Selecciona opciones"),
-                  selectedColor: Colors.green,
+                  selectedColor: Colors.blue,
                   buttonText:
                       const Text('Preferencias para mostrar el contenido'),
                   onConfirm: (values) {
@@ -434,8 +434,7 @@ class _AlumnoRegistrationState extends State<AlumnoRegistration> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(
-                          0xFF29DA81), // Cambia el color del botón a verde
+                      backgroundColor: Colors.blue , // Cambia el color del botón a verde
                     ),
                     child: const Text('Registrarse'),
                   ),
