@@ -27,6 +27,8 @@ class _TaskListPageState extends State<TaskListPage> {
   bool isAdmin = false;
   var tareas = [];
   var material = [];
+  var general = [];
+  var comanda = [];
   String tipo = ""; // Variable para almacenar el tipo de tarea
   bool asignada = false; // Variable para almacenar si la tarea está asignada
   bool mostrarBoton = false;
@@ -66,7 +68,12 @@ class _TaskListPageState extends State<TaskListPage> {
   // -----------------------------
   Future<void> loadTaskIds() async {
     tareas = await controlador.listaTareas();
-    //material = await controlador.listaTareasMaterial();
+    // material = await controlador.listaTareasMaterial();
+    // general = await controlador.listaTareasGenerales();
+    // comanda = await controlador.listaTareasComanda();
+    // setState(() {
+    //   tareas = material + general + comanda;
+    // });
   }
 
   // -----------------------------
@@ -161,17 +168,17 @@ class _TaskListPageState extends State<TaskListPage> {
                           .then((resultado) {
                         tipo = resultado;
                       });
-                      // controlador
-                      //     .esTareaAsignada(tareas[index]['tarea']['id'])
-                      //     .then((resultado) {
-                      //   asignada = resultado;
-                      // });
+                      //  controlador
+                      //      .esTareaAsignada(tareas[index]['tarea']['id'])
+                      //      .then((resultado) {
+                      //    asignada = resultado;
+                      //  });
                       return InkWell(
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return TaskDetailsPage(
-                              taskID: tareas[index]['id'],
+                              taskID: tareas[index]['tarea']['id'],
                               tipo: tipo,
                               userName: widget.userName,
                               userSurname: widget.userSurname,
@@ -207,7 +214,7 @@ class _TaskListPageState extends State<TaskListPage> {
                               ),
                             ),
                             // -----------------------
-                            subtitle: Text(tipo),
+                            //subtitle: Text(tipo),
                             leading: const Icon(
                               Icons.task_rounded,
                               size: 45,
