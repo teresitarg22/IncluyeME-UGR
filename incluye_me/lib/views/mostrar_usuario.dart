@@ -104,7 +104,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 77, 131, 105),
+                      color: Color.fromARGB(255, 25, 72, 110),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -131,7 +131,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           'Información personal',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Color.fromARGB(255, 25, 72, 110),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -179,16 +179,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         // -----------------------------
                         Row(
                           children: [
-                            const Text(
-                              'Email:',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(33, 150, 243, 1)),
-                            ),
+                            const Text('Email:',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(width: 8),
                             Text(
-                              '${user?.correo}',
+                              user?.correo ?? 'No tiene',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -200,7 +196,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           'Autentificación',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Color.fromARGB(255, 25, 72, 110),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -229,9 +225,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         Row(
                           children: [
                             Text(
-                              widget.esEstudiante
-                                  ? 'Contraseña de iconos'
-                                  : "No tiene",
+                              widget.esEstudiante ? 'Contraseña de iconos' : "",
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -242,7 +236,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                               widget.esEstudiante
                                   ? (user as Estudiante?)?.contrasenia_iconos ??
                                       ''
-                                  : '',
+                                  : 'No tiene',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -254,7 +248,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           widget.esEstudiante ? 'Accesibilidad' : "",
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Color.fromARGB(255, 25, 72, 110),
                           ),
                           textAlign: TextAlign.center,
                         ),

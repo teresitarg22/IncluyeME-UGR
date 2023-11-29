@@ -291,7 +291,7 @@ class _TaskListPageState extends State<TaskListPage> {
                   ),
                 ),
                 // ---------------------------------------------------------------------
-                Stack(
+                Column(
                   children: [
                     Positioned(
                       top: 10,

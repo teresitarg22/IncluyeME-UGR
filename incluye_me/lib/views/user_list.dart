@@ -441,7 +441,7 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 10,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
