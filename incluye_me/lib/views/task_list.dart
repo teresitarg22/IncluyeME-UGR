@@ -6,6 +6,7 @@ import '../components/bottom_navigation_bar.dart';
 import 'pedir_material.dart';
 import '../views/add_general_task.dart';
 import '../model/general_task.dart';
+import 'command_task_asign.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -180,10 +181,10 @@ class _TaskListPageState extends State<TaskListPage> {
                         // ---------------------------------------
                         child: Card(
                           color: tipo == "material"
-                              ? const Color.fromARGB(255, 223, 205, 255)
+                              ? Color.fromARGB(255, 229, 244, 255)
                               : tipo == "general"
-                                  ? Colors.blue[100]
-                                  : Colors.green[100],
+                                  ? Color.fromARGB(255, 186, 213, 235)
+                                  : const Color.fromARGB(255, 200, 219, 230),
                           margin: const EdgeInsets.only(
                               top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                           child: ListTile(
@@ -226,7 +227,14 @@ class _TaskListPageState extends State<TaskListPage> {
                                   icon: const Icon(Icons.people_alt_rounded,
                                       color: Color.fromARGB(255, 76, 76, 76)),
                                   onPressed: () {
-                                    // Nos dirigimos a la interfaz de edición:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateTaskCommand(
+                                            userName: widget.userName,
+                                            userSurname: widget.userSurname),
+                                      ),
+                                    );
                                   },
                                 ),
                                 // -----------------
