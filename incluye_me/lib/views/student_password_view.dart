@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'student_interface.dart';
+
 class LoginWithSymbols extends StatefulWidget {
   const LoginWithSymbols({Key? key});
 
@@ -117,8 +119,10 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return StudentInterface();
+                                    }));
                                   },
                                   child: const Text('Aceptar'),
                                 ),
