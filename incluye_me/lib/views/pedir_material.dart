@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../components/bottom_navigation_bar.dart';
+import '../controllers/task_controller.dart' as TC;
+import '../controllers/usuario_controller.dart' as UC;
 
 class PedirMaterial extends StatefulWidget {
   String userName;
@@ -12,6 +14,27 @@ class PedirMaterial extends StatefulWidget {
 }
 
 class _PedirMaterialState extends State<PedirMaterial> {
+  final UC.Controller Ucontrolador = UC.Controller();
+  final TC.Controller Tcontrolador = TC.Controller();
+  List<String> aulaList = [];
+  List<String> studentList = [];
+  String selectedAula = "";
+  String selectedStudent = "";
+
+  Future<void> loadAula() async {
+    if (aulaList.isNotEmpty) return;
+    for (var _class in await Ucontrolador.listaAulas()) {
+      aulaList.add(_class.toString());
+    }
+  }
+  
+  Future<void> loadEstudiante() async {
+    if (studentList.isNotEmpty) return;
+    for (var _class in await Ucontrolador.listaEstudiantes()) {
+      studentList.add(_class['aula']!['nombre'].toString());
+    }
+  }
+
   List<List<TextEditingController>> controllersList = [
     [
       TextEditingController(text: 'Material 1'),
@@ -33,14 +56,17 @@ class _PedirMaterialState extends State<PedirMaterial> {
 
   void addMaterialToStudent() {}
 
-  List<String> aulaList = ["Aula 1", "Aula 2", "Aula 3"];
-  String selectedAula = "Aula 1";
-
-  List<String> studentList = ["Student 1", "Student 2", "Student 3"];
-  String selectedStudent = "Student 1";
+  @override
+  void initState() {
+    super.initState();
+    loadAula();
+    loadEstudiante();
+  }
 
   @override
   Widget build(BuildContext context) {
+    loadAula();
+    loadEstudiante();
     return Scaffold(
       appBar: AppBar(
         title: Text('Tarea Material'),

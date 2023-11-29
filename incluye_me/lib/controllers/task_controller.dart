@@ -93,4 +93,14 @@ class Controller {
       int id) async {
     return await dbDriver.getTareaAsignada(id);
   }
+
+  // -----------------------------
+  Future<void> insertarTareaMaterial(String mail, String aula, List<String> material, List<int> cantidad) async {
+    await dbDriver.insertarTareaMaterial(mail, aula, material, cantidad);
+  }
+  
+  // -----------------------------
+  Future<void> monstrarTareaMaterial (String mail, DateTime fecha) async {
+    await dbDriver.monstrarTareaMaterial (mail, fecha);
+  }
 }

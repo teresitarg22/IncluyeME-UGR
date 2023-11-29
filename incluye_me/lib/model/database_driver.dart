@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import 'package:postgres/postgres.dart';
 
@@ -276,5 +277,36 @@ class DataBaseDriver {
   Future<void> insertarAsginada(String nombre, DateTime fecha) async {
     await request(
         "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para añadir a las tablas tarea y tarea_material las informaciones necesarias
+  Future<void> insertarTareaMaterial(String mail, String aula, List<String> material, List<int> cantidad) async {
+    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    await request(
+        "INSERT INSERT INTO tarea(nombre, completada, fecha_tarea) VALUES ('tarea_material', false, '$date')");
+    Future<List<Map<String, Map<String, dynamic>>>> id = request("SELECT max(id) FROM tarea");
+    String material_list = "{${material[0]}", cantidad_list ="{${cantidad[0]}";
+    for(int i = 1; i<material.length; i++)
+    {
+        material_list = "$material_list, ${material[i]}";
+        cantidad_list = "$material_list, ${cantidad[i]}";
+    }
+    material_list = "$material_list}";
+    cantidad_list = "$material_list}";
+    await request(
+        "INSERT INTO tarea_material VALUES ('$id', '$mail', '$aula', '$material_list', '$cantidad_list')");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
+  Future<List<Map<String, Map<String, dynamic>>>> monstrarTareaMaterial (String mail, DateTime fecha) async {
+    return await request(
+        "SELECT tm.id_tarea, ta.fecha_tarea, ta.completada, tm.aula, ARRAY_AGG(lm.nombre) AS nombres, cantidad"
+        "FROM tarea_material tm"
+        "JOIN lista_material lm ON tm.material @> ARRAY[lm.id]"
+        "JOIN tarea ta ON tm.id_tarea = ta.id"
+        "WHERE tm.correo_estudiante = '$mail' AND ta.fecha_tarea = '$fecha'"
+        "GROUP BY tm.id_tarea, ta.fecha_tarea, ta.completada;");
   }
 }
