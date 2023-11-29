@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Selección de Rol'),
-        backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Row(
@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF29DA81),
+                  backgroundColor: Colors.blue,
                   minimumSize: const Size(
                       double.infinity, 100), // Ajusta la altura como desees
                 ),
@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF29DA81),
+                  backgroundColor: Colors.blue,
                   minimumSize: const Size(
                       double.infinity, 100), // Ajusta la altura como desees
                 ),

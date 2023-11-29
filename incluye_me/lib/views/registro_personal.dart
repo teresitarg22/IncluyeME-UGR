@@ -41,7 +41,7 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
     return Scaffold(
       appBar: AppBar(
           title: const Text('Registro de Personal'),
-          backgroundColor: const Color.fromARGB(255, 41, 218, 129)),
+          backgroundColor: Colors.blue),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
