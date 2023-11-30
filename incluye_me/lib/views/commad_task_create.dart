@@ -23,31 +23,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => AsignTaskCommand(
-              userName: "sergio",
-              userSurname: "muñoz",
-              taskID: 1,
-            ),
+        '/': (context) => CreateTaskCommand(userName: "sergio", userSurname: "muñoz",),
       },
     );
   }
 }
 
-class AsignTaskCommand extends StatefulWidget {
+class CreateTaskCommand extends StatefulWidget {
   final String userName;
   final String userSurname;
-  final int taskID;
-  const AsignTaskCommand(
-      {super.key,
-      required this.userName,
-      required this.userSurname,
-      required this.taskID});
+  const CreateTaskCommand(
+      {super.key, required this.userName, required this.userSurname});
 
   @override
-  _AsignTaskCommandState createState() => _AsignTaskCommandState();
+  _CreateTaskCommandState createState() => _CreateTaskCommandState();
 }
 
-class _AsignTaskCommandState extends State<AsignTaskCommand> {
+class _CreateTaskCommandState extends State<CreateTaskCommand> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? _name;
@@ -86,7 +78,8 @@ class _AsignTaskCommandState extends State<AsignTaskCommand> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Asignar Tarea'), backgroundColor: Colors.blue),
+          title: const Text('Asignar Tarea Comanda'),
+          backgroundColor: Colors.blue),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -148,6 +141,108 @@ class _AsignTaskCommandState extends State<AsignTaskCommand> {
                     ],
                   ),
                 ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: 20), // Agrega espacio en la parte superior
+                      child: Row(
+                        children: [
+                          Text(
+                            'Frecuencia: ',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          SizedBox(
+                              width:
+                                  20), // Agrega espacio entre el texto y el campo de texto
+                          Container(
+                            width:
+                                200, // Cambia el ancho del campo de texto aquí
+                            child: DropdownButtonFormField<String>(
+                              value: _selectedOption,
+                              items: ['Semanal', 'Fecha concreta']
+                                  .map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedOption = newValue;
+                                });
+                              },
+                            ),
+                          ),
+                          if (_selectedOption == 'Semanal')
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 20), // Agrega espacio a la izquierda
+                              child: Container(
+                                width:
+                                    400, // Cambia el ancho del campo de texto aquí
+                                child: MultiSelectDialogField<String>(
+                                  items: multiSelectOptions,
+                                  initialValue: selectedOptions,
+                                  title: const Text("Selecciona opciones"),
+                                  selectedColor: Colors.blue,
+                                  buttonText: const Text(
+                                      'Elige el dia de la semana para la tarea'),
+                                  onConfirm: (values) {
+                                    setState(() {
+                                      selectedOptions = values;
+                                    });
+                                    for (var dia in selectedOptions) {
+                                      var fecha = fechasDelDiaDeLaSemana(
+                                          int.parse(dia));
+                                      for (var fechaDia in fecha) {
+                                        _dates.add(fechaDia);
+                                      }
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          if (_selectedOption == 'Fecha concreta')
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 20), // Agrega espacio a la izquierda
+                              child: Container(
+                                width:
+                                    200, // Cambia el ancho del campo de texto aquí
+                                child: TextFormField(
+                                  controller: _fechaController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Fecha',
+                                  ),
+                                  onTap: () async {
+                                    FocusScope.of(context).requestFocus(
+                                        new FocusNode()); // para evitar que se muestre el teclado
+                                    final DateTime? picked =
+                                        await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime.now().add(
+                                              Duration(days: 365),
+                                            ));
+                                    if (picked != null &&
+                                        picked != _selectedDate) {
+                                      _selectedDate = picked;
+                                      _dates.add(_selectedDate!);
+                                      _fechaController.text =
+                                          DateFormat('dd-MM-yyyy')
+                                              .format(picked);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Align(
                   alignment: Alignment.center, // Centra el botón en el medio
                   child: ElevatedButton(
@@ -168,11 +263,27 @@ class _AsignTaskCommandState extends State<AsignTaskCommand> {
                                   child: const Text('Aceptar'),
                                   onPressed: () async {
                                     List<String> parts = _name!.split(' ');
+                                    if (_selectedOption == 'Semanal') {
+                                      for (var fecha in _dates) {
+                                        var tarea = await controlador
+                                            .insertarTarea("comanda" + DateFormat('dd/MM/yyyy').format(fecha)  , fecha);
 
-                                    controlador.insertarAsginada(
-                                        parts[0],
-                                        parts.sublist(1).join(' '),
-                                        widget.taskID);
+                                        if (parts.length >= 2) {
+                                          controlador.insertarAsginada(
+                                              parts[0],
+                                              parts.sublist(1).join(' '),
+                                              tarea);
+                                        }
+                                      }
+                                    } else {
+                                      var tarea =
+                                          await controlador.insertarTarea(
+                                              "comanda " + DateFormat('dd/MM/yyyy').format(_selectedDate!), _selectedDate!);
+                                      if (parts.length >= 2) {
+                                        controlador.insertarAsginada(parts[0],
+                                            parts.sublist(1).join(' '), tarea);
+                                      }
+                                    }
 
                                     Navigator.push(
                                       context,

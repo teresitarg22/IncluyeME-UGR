@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/commad_task_create.dart';
 import 'package:incluye_me/views/task_view.dart';
 import '../controllers/session_controller.dart';
 import '../controllers/task_controller.dart';
@@ -237,9 +238,10 @@ class _TaskListPageState extends State<TaskListPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => CreateTaskCommand(
+                                        builder: (context) => AsignTaskCommand(
                                             userName: widget.userName,
-                                            userSurname: widget.userSurname),
+                                            userSurname: widget.userSurname,
+                                            taskID: tareas[index]['tarea']['id'] ),
                                       ),
                                     );
                                   },
@@ -338,6 +340,14 @@ class _TaskListPageState extends State<TaskListPage> {
                                       AddTaskView(onAddTask: _addTask),
                                 ),
                               );
+                            }else if (value == 'TareaComanda') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateTaskCommand(userName: widget.userName , userSurname: widget.userSurname ),
+                                ),
+                              );
                             }
                           },
                           itemBuilder: (BuildContext context) {
@@ -359,6 +369,16 @@ class _TaskListPageState extends State<TaskListPage> {
                                     Icon(Icons.assignment),
                                     SizedBox(width: 8.0),
                                     Text('Tarea General'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'TareaComanda',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.food_bank),
+                                    SizedBox(width: 8.0),
+                                    Text('Tarea Comanda'),
                                   ],
                                 ),
                               ),

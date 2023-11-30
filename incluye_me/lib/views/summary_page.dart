@@ -11,6 +11,7 @@ class SummaryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Resumen'),
+        backgroundColor: Colors.blue ,
       ),
       body: Center(
         child: SingleChildScrollView(
