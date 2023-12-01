@@ -23,9 +23,9 @@ En esta primera iteración, presentamos el primer prototipo que marca el inicio 
 - Funciones administrativas vitales, como la visualización del listado de usuarios, edición de perfiles, eliminación de cuentas existentes y registro de nuevos usuarios.
 - La capacidad de acceder y visualizar detalles específicos de los usuarios.
 
+Dejamos la documentación de la primera iteración en :scroll: [Iteración 1](Documentacion/Documentación.pdf)
+
 ## :file_folder: Iteración 2
 
 
-
-Dejamos la documentación de la primera iteración en :scroll: [Iteración 1](Documentacion/Documentación.pdf)
 
