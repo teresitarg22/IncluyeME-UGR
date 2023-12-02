@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/command_task_asign.dart';
+import 'package:incluye_me/views/task_asign.dart';
 import 'command_task.dart';
 import '../controllers/registro_controller.dart';
 import 'summary_page.dart';
@@ -17,14 +17,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => ClaseDropdown(),
-        '/classroomChoose': (context) => ClaseDropdown(),
+        '/': (context) => ClaseDropdown(taskID: 88 ),
       },
     );
   }
 }
 
 class ClaseDropdown extends StatefulWidget {
+  final int taskID ; 
+  const ClaseDropdown(
+      {super.key, required this.taskID});
   @override
   _ClaseDropdownState createState() => _ClaseDropdownState();
 }
@@ -152,6 +154,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                                     return SummaryPage(
                                       amount: amount,
                                       menus: menus,
+                                      taskID: widget.taskID,
                                     );
                                   }));
                                 }
@@ -209,6 +212,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                                     return SummaryPage(
                                       amount: amount,
                                       menus: menus,
+                                      taskID: widget.taskID,
                                     );
                                   }));
                                 }

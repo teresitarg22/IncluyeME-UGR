@@ -273,8 +273,8 @@ class DataBaseDriver {
     final results = await request(
         "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha') RETURNING id");
 
-    var primeraFila = results.first ; 
-    var id = primeraFila['tarea']!['id'] ;
+    var primeraFila = results.first;
+    var id = primeraFila['tarea']!['id'];
     return int.parse(id.toString());
   }
   // ----------------------------------------------------
@@ -294,5 +294,17 @@ class DataBaseDriver {
     return await request("SELECT * FROM tarea WHERE id = $id");
   }
 
-  //
+  // ----------------------------------------------------
+
+  Future<void> insertarComanda(
+      int id, String nombre, String menu, var cantidad,int total) async {
+    await request(
+        "INSERT INTO comanda (id_tarea,nombre_clase,menu,cantidad,total) VALUES ('$id', '$nombre', '$menu', '$cantidad', $total)");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para marcar una tarea como completada 
+  Future<void> completarTarea(int id) async {
+    await request("UPDATE tarea SET completada = true WHERE id = $id");
+  }
 }
