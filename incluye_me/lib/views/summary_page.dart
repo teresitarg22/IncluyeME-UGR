@@ -78,7 +78,7 @@ class SummaryPage extends StatelessWidget {
               }
             }
 
-            //Navigator.pop(context);
+            Navigator.pop(context);
           },
           child: Text('Finalizar Tarea',
           style: TextStyle(fontSize: 25),),

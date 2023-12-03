@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class TaskCommand extends StatefulWidget {
   final String? clase;
-  final Map<String, int >? menus;
-  final  Map<String, int>? specialOptions; 
-  const TaskCommand({Key? key, required this.clase, this.menus, this.specialOptions});
+  final Map<String, int>? menus;
+  final Map<String, int>? specialOptions;
+  const TaskCommand(
+      {Key? key, required this.clase, this.menus, this.specialOptions});
 
   @override
   _CreateTaskCommandState createState() => _CreateTaskCommandState();
@@ -31,12 +32,10 @@ class _CreateTaskCommandState extends State<TaskCommand> {
       }
     } else {
       for (var menu in menus) {
-        amount[menu] = widget.menus![widget.clase]! ; 
+        amount[menu] = widget.menus![widget.clase]!;
       }
       this.specialOptions = widget.specialOptions!;
-    } 
-
-
+    }
   }
 
   @override
@@ -44,7 +43,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Selecciona las comandas para la clase ${widget.clase}'),
-        backgroundColor: Colors.blue ,
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(
@@ -70,7 +69,13 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                       ),
                       SizedBox(width: 30),
                       IconButton(
-                        icon: Icon(Icons.remove, size: 30.0),
+                         icon: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Icon(Icons.remove),
+                        ),
                         onPressed: () {
                           setState(() {
                             if (amount[menus[index]]! > 0) {
@@ -84,7 +89,13 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                         style: TextStyle(fontSize: 20.0),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add, size: 30.0),
+                        icon: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Icon(Icons.add),
+                        ),
                         onPressed: () {
                           setState(() {
                             amount[menus[index]] = amount[menus[index]]! + 1;
@@ -108,7 +119,13 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                       textAlign: TextAlign.center,
                     ),
                     IconButton(
-                      icon: Icon(Icons.remove, size: 30.0),
+                       icon: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Icon(Icons.remove),
+                      ),
                       onPressed: () {
                         setState(() {
                           if (specialOptions[key]! > 0) {
@@ -122,7 +139,13 @@ class _CreateTaskCommandState extends State<TaskCommand> {
                       style: TextStyle(fontSize: 20.0),
                     ),
                     IconButton(
-                      icon: Icon(Icons.add, size: 30.0),
+                       icon: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Icon(Icons.add),
+                      ),
                       onPressed: () {
                         setState(() {
                           if (key == 'Fruta Triturada') {
