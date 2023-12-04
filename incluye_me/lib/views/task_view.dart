@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/task_list.dart';
-import '../model/estudiante.dart';
 import '../model/user.dart';
-import './user_list.dart';
 import '../controllers/task_controller.dart';
-import 'mostrar_usuario.dart';
+import '../components/bottom_navigation_bar.dart';
 
 // ----------------------------------------------------------
 
@@ -46,13 +43,14 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Future<void> _getTarea() async {
-    if (widget.tipo == "general") {
-      tarea = await controlador.getTareaGeneral(widget.taskID);
-    } else if (widget.tipo == "material") {
-      tarea = await controlador.getTareaMaterial(widget.taskID);
-    } else if (widget.tipo == "comanda") {
-      tarea = await controlador.getTareaComanda(widget.taskID);
-    }
+    tarea = await controlador.getTarea(widget.taskID);
+    // if (widget.tipo == "general") {
+    //   tarea = await controlador.getTareaGeneral(widget.taskID);
+    // } else if (widget.tipo == "material") {
+    //   tarea = await controlador.getTareaMaterial(widget.taskID);
+    // } else if (widget.tipo == "comanda") {
+    //   tarea = await controlador.getTareaComanda(widget.taskID);
+    // }
   }
 
   @override
@@ -60,7 +58,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles de la Tarea'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -71,11 +69,11 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               children: <Widget>[
                 ListTile(
                   title: Text(
-                    tarea[0][widget.tipo]['nombre'],
+                    tarea[0]['tarea']['nombre'],
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 77, 131, 105),
+                      color: Colors.blue,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -99,7 +97,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              tarea[0][widget.tipo]['nombre'],
+                              tarea[0]['tarea']['nombre'],
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -159,7 +157,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              tarea[0][widget.tipo]['completada'] ? 'Sí' : 'No',
+                              tarea[0]['tarea']['completada'] ? 'Sí' : 'No',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -178,64 +176,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               ]),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
-        currentIndex: 0,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 1) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return TaskListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos"
-          } else if (index == 3) {
-            // Lógica para la pestaña "Chat"
-          } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          }
-        },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
-            icon: Icon(Icons.people, color: Colors.white),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment, color: Colors.white),
-            label: 'Tareas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.white),
-            label: 'Gráficos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Perfil',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }

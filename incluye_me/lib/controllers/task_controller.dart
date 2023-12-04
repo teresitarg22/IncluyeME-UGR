@@ -1,5 +1,6 @@
 import 'package:incluye_me/globals/globals.dart';
 import 'package:incluye_me/model/general_task.dart';
+
 // -------------------------------------------
 
 class Controller {
@@ -95,6 +96,11 @@ class Controller {
   }
 
   // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> getTarea(int id) async {
+    return await dbDriver.getTarea(id);
+  }
+
+  // -----------------------------
   Future<void> addTareaGeneral(List<int> indicesPasos, String nombre, String propietario) async {
     await dbDriver.insertarTareaGeneral(indicesPasos, nombre, propietario);
   }
@@ -118,4 +124,8 @@ class Controller {
   }
 
   // -----------------------------
+  // insertarTarea2
+  Future<void> addTarea(String nombre, bool completada, DateTime fecha_tarea) async {
+    await dbDriver.insertarTarea2(nombre, completada, fecha_tarea);
+  }
 }

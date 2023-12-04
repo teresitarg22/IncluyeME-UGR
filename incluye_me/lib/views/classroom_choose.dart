@@ -61,7 +61,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                 'Selecciona una Clase',
                 style: TextStyle(fontSize: 28),
               ),
-              backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+              backgroundColor: Colors.blue , 
             ),
             body: Stack(
               children: [

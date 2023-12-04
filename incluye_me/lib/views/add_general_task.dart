@@ -30,7 +30,9 @@ class _AddTaskPageState extends State<AddTaskView> {
         indicesPasos: indicesPasos,
         propietario: teacher!.getName() + ' ' + teacher!.getSurnames()
     );
+    await widget.controller.addTarea(tarea.titulo, false, DateTime.now());
     widget.onAddTask(tarea);
+
     Navigator.pop(context);
   }
 
@@ -39,7 +41,7 @@ class _AddTaskPageState extends State<AddTaskView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Añadir Tarea'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -58,12 +60,13 @@ class _AddTaskPageState extends State<AddTaskView> {
                   child: _buildPasoField(i),
                 ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 120.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 120.0),
                 child: ElevatedButton(
                   onPressed: addPaso,
                   child: Text('Añadir Paso'),
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81), // Establecer color aquí
+                    primary: Colors.blue, // Establecer color aquí
                   ),
                 ),
               ),
@@ -73,7 +76,7 @@ class _AddTaskPageState extends State<AddTaskView> {
                   onPressed: _saveTask,
                   child: Text('Guardar Tarea'),
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF29DA81), // Establecer color aquí
+                    primary: Colors.blue, // Establecer color aquí
                   ),
                 ),
               ),
@@ -83,7 +86,6 @@ class _AddTaskPageState extends State<AddTaskView> {
       ),
     );
   }
-
 
   Widget _buildPasoField(int index) {
     return Row(

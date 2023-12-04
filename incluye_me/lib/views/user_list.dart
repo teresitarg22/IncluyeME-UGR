@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../components/bottom_navigation_bar.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
-import 'asignacion_tareas.dart';
 import '../controllers/usuario_controller.dart';
 import '../controllers/session_controller.dart';
 
@@ -17,8 +16,6 @@ class UserListPage extends StatefulWidget {
 
   @override
   _UserListPageState createState() => _UserListPageState();
-
-
 }
 
 // ------------------------------------------------------------------
@@ -97,7 +94,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Usuarios'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -218,7 +215,7 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18, // Tamaño de fuente más grande.
+                                fontSize: 16, // Tamaño de fuente más grande.
                                 fontWeight:
                                     FontWeight.bold, // Texto en negrita.
                               ),
@@ -257,14 +254,12 @@ class _UserListPageState extends State<UserListPage> {
                             },
                           ),
                           // -----------------
-                          const SizedBox(width: 30.0),
+                          const SizedBox(width: 5.0),
                           // -----------------
                           IconButton(
                               icon: const Icon(Icons.delete,
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
-                                // Hacer la función asíncrona
-
                                 // Mostrar un diálogo de confirmación
                                 bool confirmar = await showDialog(
                                   context: context,
@@ -326,7 +321,7 @@ class _UserListPageState extends State<UserListPage> {
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF29DA81),
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -347,7 +342,8 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 
@@ -360,7 +356,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Alumnos'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -411,6 +407,7 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
+      // ---------------------------------------------------------------
       body: Column(
         children: [
           Expanded(
@@ -444,7 +441,7 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -452,8 +449,10 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
+                      // --------------------------------------
                       subtitle:
                           Text(filteredUsers[index]['estudiante']['correo']),
+                      // --------------------------------------
                       leading: const Icon(
                         Icons.person,
                         size: 45,
@@ -469,7 +468,8 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }

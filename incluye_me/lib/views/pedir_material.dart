@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import '../components/bottom_navigation_bar.dart';
 
 class PedirMaterial extends StatefulWidget {
+  String userName;
+  String userSurname;
 
-  const PedirMaterial({super.key});
+  PedirMaterial({super.key, required this.userName, required this.userSurname});
 
-@override
+  @override
   _PedirMaterialState createState() => _PedirMaterialState();
 }
 
@@ -28,10 +31,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
     });
   }
 
-  void addMaterialToStudent()
-  {
-
-  }
+  void addMaterialToStudent() {}
 
   List<String> aulaList = ["Aula 1", "Aula 2", "Aula 3"];
   String selectedAula = "Aula 1";
@@ -44,7 +44,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Tarea Material'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
       ),
       body: Column(
         children: [
@@ -62,13 +62,15 @@ class _PedirMaterialState extends State<PedirMaterial> {
                     Center(
                       child: Text(
                         'Material',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Center(
                       child: Text(
                         'Cuantidad',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -78,7 +80,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child : DropdownButton<String>(
+                        child: DropdownButton<String>(
                           value: controllers[0].text,
                           items: dropdownItems.map((String value) {
                             return DropdownMenuItem<String>(
@@ -95,7 +97,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child : TextFormField(
+                        child: TextFormField(
                           controller: controllers[1],
                         ),
                       ),
@@ -108,7 +110,8 @@ class _PedirMaterialState extends State<PedirMaterial> {
           SizedBox(height: 16),
           Center(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center, // Center the children horizontally
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // Center the children horizontally
               children: [
                 DropdownButton<String>(
                   value: selectedStudent,
@@ -142,21 +145,26 @@ class _PedirMaterialState extends State<PedirMaterial> {
             ),
           ),
           ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF29DA81)),
-          ),
-          child: Text("Asignar a este alumno"),
-          onPressed: addMaterialToStudent
-          )
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                padding: const EdgeInsets.all(16.0),
+              ),
+              child: Text("Asignar a este alumno"),
+              onPressed: addMaterialToStudent),
         ],
       ),
       // Bouton flottant en bas à droite
       floatingActionButton: FloatingActionButton(
-        onPressed: addLine,
-        child: Icon(Icons.add),
-        backgroundColor: const Color(0xFF29DA81)
-      ),
+          onPressed: addLine,
+          child: Icon(Icons.add),
+          backgroundColor: Colors.blue),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }

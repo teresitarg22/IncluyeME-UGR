@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
 import 'package:incluye_me/model/general_task.dart';
-
+// -------------------------------------------------------------------------
 
 class DataBaseDriver {
+  // ----------------------------------------------------
   final PostgreSQLConnection? connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-  'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos;
-  );// ;
+    'flora.db.elephantsql.com', // host de la base de datos
+    5432, // puerto de la base de datos
+    'srvvjedp', // nombre de la base de datos
+    username: 'srvvjedp', // nombre de usuario de la base de datos
+    password:
+        'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos;
+  ); // ;
 
   // Constructor
 
@@ -20,10 +21,13 @@ class DataBaseDriver {
     if (connection?.isClosed == true) await connection?.open();
   }
 
+  // ----------------------------------------------------
   close() {
     connection?.close();
   }
 
+  // ----------------------------------------------------
+  // Función para hacer una petición a la BD.
   Future<List<Map<String, Map<String, dynamic>>>> request(String query) async {
     List<Map<String, Map<String, dynamic>>> results = [];
     await connect();
@@ -46,6 +50,8 @@ class DataBaseDriver {
         "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
   }
 
+  // ----------------------------------------------------
+  // Obtener tablas.
   Future<List<Map<String, Map<String, dynamic>>>> requestTables() async {
     return await request(
         "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
@@ -57,6 +63,8 @@ class DataBaseDriver {
         "SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
   }
 
+  // ----------------------------------------------------
+  // Verificar contraseña.
   Future<bool> verifyPassword(String email, String password) async {
     var result = await request(
         "SELECT contrasenia FROM personal WHERE correo = '$email'");
@@ -67,6 +75,8 @@ class DataBaseDriver {
     return passwd == password;
   }
 
+  // ----------------------------------------------------
+  // Registrar estudiante en la base de datos.
   Future<void> registrarEstudiante(
       String nombre,
       String apellidos,
@@ -259,19 +269,29 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Funcion para añadir a la tabla tarea el nombre de la tarea la fecha de entrega
 
-  Future<void> insertarTarea(String nombre, DateTime fecha) async {
-    await request(
-        "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+  Future<int> insertarTarea(String nombre, DateTime fecha) async {
+    final results = await request(
+        "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha') RETURNING id");
+
+    var primeraFila = results.first ;
+    var id = primeraFila['tarea']!['id'] ;
+    return int.parse(id.toString());
   }
-   // ----------------------------------------------------
+  // ----------------------------------------------------
   // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
 
   // ----------------------------------------------------
   // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
 
-  Future<void> insertarAsginada(String nombre, DateTime fecha) async {
+  Future<void> insertarAsginada(String nombre, int id, String apellidos) async {
     await request(
-        "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+        "INSERT INTO asignada (nombre_alumno, apellido_alumno, id_tarea) VALUES ('$nombre', '$apellidos', '$id')");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea
+  Future<List<Map<String, Map<String, dynamic>>>> getTarea(int id) async {
+    return await request("SELECT * FROM tarea WHERE id = $id");
   }
 
   // ----------------------------------------------------
@@ -289,8 +309,6 @@ class DataBaseDriver {
       throw Exception('No se pudo insertar la tarea general');
     }
   }
-
-
 
   Future<int> insertarPaso(Paso paso) async {
     try {
@@ -311,12 +329,43 @@ class DataBaseDriver {
     }
   }
 
+  // SELECT * FROM tu_tabla LIMIT 1;
+  // ----------------------------------------------------
+  // Función para obtener una tarea
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaGeneralLimit1() async {
+    return await request("SELECT * FROM tareas_generales LIMIT 1");
+  }
+
+  // ----------------------------------------------------
+  // Función para eliminar todas las filas de la tabla tareas_generales
+  Future<void> deleteAllTareasGenerales() async {
+    await request("DELETE FROM tareas_generales");
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener todas las tareas generales
+  Future<List<Map<String, Map<String, dynamic>>>> getAllTareasGenerales() async {
+    return await request("SELECT * FROM tareas_generales");
+  }
 
   // Obtener paso por id
   Future<Paso> getPaso(int id) async {
     List<Map<String, Map<String, dynamic>>> data = await request("SELECT * FROM pasos WHERE id = $id");
     return Paso.fromJson(data);
   }
+
+  // Insertar tarea en la tabla tarea (nombre, completada: true/false, fecha_tarea)
+  Future<void> insertarTarea2(String nombre, bool completada, DateTime fecha) async {
+    try {
+      await request(
+          "INSERT INTO tarea (nombre, completada, fecha_tarea) VALUES ('$nombre', '$completada', '$fecha')");
+    }
+    catch (e) {
+      print('Error al insertar tarea general: $e');
+      throw Exception('No se pudo insertar la tarea general');
+    }
+  }
+
 }
 
 

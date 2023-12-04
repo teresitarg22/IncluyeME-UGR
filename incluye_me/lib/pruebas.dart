@@ -8,7 +8,7 @@ main() async {
 
   DataBaseDriver dbDriver =  DataBaseDriver();
 
-  var result = await dbDriver.getPaso(1);
+  var result = await dbDriver.listaTareas();
   print(result);
 
   dbDriver.close();

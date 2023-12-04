@@ -8,6 +8,11 @@ class Tarea {
 
   Tarea({required this.titulo, this.indicesPasos = const [], required this.propietario});
 
+  @override
+  String toString() {
+    return 'Tarea(titulo: $titulo, indicesPasos: $indicesPasos, propietario: $propietario)';
+  }
+
   factory Tarea.fromJson(Map<String, dynamic> json_raw) {
     //Null check
     if (json_raw.isEmpty) {

@@ -126,7 +126,7 @@ class _TaskViewState extends State<TaskView> {
         child: Icon(Icons.add),
         backgroundColor: const Color(0xFF29DA81),
       ),
-      bottomNavigationBar: CustomNavigationBar(),
+      //bottomNavigationBar: CustomNavigationBar(userName:widget.userName, userSurname:widget.userSurname),
     );
   }
 }
