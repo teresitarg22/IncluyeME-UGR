@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/command_task_asign.dart';
-import 'command_task.dart';
-import '../controllers/registro_controller.dart';
-import 'summary_page.dart';
+import 'package:incluye_me/views/command/command_task_asign.dart';
+import '../command/command_task.dart';
+import '../../controllers/register_controller.dart';
+import '../summary_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,7 +61,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                 'Selecciona una Clase',
                 style: TextStyle(fontSize: 28),
               ),
-              backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+              backgroundColor: Colors.blue , 
             ),
             body: Stack(
               children: [

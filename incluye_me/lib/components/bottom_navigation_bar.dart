@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../globals/globals.dart';
-import '../views/task_list.dart';
+import '../views/tasks/task_list.dart';
 import '../views/user_list.dart';
-import '../views/mostrar_usuario.dart';
+import '../views/user_details.dart';
 import 'package:incluye_me/main.dart';
 
 class CustomNavigationBar extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/pedir_material.dart';
-import 'package:incluye_me/views/registro_alumno.dart';
-import 'package:incluye_me/views/registro_personal.dart';
+import 'package:incluye_me/views/material/material_task.dart';
+import 'package:incluye_me/views/register/student_register.dart';
+import 'package:incluye_me/views/register/staff_register.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

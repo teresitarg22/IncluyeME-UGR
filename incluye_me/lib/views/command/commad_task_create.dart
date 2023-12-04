@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:incluye_me/views/task_list.dart';
+import 'package:incluye_me/views/tasks/task_list.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
-import '../controllers/usuario_controller.dart';
-import '../views/user_list.dart';
-import '../views/home_view.dart';
+import '../../controllers/user_controller.dart';
+import '../user_list.dart';
+import '../home_view.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
-import '../components/bottom_navigation_bar.dart';
+import '../../components/bottom_navigation_bar.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    String user = "";
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => CreateTaskCommand(userName: "sergio", userSurname: "muñoz",),
+      },
+    );
+  }
+}
 
 class CreateTaskCommand extends StatefulWidget {
   final String userName;
@@ -112,6 +131,8 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'El nombre es obligatorio ';
+                            } else {
+                              _name = value;
                             }
                             return null;
                           },
@@ -240,16 +261,30 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('Aceptar'),
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    List<String> parts = _name!.split(' ');
                                     if (_selectedOption == 'Semanal') {
                                       for (var fecha in _dates) {
-                                        controlador.insertarTarea(
-                                            "comanda", fecha);
+                                        var tarea = await controlador
+                                            .insertarTarea("comanda" + DateFormat('dd/MM/yyyy').format(fecha)  , fecha);
+
+                                        if (parts.length >= 2) {
+                                          controlador.insertarAsginada(
+                                              parts[0],
+                                              parts.sublist(1).join(' '),
+                                              tarea);
+                                        }
                                       }
                                     } else {
-                                      controlador.insertarTarea(
-                                          "comanda", _selectedDate!);
+                                      var tarea =
+                                          await controlador.insertarTarea(
+                                              "comanda " + DateFormat('dd/MM/yyyy').format(_selectedDate!), _selectedDate!);
+                                      if (parts.length >= 2) {
+                                        controlador.insertarAsginada(parts[0],
+                                            parts.sublist(1).join(' '), tarea);
+                                      }
                                     }
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -269,9 +269,13 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Funcion para añadir a la tabla tarea el nombre de la tarea la fecha de entrega
 
-  Future<void> insertarTarea(String nombre, DateTime fecha) async {
-    await request(
-        "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+  Future<int> insertarTarea(String nombre, DateTime fecha) async {
+    final results = await request(
+        "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha') RETURNING id");
+
+    var primeraFila = results.first;
+    var id = primeraFila['tarea']!['id'];
+    return int.parse(id.toString());
   }
   // ----------------------------------------------------
   // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
@@ -279,9 +283,9 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
 
-  Future<void> insertarAsginada(String nombre, DateTime fecha) async {
+  Future<void> insertarAsginada(String nombre, int id, String apellidos) async {
     await request(
-        "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+        "INSERT INTO asignada (nombre_alumno, apellido_alumno, id_tarea) VALUES ('$nombre', '$apellidos', '$id')");
   }
 
   // ----------------------------------------------------
@@ -289,4 +293,6 @@ class DataBaseDriver {
   Future<List<Map<String, Map<String, dynamic>>>> getTarea(int id) async {
     return await request("SELECT * FROM tarea WHERE id = $id");
   }
+
+  //
 }

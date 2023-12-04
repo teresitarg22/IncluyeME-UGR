@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/bottom_navigation_bar.dart';
-import 'mostrar_usuario.dart';
+import 'user_details.dart';
 import 'edit_user.dart';
-import '../controllers/usuario_controller.dart';
+import '../controllers/user_controller.dart';
 import '../controllers/session_controller.dart';
 
 // --------------------------------------------

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../model/user.dart';
-import '../controllers/task_controller.dart';
-import '../components/bottom_navigation_bar.dart';
+import '../../model/user.dart';
+import '../../controllers/task_controller.dart';
+import '../../components/bottom_navigation_bar.dart';
 
 // ----------------------------------------------------------
 

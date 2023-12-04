@@ -73,7 +73,12 @@ class Controller {
   }
 
   // -----------------------------
-  Future<void> insertarTarea(String nombre, DateTime tarea) async {
-    await dbDriver.insertarTarea(nombre, tarea);
+  Future<int> insertarTarea(String nombre, DateTime tarea) async {
+    return await dbDriver.insertarTarea(nombre, tarea);
+  }
+
+  // -----------------------------
+  Future<void> insertarAsginada(String nombre, String apellidos, int id) async {
+    await dbDriver.insertarAsginada(nombre, id, apellidos);
   }
 }

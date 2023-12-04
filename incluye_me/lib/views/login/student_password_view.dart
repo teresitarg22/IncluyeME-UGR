@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'student_interface.dart';
+import '../student_interface.dart';
 
 class LoginWithSymbols extends StatefulWidget {
   const LoginWithSymbols({Key? key});

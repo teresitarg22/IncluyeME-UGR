@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/task_view.dart';
-import '../controllers/session_controller.dart';
-import '../controllers/task_controller.dart';
-import '../components/bottom_navigation_bar.dart';
-import 'pedir_material.dart';
-import '../views/add_general_task.dart';
-import '../model/general_task.dart';
-import 'command_task_asign.dart';
+import 'package:incluye_me/views/command/commad_task_create.dart';
+import 'package:incluye_me/views/tasks/task_view.dart';
+import '../../controllers/session_controller.dart';
+import '../../controllers/task_controller.dart';
+import '../../components/bottom_navigation_bar.dart';
+import '../material/material_task.dart';
+import '../general/add_general_task.dart';
+import '../../model/general_task.dart';
+import '../command/command_task_asign.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -237,9 +238,10 @@ class _TaskListPageState extends State<TaskListPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => CreateTaskCommand(
+                                        builder: (context) => AsignTaskCommand(
                                             userName: widget.userName,
-                                            userSurname: widget.userSurname),
+                                            userSurname: widget.userSurname,
+                                            taskID: tareas[index]['tarea']['id'] ),
                                       ),
                                     );
                                   },
@@ -338,6 +340,14 @@ class _TaskListPageState extends State<TaskListPage> {
                                       AddTaskView(onAddTask: _addTask),
                                 ),
                               );
+                            }else if (value == 'TareaComanda') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateTaskCommand(userName: widget.userName , userSurname: widget.userSurname ),
+                                ),
+                              );
                             }
                           },
                           itemBuilder: (BuildContext context) {
@@ -359,6 +369,16 @@ class _TaskListPageState extends State<TaskListPage> {
                                     Icon(Icons.assignment),
                                     SizedBox(width: 8.0),
                                     Text('Tarea General'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'TareaComanda',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.food_bank),
+                                    SizedBox(width: 8.0),
+                                    Text('Tarea Comanda'),
                                   ],
                                 ),
                               ),

@@ -44,7 +44,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Selecciona las comandas para la clase ${widget.clase}'),
-        backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+        backgroundColor: Colors.blue ,
       ),
       body: Center(
         child: Column(

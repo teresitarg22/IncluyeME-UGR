@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'registro_alumno.dart';
-import 'registro_personal.dart';
+import 'student_register.dart';
+import 'staff_register.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
