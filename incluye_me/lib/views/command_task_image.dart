@@ -9,6 +9,7 @@ class TaskCommandImage extends StatefulWidget {
 }
 
 class _CreateTaskImageCommandState extends State<TaskCommandImage> {
+  Map<String, int> amount = {};
   List<String> menus = [
     'assets/menu.png',
     'assets/no_carne.png',
@@ -18,7 +19,6 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
     'assets/fruta.png'
   ]; // Lista de menús
 
-  Map<String, int> amount = {};
   Map<String, int> numeros = {};
   int currentClassIndex = 0;
 
@@ -37,6 +37,7 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
       amount[menu] = 0;
     }
 
+    numeros["assets/cero.png"] = 0;
     numeros["assets/uno.png"] = 1;
     numeros["assets/dos.png"] = 2;
     numeros["assets/tres.png"] = 3;
@@ -54,6 +55,7 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
   @override
   Widget build(BuildContext context) {
     List<String> repeatedImages = [
+      'assets/cero.png',
       'assets/uno.png',
       'assets/dos.png',
       'assets/tres.png',
@@ -67,6 +69,7 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
           'Selecciona las comandas para $current_class',
         ),
         backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+        automaticallyImplyLeading: false,
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),
@@ -85,13 +88,18 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
                 icon: Icon(Icons.arrow_back),
                 iconSize: 50.0,
                 onPressed: () {
-                  if (currentClassIndex > 0) {
+                  Navigator.pop(
+                    context,
+                    {'devolver': widget.clase},
+                  );
+
+                  /*if (currentClassIndex > 0) {
                     setState(() {
                       currentClassIndex--;
                     });
                   } else {
                     // Navega a la página anterior o realiza otra acción cuando se está en la primera clase
-                  }
+                  }*/
                 },
               ),
               IconButton(

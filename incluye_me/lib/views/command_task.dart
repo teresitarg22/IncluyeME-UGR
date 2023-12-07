@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class TaskCommand extends StatefulWidget {
   final String? clase;
-  final Map<String, int >? menus;
-  final  Map<String, int>? specialOptions; 
-  const TaskCommand({Key? key, required this.clase, this.menus, this.specialOptions});
+  final Map<String, int>? menus;
+  final Map<String, int>? specialOptions;
+  const TaskCommand(
+      {Key? key, required this.clase, this.menus, this.specialOptions});
 
   @override
   _CreateTaskCommandState createState() => _CreateTaskCommandState();
@@ -31,12 +32,10 @@ class _CreateTaskCommandState extends State<TaskCommand> {
       }
     } else {
       for (var menu in menus) {
-        amount[menu] = widget.menus![widget.clase]! ; 
+        amount[menu] = widget.menus![widget.clase]!;
       }
       this.specialOptions = widget.specialOptions!;
-    } 
-
-
+    }
   }
 
   @override
@@ -44,7 +43,7 @@ class _CreateTaskCommandState extends State<TaskCommand> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Selecciona las comandas para la clase ${widget.clase}'),
-        backgroundColor: Colors.blue ,
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(

@@ -61,7 +61,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                 'Selecciona una Clase',
                 style: TextStyle(fontSize: 28),
               ),
-              backgroundColor: Colors.blue , 
+              backgroundColor: Colors.blue,
             ),
             body: Stack(
               children: [
@@ -160,9 +160,9 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                               setState(() {
                                 if (_classList[result['devolver']].isEmpty) {
                                   _classList.add(result['devolver']);
-                                _selectedClase = _classList.isNotEmpty
-                                    ? _classList[0]
-                                    : null;
+                                  _selectedClase = _classList.isNotEmpty
+                                      ? _classList[0]
+                                      : null;
                                 }
                               });
                             }
@@ -182,7 +182,11 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                       if (amount.isNotEmpty) {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return TaskCommand(clase: amount.keys.last , menus: menus , specialOptions: amount[amount.keys.last]![amount[amount.keys.last]!.keys.last]!);
+                          return TaskCommand(
+                              clase: amount.keys.last,
+                              menus: menus,
+                              specialOptions: amount[amount.keys.last]![
+                                  amount[amount.keys.last]!.keys.last]!);
                         })).then((result) {
                           // result es el dato que pasaste de vuelta desde TaskCommand
                           amount.remove(amount.keys.last);
@@ -215,16 +219,15 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                               });
                             } else if (result['devolver'] != null) {
                               setState(() {
-                                 
-                                  _classList.add(result['devolver']);
+                                _classList.add(result['devolver']);
                                 _selectedClase = _classList.isNotEmpty
                                     ? _classList[0]
                                     : null;
-                                
                               });
                             }
                           }
-                        });;
+                        });
+                        ;
                       }
                     },
                   ),
