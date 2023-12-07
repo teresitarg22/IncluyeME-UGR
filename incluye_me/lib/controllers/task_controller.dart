@@ -125,4 +125,9 @@ class Controller {
     
     await dbDriver.insertarTareaMaterial(mail, aula, materialInt, cantidad);
   }
+
+  // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> getTarea(int id) async {
+    return await dbDriver.getTarea(id);
+  }
 }

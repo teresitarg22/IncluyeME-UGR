@@ -8,13 +8,13 @@ import 'package:postgres/postgres.dart';
 class DataBaseDriver {
   // ----------------------------------------------------
   final PostgreSQLConnection? connection = PostgreSQLConnection(
-  'flora.db.elephantsql.com', // host de la base de datos
-  5432, // puerto de la base de datos
-  'srvvjedp', // nombre de la base de datos
-  username: 'srvvjedp', // nombre de usuario de la base de datos
-  password:
-  'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos;
-  );// ;
+    'flora.db.elephantsql.com', // host de la base de datos
+    5432, // puerto de la base de datos
+    'srvvjedp', // nombre de la base de datos
+    username: 'srvvjedp', // nombre de usuario de la base de datos
+    password:
+        'tuZz6S15UozErJ7aROYQFR3ZcThFJ9MZ', // contraseña del usuario de la base de datos;
+  ); // ;
 
   // Constructor
 
@@ -45,24 +45,30 @@ class DataBaseDriver {
     return results;
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> requestStructure(String table) async {
-    return await request("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
+  Future<List<Map<String, Map<String, dynamic>>>> requestStructure(
+      String table) async {
+    return await request(
+        "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '$table'");
   }
 
   // ----------------------------------------------------
   // Obtener tablas.
   Future<List<Map<String, Map<String, dynamic>>>> requestTables() async {
-    return await request("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
+    return await request(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE'");
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> requestDataFromPersonal(String email) async {
-    return await request("SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
+  Future<List<Map<String, Map<String, dynamic>>>> requestDataFromPersonal(
+      String email) async {
+    return await request(
+        "SELECT nombre,apellidos,correo,foto,es_admin FROM personal WHERE correo = '$email'");
   }
 
   // ----------------------------------------------------
   // Verificar contraseña.
   Future<bool> verifyPassword(String email, String password) async {
-    var result = await request("SELECT contrasenia FROM personal WHERE correo = '$email'");
+    var result = await request(
+        "SELECT contrasenia FROM personal WHERE correo = '$email'");
     if (result.isEmpty) {
       return false;
     }
@@ -264,20 +270,32 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Funcion para añadir a la tabla tarea el nombre de la tarea la fecha de entrega
 
-  Future<void> insertarTarea(String nombre, DateTime fecha) async {
-    await request(
-        "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+  Future<int> insertarTarea(String nombre, DateTime fecha) async {
+    final results = await request(
+        "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha') RETURNING id");
+
+    var primeraFila = results.first ; 
+    var id = primeraFila['tarea']!['id'] ;
+    return int.parse(id.toString());
   }
-   // ----------------------------------------------------
+  // ----------------------------------------------------
   // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
 
   // ----------------------------------------------------
   // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
 
-  Future<void> insertarAsginada(String nombre, DateTime fecha) async {
+  Future<void> insertarAsginada(String nombre, int id, String apellidos) async {
     await request(
-        "INSERT INTO asignada (nombre, fecha_tarea) VALUES ('$nombre', '$fecha')");
+        "INSERT INTO asignada (nombre_alumno, apellido_alumno, id_tarea) VALUES ('$nombre', '$apellidos', '$id')");
   }
+
+  // ----------------------------------------------------
+  // Función para obtener una tarea
+  Future<List<Map<String, Map<String, dynamic>>>> getTarea(int id) async {
+    return await request("SELECT * FROM tarea WHERE id = $id");
+  }
+
+  //
 
   // ----------------------------------------------------
   // Funcion para añadir a las tablas tarea y tarea_material las informaciones necesarias

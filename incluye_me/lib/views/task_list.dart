@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/commad_task_create.dart';
 import 'package:incluye_me/views/task_view.dart';
 import '../controllers/session_controller.dart';
 import '../controllers/task_controller.dart';
@@ -6,6 +7,7 @@ import '../components/bottom_navigation_bar.dart';
 import 'pedir_material.dart';
 import '../views/add_general_task.dart';
 import '../model/general_task.dart';
+import 'command_task_asign.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -26,6 +28,8 @@ class _TaskListPageState extends State<TaskListPage> {
   bool isAdmin = false;
   var tareas = [];
   var material = [];
+  var general = [];
+  var comanda = [];
   String tipo = ""; // Variable para almacenar el tipo de tarea
   bool asignada = false; // Variable para almacenar si la tarea está asignada
   bool mostrarBoton = false;
@@ -65,7 +69,12 @@ class _TaskListPageState extends State<TaskListPage> {
   // -----------------------------
   Future<void> loadTaskIds() async {
     tareas = await controlador.listaTareas();
-    //material = await controlador.listaTareasMaterial();
+    // material = await controlador.listaTareasMaterial();
+    // general = await controlador.listaTareasGenerales();
+    // comanda = await controlador.listaTareasComanda();
+    // setState(() {
+    //   tareas = material + general + comanda;
+    // });
   }
 
   // -----------------------------
@@ -160,17 +169,17 @@ class _TaskListPageState extends State<TaskListPage> {
                           .then((resultado) {
                         tipo = resultado;
                       });
-                      // controlador
-                      //     .esTareaAsignada(tareas[index]['tarea']['id'])
-                      //     .then((resultado) {
-                      //   asignada = resultado;
-                      // });
+                      //  controlador
+                      //      .esTareaAsignada(tareas[index]['tarea']['id'])
+                      //      .then((resultado) {
+                      //    asignada = resultado;
+                      //  });
                       return InkWell(
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return TaskDetailsPage(
-                              taskID: tareas[index]['id'],
+                              taskID: tareas[index]['tarea']['id'],
                               tipo: tipo,
                               userName: widget.userName,
                               userSurname: widget.userSurname,
@@ -180,10 +189,10 @@ class _TaskListPageState extends State<TaskListPage> {
                         // ---------------------------------------
                         child: Card(
                           color: tipo == "material"
-                              ? const Color.fromARGB(255, 223, 205, 255)
+                              ? Color.fromARGB(255, 229, 244, 255)
                               : tipo == "general"
-                                  ? Colors.blue[100]
-                                  : Colors.green[100],
+                                  ? Color.fromARGB(255, 186, 213, 235)
+                                  : const Color.fromARGB(255, 200, 219, 230),
                           margin: const EdgeInsets.only(
                               top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                           child: ListTile(
@@ -206,7 +215,7 @@ class _TaskListPageState extends State<TaskListPage> {
                               ),
                             ),
                             // -----------------------
-                            subtitle: Text(tipo),
+                            //subtitle: Text(tipo),
                             leading: const Icon(
                               Icons.task_rounded,
                               size: 45,
@@ -226,7 +235,15 @@ class _TaskListPageState extends State<TaskListPage> {
                                   icon: const Icon(Icons.people_alt_rounded,
                                       color: Color.fromARGB(255, 76, 76, 76)),
                                   onPressed: () {
-                                    // Nos dirigimos a la interfaz de edición:
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AsignTaskCommand(
+                                            userName: widget.userName,
+                                            userSurname: widget.userSurname,
+                                            taskID: tareas[index]['tarea']['id'] ),
+                                      ),
+                                    );
                                   },
                                 ),
                                 // -----------------
@@ -291,7 +308,7 @@ class _TaskListPageState extends State<TaskListPage> {
                   ),
                 ),
                 // ---------------------------------------------------------------------
-                Stack(
+                Column(
                   children: [
                     Positioned(
                       top: 10,
@@ -323,6 +340,14 @@ class _TaskListPageState extends State<TaskListPage> {
                                       AddTaskView(onAddTask: _addTask),
                                 ),
                               );
+                            }else if (value == 'TareaComanda') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateTaskCommand(userName: widget.userName , userSurname: widget.userSurname ),
+                                ),
+                              );
                             }
                           },
                           itemBuilder: (BuildContext context) {
@@ -344,6 +369,16 @@ class _TaskListPageState extends State<TaskListPage> {
                                     Icon(Icons.assignment),
                                     SizedBox(width: 8.0),
                                     Text('Tarea General'),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'TareaComanda',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.food_bank),
+                                    SizedBox(width: 8.0),
+                                    Text('Tarea Comanda'),
                                   ],
                                 ),
                               ),

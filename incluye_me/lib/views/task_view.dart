@@ -43,13 +43,14 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Future<void> _getTarea() async {
-    if (widget.tipo == "general") {
-      tarea = await controlador.getTareaGeneral(widget.taskID);
-    } else if (widget.tipo == "material") {
-      tarea = await controlador.getTareaMaterial(widget.taskID);
-    } else if (widget.tipo == "comanda") {
-      tarea = await controlador.getTareaComanda(widget.taskID);
-    }
+    tarea = await controlador.getTarea(widget.taskID);
+    // if (widget.tipo == "general") {
+    //   tarea = await controlador.getTareaGeneral(widget.taskID);
+    // } else if (widget.tipo == "material") {
+    //   tarea = await controlador.getTareaMaterial(widget.taskID);
+    // } else if (widget.tipo == "comanda") {
+    //   tarea = await controlador.getTareaComanda(widget.taskID);
+    // }
   }
 
   @override
@@ -68,7 +69,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               children: <Widget>[
                 ListTile(
                   title: Text(
-                    tarea[0][widget.tipo]['nombre'],
+                    tarea[0]['tarea']['nombre'],
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -96,7 +97,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              tarea[0][widget.tipo]['nombre'],
+                              tarea[0]['tarea']['nombre'],
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -156,7 +157,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              tarea[0][widget.tipo]['completada'] ? 'Sí' : 'No',
+                              tarea[0]['tarea']['completada'] ? 'Sí' : 'No',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),

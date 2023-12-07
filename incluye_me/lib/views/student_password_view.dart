@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'student_interface.dart';
+
 class LoginWithSymbols extends StatefulWidget {
   const LoginWithSymbols({Key? key});
 
@@ -109,22 +111,17 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                             selectedSymbols[0] == correctCombination[0] &&
                             selectedSymbols[1] == correctCombination[1] &&
                             selectedSymbols[2] == correctCombination[2]) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Inicio de sesión correcto'),
-                              content: const Text('Redirigiendo...'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Aceptar'),
-                                ),
-                              ],
-                            ),
-                          );
+                          _showSuccessDialog();
+                          Future.delayed(const Duration(seconds: 2), () {
+                            Navigator.pop(context);
+                            Future.delayed(const Duration(seconds: 1), () {
+                              Navigator.pop(context);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return StudentInterface();
+                              }));
+                            });
+                          });
                         } else {
                           showDialog(
                             context: context,
@@ -175,6 +172,33 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showSuccessDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible:
+          false, // El usuario debe tocar el botón para cerrar el diálogo.
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 10),
+              Text('Inicio de sesión'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Redirigiendo...'),
+              SizedBox(height: 20),
+              CircularProgressIndicator(),
+            ],
+          ),
+        );
+      },
     );
   }
 }
