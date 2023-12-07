@@ -93,14 +93,36 @@ class Controller {
       int id) async {
     return await dbDriver.getTareaAsignada(id);
   }
-
-  // -----------------------------
-  Future<void> insertarTareaMaterial(String mail, String aula, List<String> material, List<int> cantidad) async {
-    await dbDriver.insertarTareaMaterial(mail, aula, material, cantidad);
-  }
   
   // -----------------------------
   Future<void> monstrarTareaMaterial (String mail, DateTime fecha) async {
     await dbDriver.monstrarTareaMaterial (mail, fecha);
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> monstrarListaMaterial () async {
+    return await dbDriver.monstrarListaMaterial ();
+  }
+
+  // -----------------------------
+  Future<void> addMaterialToStudent (String nombreEntero, String aula, List<String> material, List<int> cantidad) async {
+    String nombre;
+    String apellidos;
+    List<String> partes = nombreEntero.split(" ");
+    List<int> materialInt = [];
+    nombre = partes[0];
+    apellidos = partes[1];
+    if (partes.length == 3) {
+      apellidos = apellidos + " " + partes[2];
+    }
+    List<Map<String, Map<String, dynamic>>> estudiante = await dbDriver.comprobarEstudiante(nombre, apellidos);
+    String mail =  estudiante[0]["estudiante"]!["correo"];
+
+    for (int i = 0; i < material.length; i++)
+    {
+      List<Map<String, Map<String, dynamic>>> mat = await dbDriver.materialNombreToID(material[i]);
+      materialInt.add(mat[0]["lista_material"]!["id"]) ;
+    }
+    
+    await dbDriver.insertarTareaMaterial(mail, aula, materialInt, cantidad);
   }
 }

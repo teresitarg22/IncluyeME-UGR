@@ -16,57 +16,76 @@ class PedirMaterial extends StatefulWidget {
 class _PedirMaterialState extends State<PedirMaterial> {
   final UC.Controller Ucontrolador = UC.Controller();
   final TC.Controller Tcontrolador = TC.Controller();
-  List<String> aulaList = [];
-  List<String> studentList = [];
+  List<String> aulaList = [""];
+  List<String> studentList = [""];
+  List<String> materialList = [""];
   String selectedAula = "";
   String selectedStudent = "";
 
+  Future<void> loadMaterial() async {
+    for (var material in await Tcontrolador.monstrarListaMaterial()) {
+      materialList.add(material['lista_material']!['nombre'].toString());
+    }
+  }
+
   Future<void> loadAula() async {
-    if (aulaList.isNotEmpty) return;
-    for (var _class in await Ucontrolador.listaAulas()) {
-      aulaList.add(_class.toString());
+    for (var aula in await Ucontrolador.listaAulas()) {
+      aulaList.add(aula['aula']!['nombre'].toString());
     }
   }
   
   Future<void> loadEstudiante() async {
-    if (studentList.isNotEmpty) return;
-    for (var _class in await Ucontrolador.listaEstudiantes()) {
-      studentList.add(_class['aula']!['nombre'].toString());
+    for (var student in await Ucontrolador.listaEstudiantes()) {
+      studentList.add(student['estudiante']!['nombre'].toString() +
+          " " +
+          student['estudiante']!['apellidos'].toString());
     }
   }
 
   List<List<TextEditingController>> controllersList = [
     [
-      TextEditingController(text: 'Material 1'),
+      TextEditingController(text: ""),
       TextEditingController(text: '0'),
     ],
   ];
 
-  List<String> dropdownItems = ["Material 1", "Material 2", "Material 3"];
-
   void addLine() {
     setState(() {
       List<TextEditingController> rowControllers = [
-        TextEditingController(text: 'Material 1'),
+        TextEditingController(text: ""),
         TextEditingController(text: '0'),
       ];
       controllersList.add(rowControllers);
     });
   }
 
-  void addMaterialToStudent() {}
+void addMaterialToStudent(String student, String aula) {
+  List<String> material = [];
+  List<int> cantidad = [];
+    for (List<TextEditingController> listeInterne in controllersList) {
+      if (listeInterne.isNotEmpty) {
+        material.add(listeInterne[0].text);
+      }
+    }
+    for (List<TextEditingController> listeInterne in controllersList) {
+      if (listeInterne.isNotEmpty) {
+        int isInt = int.parse(listeInterne[1].text);
+        cantidad.add(isInt);
+      }
+    }
+    Tcontrolador.addMaterialToStudent(student, aula, material, cantidad);
+  }
 
   @override
   void initState() {
     super.initState();
     loadAula();
     loadEstudiante();
+    loadMaterial();
   }
 
   @override
   Widget build(BuildContext context) {
-    loadAula();
-    loadEstudiante();
     return Scaffold(
       appBar: AppBar(
         title: Text('Tarea Material'),
@@ -108,7 +127,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
                         padding: EdgeInsets.symmetric(horizontal: 16.0),
                         child: DropdownButton<String>(
                           value: controllers[0].text,
-                          items: dropdownItems.map((String value) {
+                          items: materialList.map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
@@ -179,7 +198,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
                 padding: const EdgeInsets.all(16.0),
               ),
               child: Text("Asignar a este alumno"),
-              onPressed: addMaterialToStudent),
+              onPressed: () {addMaterialToStudent(selectedStudent, selectedAula);}),
         ],
       ),
       // Bouton flottant en bas à droite
