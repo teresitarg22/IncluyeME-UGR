@@ -33,6 +33,7 @@ class _TaskListPageState extends State<TaskListPage> {
   String tipo = ""; // Variable para almacenar el tipo de tarea
   bool asignada = false; // Variable para almacenar si la tarea está asignada
   bool mostrarBoton = false;
+  String alumnoAsignado = "";
 
   Controller controlador = Controller();
 
@@ -69,12 +70,6 @@ class _TaskListPageState extends State<TaskListPage> {
   // -----------------------------
   Future<void> loadTaskIds() async {
     tareas = await controlador.listaTareas();
-    // material = await controlador.listaTareasMaterial();
-    // general = await controlador.listaTareasGenerales();
-    // comanda = await controlador.listaTareasComanda();
-    // setState(() {
-    //   tareas = material + general + comanda;
-    // });
   }
 
   // -----------------------------
@@ -169,30 +164,36 @@ class _TaskListPageState extends State<TaskListPage> {
                           .then((resultado) {
                         tipo = resultado;
                       });
-                      //  controlador
-                      //      .esTareaAsignada(tareas[index]['tarea']['id'])
-                      //      .then((resultado) {
-                      //    asignada = resultado;
-                      //  });
+                      controlador
+                          .esTareaAsignada(tareas[index]['tarea']['id'])
+                          .then((resultado) {
+                        asignada = resultado;
+                      });
+                      controlador
+                          .alumnoAsignado(tareas[index]['tarea']['id'])
+                          .then((resultado) {
+                        alumnoAsignado = resultado;
+                      });
+
                       return InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return TaskDetailsPage(
-                              taskID: tareas[index]['tarea']['id'],
-                              tipo: tipo,
-                              userName: widget.userName,
-                              userSurname: widget.userSurname,
-                            );
-                          }));
-                        },
+                        // onTap: () {
+                        //   Navigator.push(context,
+                        //       MaterialPageRoute(builder: (context) {
+                        //     return TaskDetailsPage(
+                        //       taskID: tareas[index]['tarea']['id'],
+                        //       tipo: tipo,
+                        //       userName: widget.userName,
+                        //       userSurname: widget.userSurname,
+                        //     );
+                        //   }));
+                        // },
                         // ---------------------------------------
                         child: Card(
-                          color: tipo == "material"
-                              ? Color.fromARGB(255, 229, 244, 255)
-                              : tipo == "general"
-                                  ? Color.fromARGB(255, 186, 213, 235)
-                                  : const Color.fromARGB(255, 200, 219, 230),
+                          color: tareas[index]['tarea']['completada']
+                              ? Color.fromARGB(255, 229, 250, 238)
+                              : asignada == false
+                                  ? Color.fromARGB(255, 223, 241, 255)
+                                  : Color.fromARGB(255, 241, 233, 255),
                           margin: const EdgeInsets.only(
                               top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                           child: ListTile(
@@ -206,7 +207,7 @@ class _TaskListPageState extends State<TaskListPage> {
                                     "${tareas[index]?['tarea']?['nombre']}",
                                     style: const TextStyle(
                                       color: Color.fromARGB(255, 76, 76, 76),
-                                      fontSize: 18,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -217,13 +218,13 @@ class _TaskListPageState extends State<TaskListPage> {
                             // -----------------------
                             subtitle: Text(
                                 tareas[index]['tarea']['completada'] == true
-                                    ? "Completada"
+                                    ? "Completada ${alumnoAsignado}"
                                     : asignada
-                                        ? "Asignada"
+                                        ? "Asignada ${alumnoAsignado}"
                                         : "No asignada"),
                             leading: const Icon(
-                              Icons.task_rounded,
-                              size: 45,
+                              Icons.task,
+                              size: 35,
                             ),
                             // -----------------------
                             trailing: Row(
@@ -244,14 +245,6 @@ class _TaskListPageState extends State<TaskListPage> {
                                                 ['id']),
                                       ),
                                     );
-                                  },
-                                ),
-                                // -----------------
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Color.fromARGB(255, 76, 76, 76)),
-                                  onPressed: () {
-                                    // Nos dirigimos a la interfaz de edición:
                                   },
                                 ),
                                 // -----------------
@@ -471,20 +464,34 @@ class _TaskListPageState extends State<TaskListPage> {
                   child: ListView.builder(
                     itemCount: tareas.length,
                     itemBuilder: (BuildContext context, int index) {
+                      controlador
+                          .esTareaAsignada(tareas[index]['tarea']['id'])
+                          .then((resultado) {
+                        asignada = resultado;
+                      });
+                      controlador
+                          .alumnoAsignado(tareas[index]['tarea']['id'])
+                          .then((resultado) {
+                        alumnoAsignado = resultado;
+                      });
                       return InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return TaskDetailsPage(
-                              taskID: tareas[index][tipo]['id'],
-                              tipo: tipo,
-                              userName: widget.userName,
-                              userSurname: widget.userSurname,
-                            );
-                          }));
-                        },
+                        // onTap: () {
+                        //   Navigator.push(context,
+                        //       MaterialPageRoute(builder: (context) {
+                        //     return TaskDetailsPage(
+                        //       taskID: tareas[index][tipo]['id'],
+                        //       tipo: tipo,
+                        //       userName: widget.userName,
+                        //       userSurname: widget.userSurname,
+                        //     );
+                        //   }));
+                        // },
                         child: Card(
-                          color: Color.fromARGB(255, 223, 205, 255),
+                          color: tareas[index]['tarea']['completada']
+                              ? Color.fromARGB(255, 229, 250, 238)
+                              : asignada == false
+                                  ? Color.fromARGB(255, 223, 241, 255)
+                                  : Color.fromARGB(255, 241, 233, 255),
                           margin: const EdgeInsets.only(
                               top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                           child: ListTile(
@@ -498,7 +505,7 @@ class _TaskListPageState extends State<TaskListPage> {
                                     style: const TextStyle(
                                       color: Color.fromARGB(255, 76, 76, 76),
                                       fontSize:
-                                          18, // Tamaño de fuente más grande.
+                                          14, // Tamaño de fuente más grande.
                                       fontWeight:
                                           FontWeight.bold, // Texto en negrita.
                                     ),
@@ -509,27 +516,17 @@ class _TaskListPageState extends State<TaskListPage> {
                             ),
                             subtitle: Text(
                                 tareas[index]['tarea']['completada'] == true
-                                    ? "Completada"
+                                    ? "Completada ${alumnoAsignado}"
                                     : asignada
-                                        ? "Asignada"
+                                        ? "Asignada ${alumnoAsignado}"
                                         : "No asignada"),
                             leading: const Icon(
-                              Icons.person,
-                              size: 45,
+                              Icons.task,
+                              size: 35,
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                // ------------------------------------
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Color.fromARGB(255, 76, 76, 76)),
-                                  onPressed: () {
-                                    // Nos dirigimos a la interfaz de edición de usuario:
-                                  },
-                                ),
-                                // -----------------
-                                const SizedBox(width: 30.0),
                                 // -----------------
                                 IconButton(
                                     icon: const Icon(Icons.delete,

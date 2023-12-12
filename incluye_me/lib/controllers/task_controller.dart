@@ -126,4 +126,16 @@ class Controller {
       return false;
     }
   }
+
+  //---------------------------------
+  Future<String> alumnoAsignado(int id) async {
+    var asignado = await getTareaAsignada(id);
+    if (asignado.isNotEmpty) {
+      return asignado[0]['asignada']?['nombre_alumno'] +
+          " " +
+          asignado[0]['asignada']?['apellido_alumno'];
+    } else {
+      return "";
+    }
+  }
 }

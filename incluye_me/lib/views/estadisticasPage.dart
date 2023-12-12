@@ -4,6 +4,17 @@ import 'package:incluye_me/controllers/task_controller.dart';
 import '../components/bottom_navigation_bar.dart';
 
 class EstadisticaPage extends StatefulWidget {
+  String nombre;
+  String apellidos;
+  String userName;
+  String userSurname;
+
+  EstadisticaPage(
+      {required this.nombre,
+      required this.apellidos,
+      required this.userName,
+      required this.userSurname});
+
   @override
   _EstadisticaPageState createState() => _EstadisticaPageState();
 }
@@ -31,7 +42,8 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
   }
 
   Future<List<Map<String, dynamic>>> setTareas() async {
-    return controlador.getTareaAsignadaPorEstudiante("Sergio", "Lopez");
+    return controlador.getTareaAsignadaPorEstudiante(
+        widget.nombre, widget.apellidos);
   }
 
   Future<void> setDatos() async {
@@ -80,11 +92,14 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
                 sectionsSpace: 0,
                 centerSpaceRadius: 60,
                 sections: loadDatos(),
-              ),
-            )
+              ))
           : Center(
               child: CircularProgressIndicator(),
             ),
+      bottomNavigationBar: CustomNavigationBar(
+        userName: widget.userName,
+        userSurname: widget.userSurname,
+      ),
     );
   }
 

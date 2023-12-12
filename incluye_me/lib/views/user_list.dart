@@ -240,7 +240,14 @@ class _UserListPageState extends State<UserListPage> {
                                     color: Color.fromARGB(255, 76, 76, 76)),
                                 onPressed: () => Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return EstadisticaPage();
+                                      return EstadisticaPage(
+                                        nombre: filteredUsers[index][tipo]
+                                            ['nombre'],
+                                        apellidos: filteredUsers[index][tipo]
+                                            ['apellidos'],
+                                        userName: widget.userName,
+                                        userSurname: widget.userSurname,
+                                      );
                                     }))),
                           // ------------------------------------
                           IconButton(
@@ -474,7 +481,14 @@ class _UserListPageState extends State<UserListPage> {
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () => Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return EstadisticaPage();
+                                    return EstadisticaPage(
+                                      nombre: filteredUsers[index]['estudiante']
+                                          ['nombre'],
+                                      apellidos: filteredUsers[index]
+                                          ['estudiante']['apellidos'],
+                                      userName: widget.userName,
+                                      userSurname: widget.userSurname,
+                                    );
                                   }))),
                         ],
                       ),
