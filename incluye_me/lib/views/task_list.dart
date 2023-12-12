@@ -215,7 +215,12 @@ class _TaskListPageState extends State<TaskListPage> {
                               ),
                             ),
                             // -----------------------
-                            //subtitle: Text(tipo),
+                            subtitle: Text(
+                                tareas[index]['tarea']['completada'] == true
+                                    ? "Completada"
+                                    : asignada
+                                        ? "Asignada"
+                                        : "No asignada"),
                             leading: const Icon(
                               Icons.task_rounded,
                               size: 45,
@@ -224,12 +229,6 @@ class _TaskListPageState extends State<TaskListPage> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                    tareas[index]['tarea']['completada'] == true
-                                        ? "Completada"
-                                        : asignada
-                                            ? "Asignada"
-                                            : "No asignada"),
                                 // ------------------------------------
                                 IconButton(
                                   icon: const Icon(Icons.people_alt_rounded,
@@ -241,7 +240,8 @@ class _TaskListPageState extends State<TaskListPage> {
                                         builder: (context) => AsignTaskCommand(
                                             userName: widget.userName,
                                             userSurname: widget.userSurname,
-                                            taskID: tareas[index]['tarea']['id'] ),
+                                            taskID: tareas[index]['tarea']
+                                                ['id']),
                                       ),
                                     );
                                   },
@@ -340,12 +340,13 @@ class _TaskListPageState extends State<TaskListPage> {
                                       AddTaskView(onAddTask: _addTask),
                                 ),
                               );
-                            }else if (value == 'TareaComanda') {
+                            } else if (value == 'TareaComanda') {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateTaskCommand(userName: widget.userName , userSurname: widget.userSurname ),
+                                  builder: (context) => CreateTaskCommand(
+                                      userName: widget.userName,
+                                      userSurname: widget.userSurname),
                                 ),
                               );
                             }
@@ -506,7 +507,12 @@ class _TaskListPageState extends State<TaskListPage> {
                                 ],
                               ),
                             ),
-                            subtitle: Text(tipo),
+                            subtitle: Text(
+                                tareas[index]['tarea']['completada'] == true
+                                    ? "Completada"
+                                    : asignada
+                                        ? "Asignada"
+                                        : "No asignada"),
                             leading: const Icon(
                               Icons.person,
                               size: 45,
@@ -514,12 +520,6 @@ class _TaskListPageState extends State<TaskListPage> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                    tareas[index]['tarea']['completada'] == true
-                                        ? "Completada"
-                                        : asignada
-                                            ? "Asignada"
-                                            : "No asignada"),
                                 // ------------------------------------
                                 IconButton(
                                   icon: const Icon(Icons.edit,

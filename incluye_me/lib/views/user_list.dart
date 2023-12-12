@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/estadisticasPage.dart';
 import '../components/bottom_navigation_bar.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
@@ -233,6 +234,14 @@ class _UserListPageState extends State<UserListPage> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          if (tipo == "estudiante")
+                            IconButton(
+                                icon: Icon(Icons.bar_chart,
+                                    color: Color.fromARGB(255, 76, 76, 76)),
+                                onPressed: () => Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return EstadisticaPage();
+                                    }))),
                           // ------------------------------------
                           IconButton(
                             icon: const Icon(Icons.edit,
@@ -457,8 +466,17 @@ class _UserListPageState extends State<UserListPage> {
                         Icons.person,
                         size: 45,
                       ),
-                      trailing: const Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              icon: Icon(Icons.bar_chart,
+                                  color: Color.fromARGB(255, 76, 76, 76)),
+                              onPressed: () => Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return EstadisticaPage();
+                                  }))),
+                        ],
                       ),
                     ),
                   ),
