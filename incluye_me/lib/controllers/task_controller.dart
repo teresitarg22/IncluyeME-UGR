@@ -98,4 +98,44 @@ class Controller {
   Future<List<Map<String, Map<String, dynamic>>>> getTarea(int id) async {
     return await dbDriver.getTarea(id);
   }
+
+  // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaAsignadaPorEstudiante(
+      String nombre, String apellidos) async {
+    return await dbDriver.getTareasAsignadas(nombre, apellidos);
+  }
+
+  // -----------------------------
+  Future<bool> esTareaCompletada(int id) async {
+    var completada = await dbDriver.getTareaCompletada(id);
+
+    if (completada.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //---------------------------------
+  Future<bool> esTareaSemamal(int id) async {
+    var semanal = await dbDriver.getTareaSemanal(id);
+
+    if (semanal.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //---------------------------------
+  Future<String> alumnoAsignado(int id) async {
+    var asignado = await getTareaAsignada(id);
+    if (asignado.isNotEmpty) {
+      return asignado[0]['asignada']?['nombre_alumno'] +
+          " " +
+          asignado[0]['asignada']?['apellido_alumno'];
+    } else {
+      return "";
+    }
+  }
 }
