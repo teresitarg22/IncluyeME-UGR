@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/controllers/session_controller.dart';
+import '../components/bottom_navigation_bar.dart';
+import '../globals/globals.dart';
+import 'package:incluye_me/views/task_list.dart';
 import '../model/estudiante.dart';
 import '../model/user.dart';
 import './user_list.dart';
@@ -85,7 +89,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detalles del Usuario'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -100,7 +104,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 77, 131, 105),
+                      color: Color.fromARGB(255, 25, 72, 110),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -127,7 +131,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           'Información personal',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Color.fromARGB(255, 25, 72, 110),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -175,16 +179,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         // -----------------------------
                         Row(
                           children: [
-                            const Text(
-                              'Email:',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            const Text('Email:',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(width: 8),
                             Text(
-                              '${user?.correo}',
+                              user?.correo ?? 'No tiene',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -196,7 +196,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           'Autentificación',
                           style: TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Color.fromARGB(255, 25, 72, 110),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -225,9 +225,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         Row(
                           children: [
                             Text(
-                              widget.esEstudiante
-                                  ? 'Contraseña de iconos'
-                                  : "No tiene",
+                              widget.esEstudiante ? 'Contraseña de iconos' : "",
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -238,7 +236,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                               widget.esEstudiante
                                   ? (user as Estudiante?)?.contrasenia_iconos ??
                                       ''
-                                  : '',
+                                  : 'No tiene',
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
@@ -250,7 +248,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           widget.esEstudiante ? 'Accesibilidad' : "",
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(255, 77, 131, 105),
+                            color: Color.fromARGB(255, 25, 72, 110),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -354,59 +352,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               ]),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
-        currentIndex: 0,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 1) {
-            // Lógica para la pestaña "Tareas"
-          } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos"
-          } else if (index == 3) {
-            // Lógica para la pestaña "Chat"
-          } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          }
-        },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
-            icon: Icon(Icons.people, color: Colors.white),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment, color: Colors.white),
-            label: 'Tareas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.white),
-            label: 'Gráficos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Perfil',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/bottom_navigation_bar.dart';
 import 'mostrar_usuario.dart';
 import 'edit_user.dart';
 import '../controllers/usuario_controller.dart';
@@ -93,7 +94,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Usuarios'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -214,7 +215,7 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18, // Tamaño de fuente más grande.
+                                fontSize: 16, // Tamaño de fuente más grande.
                                 fontWeight:
                                     FontWeight.bold, // Texto en negrita.
                               ),
@@ -253,14 +254,12 @@ class _UserListPageState extends State<UserListPage> {
                             },
                           ),
                           // -----------------
-                          const SizedBox(width: 30.0),
+                          const SizedBox(width: 5.0),
                           // -----------------
                           IconButton(
                               icon: const Icon(Icons.delete,
                                   color: Color.fromARGB(255, 76, 76, 76)),
                               onPressed: () async {
-                                // Hacer la función asíncrona
-
                                 // Mostrar un diálogo de confirmación
                                 bool confirmar = await showDialog(
                                   context: context,
@@ -322,7 +321,7 @@ class _UserListPageState extends State<UserListPage> {
               },
               // --------------------------
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF29DA81),
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -343,65 +342,8 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
-        currentIndex: 0,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 1) {
-            // Lógica para la pestaña "Tareas".
-          } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos".
-          } else if (index == 3) {
-            // Lógica para la pestaña "Chat".
-          } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 5) {
-            userLogout();
-          }
-        },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
-            icon: Icon(Icons.people, color: Colors.white),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment, color: Colors.white),
-            label: 'Tareas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.white),
-            label: 'Gráficos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Perfil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.logout, color: Colors.white),
-            label: 'Cerrar Sesión',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 
@@ -414,7 +356,7 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Alumnos'),
-        backgroundColor: const Color(0xFF29DA81),
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             onPressed: () {
@@ -465,6 +407,7 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
+      // ---------------------------------------------------------------
       body: Column(
         children: [
           Expanded(
@@ -498,7 +441,7 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]['estudiante']?['nombre']} ${filteredUsers[index]['estudiante']?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -506,8 +449,10 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
+                      // --------------------------------------
                       subtitle:
                           Text(filteredUsers[index]['estudiante']['correo']),
+                      // --------------------------------------
                       leading: const Icon(
                         Icons.person,
                         size: 45,
@@ -523,65 +468,8 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF29DA81),
-        currentIndex: 0,
-        onTap: (int index) {
-          if (index == 0) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserListPage(
-                userName: widget.userName,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 1) {
-            // Lógica para la pestaña "Tareas"
-          } else if (index == 2) {
-            // Lógica para la pestaña "Gráficos"
-          } else if (index == 3) {
-            // Lógica para la pestaña "Chat"
-          } else if (index == 4) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UserDetailsPage(
-                nombre: widget.userName,
-                apellidos: widget.userSurname,
-                esEstudiante: false,
-                userName: widget.userSurname,
-                userSurname: widget.userSurname,
-              );
-            }));
-          } else if (index == 5) {
-            userLogout();
-          }
-        },
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            backgroundColor: Color(0xFF29DA81),
-            icon: Icon(Icons.people, color: Colors.white),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment, color: Colors.white),
-            label: 'Tareas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart, color: Colors.white),
-            label: 'Gráficos',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat, color: Colors.white),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: 'Perfil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.logout, color: Colors.white),
-            label: 'Cerrar Sesión',
-          ),
-        ],
-      ),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }

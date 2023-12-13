@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:incluye_me/model/user.dart';
 import 'package:incluye_me/model/estudiante.dart';
+import 'package:incluye_me/views/task_list.dart';
 import './mostrar_usuario.dart';
 import './user_list.dart';
 import '../controllers/usuario_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import '../components/bottom_navigation_bar.dart';
 
 class EditUserPage extends StatefulWidget {
   final String nombre;
@@ -157,7 +159,7 @@ class _EditUserPageState extends State<EditUserPage> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Edit User'),
-              backgroundColor: const Color(0xFF29DA81),
+              backgroundColor: Colors.blue,
             ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -192,7 +194,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 77, 131, 105),
+                          color: Colors.blue,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -244,7 +246,7 @@ class _EditUserPageState extends State<EditUserPage> {
                         items: multiSelectOptions,
                         initialValue: selectedOptions,
                         title: const Text("Selecciona opciones"),
-                        selectedColor: Colors.green,
+                        selectedColor: Colors.blue,
                         buttonText: const Text(
                             'Preferencias para mostrar el contenido'),
                         onConfirm: (values) {
@@ -346,8 +348,7 @@ class _EditUserPageState extends State<EditUserPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 98, 186, 142),
+                          backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -360,59 +361,8 @@ class _EditUserPageState extends State<EditUserPage> {
                 ),
               ),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: const Color(0xFF29DA81), // Color personalizado
-              currentIndex: 0,
-              onTap: (int index) {
-                if (index == 0) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return UserListPage(
-                      userName: widget.userName,
-                      userSurname: widget.userSurname,
-                    );
-                  }));
-                } else if (index == 1) {
-                  // Lógica para la pestaña "Tareas"
-                } else if (index == 2) {
-                  // Lógica para la pestaña "Gráficos"
-                } else if (index == 3) {
-                  // Lógica para la pestaña "Chat"
-                } else if (index == 4) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return UserDetailsPage(
-                      nombre: widget.userName,
-                      apellidos: widget.userSurname,
-                      esEstudiante: false,
-                      userName: widget.userName,
-                      userSurname: widget.userSurname,
-                    );
-                  }));
-                }
-              },
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  backgroundColor: Color(0xFF29DA81), // Color personalizado
-                  icon: Icon(Icons.people, color: Colors.white),
-                  label: 'Usuarios',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.assignment, color: Colors.white),
-                  label: 'Tareas',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.bar_chart, color: Colors.white),
-                  label: 'Gráficos',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat, color: Colors.white),
-                  label: 'Chat',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person, color: Colors.white),
-                  label: 'Perfil',
-                ),
-              ],
-            ),
+            bottomNavigationBar: CustomNavigationBar(
+                userName: widget.userName, userSurname: widget.userSurname),
           );
         }
       },

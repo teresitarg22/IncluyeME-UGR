@@ -14,6 +14,16 @@ class Controller {
   }
 
   // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> listaAulas() async {
+    return await dbDriver.listaAulas();
+  }
+
+  // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> fotoAula(String aula) async {
+    return await dbDriver.fotoAula(aula);
+  }
+
+  // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> getEstudiante(
       String nombre, String apellidos) async {
     return await dbDriver.comprobarEstudiante(nombre, apellidos);
@@ -63,7 +73,24 @@ class Controller {
   }
 
   // -----------------------------
-  Future<void> insertarTarea(String nombre, DateTime tarea) async {
-    await dbDriver.insertarTarea(nombre, tarea);
+  Future<int> insertarTarea(String nombre, DateTime tarea) async {
+     return await dbDriver.insertarTarea(nombre, tarea);
   }
+
+  // -----------------------------
+  Future<void> insertarAsginada(String nombre, String apellidos, int id) async {
+    await dbDriver.insertarAsginada(nombre, id, apellidos);
+  }
+
+  // -----------------------------
+  Future<void> insertarComanda(int id, String nombre, String menu, String comanda, int total) async {
+    await dbDriver.insertarComanda(id, nombre, menu, comanda, total );
+  }
+
+  // -----------------------------
+  //Funcion para marcar una tarea como completada
+  Future<void> completarTarea(int id) async {
+    await dbDriver.completarTarea(id);
+  }
+  
 }

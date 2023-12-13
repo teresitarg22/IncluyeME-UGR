@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'student_interface.dart';
+
 class LoginWithSymbols extends StatefulWidget {
-  const LoginWithSymbols({super.key});
+  const LoginWithSymbols({Key? key});
 
   @override
   _LoginWithSymbolsState createState() => _LoginWithSymbolsState();
 }
-
-// ------------------------------------------------------------------------
 
 class _LoginWithSymbolsState extends State<LoginWithSymbols> {
   List<String> selectedSymbols = [];
@@ -29,12 +29,12 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
       ),
       body: Column(
         children: [
-          Expanded(
+          Flexible(
             child: GridView.builder(
-              padding: const EdgeInsets.all(16.0), // Padding para los bordes
+              padding: const EdgeInsets.all(16.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                crossAxisSpacing: 16.0, // Espaciado entre elementos
+                crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
               ),
               itemCount: symbols.length,
@@ -50,14 +50,13 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blue),
-                      borderRadius:
-                          BorderRadius.circular(10), // Borde redondeado
+                      borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: const Offset(0, 3), // Sombra
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -67,86 +66,139 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
               },
             ),
           ),
+          // ---------------------------------------------------------------
           Container(
-            padding: const EdgeInsets.only(bottom: 16.0), // Padding inferior
+            height: 1.5,
+            color: Colors.blue, // Línea azul de separación.
+          ),
+          const SizedBox(height: 15),
+          Container(
+            padding: const EdgeInsets.only(bottom: 16.0),
             height: 250,
             child: Column(
               children: [
-                // --------------------------
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(3, (index) {
                     if (index < selectedSymbols.length) {
-                      return Image.asset(selectedSymbols[index],
-                          height: 100, width: 100);
+                      return Image.asset(
+                        selectedSymbols[index],
+                        height: 80,
+                        width: 80,
+                      );
                     } else {
                       return const Icon(Icons.clear,
                           size: 50, color: Colors.red);
                     }
                   }),
                 ),
-                // --------------------------
-                ElevatedButton(
-                  onPressed: () {
-                    // Verificar si la combinación es correcta.
-                    if (selectedSymbols.length == 3 &&
-                        selectedSymbols[0] == correctCombination[0] &&
-                        selectedSymbols[1] == correctCombination[1] &&
-                        selectedSymbols[2] == correctCombination[2]) {
-                      // Mostrar popup de inicio de sesión correcto.
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Inicio de sesión correcto'),
-                          content: const Text('Redirigiendo...'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                // Simular redirección
-                                Navigator.pop(context); // Cerrar popup
-                                Navigator.pop(
-                                    context); // Cerrar pantalla actual
-                              },
-                              child: const Text('Aceptar'),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      // Mostrar popup de inicio de sesión incorrecto.
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Inicio de sesión incorrecto'),
-                          content: const Text('Por favor, intenta de nuevo.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () =>
-                                  Navigator.pop(context), // Cerrar popup
-                              child: const Text('Aceptar'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Aceptar'),
+                // ---------------------------------------------------------
+                const SizedBox(height: 15),
+                Container(
+                  height: 1.5,
+                  color: Colors.blue, // Línea azul de separación.
                 ),
-                // --------------------------
-                ElevatedButton(
-                  onPressed: () {
-                    // Acción para borrar toda la selección
-                    setState(() {
-                      selectedSymbols.clear();
-                    });
-                  },
-                  child: const Text('Borrar selección'),
-                ),
+                const SizedBox(height: 40),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // ----------------------------------------
+                    // Botón para aceptar la acción
+                    ElevatedButton(
+                      onPressed: () {
+                        if (selectedSymbols.length == 3 &&
+                            selectedSymbols[0] == correctCombination[0] &&
+                            selectedSymbols[1] == correctCombination[1] &&
+                            selectedSymbols[2] == correctCombination[2]) {
+                          _showSuccessDialog();
+                          Future.delayed(const Duration(seconds: 2), () {
+                            Navigator.pop(context);
+                            Future.delayed(const Duration(seconds: 1), () {
+                              Navigator.pop(context);
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return StudentInterface();
+                              }));
+                            });
+                          });
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Inicio de sesión incorrecto'),
+                              content:
+                                  const Text('Por favor, intenta de nuevo.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Aceptar'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(8.0),
+                      ),
+                      child: SizedBox(
+                        width: 50,
+                        child: Image.asset('assets/sí.png'),
+                      ),
+                    ),
+                    // -------------------------------------------------
+                    const SizedBox(width: 70),
+                    // ----------------------------------------
+                    // Botón para denegar la acción
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedSymbols.clear();
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(8.0),
+                      ),
+                      child: SizedBox(
+                        width: 50, // Ajusta este valor según tus necesidades
+                        child: Image.asset('assets/no.png'),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showSuccessDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible:
+          false, // El usuario debe tocar el botón para cerrar el diálogo.
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 10),
+              Text('Inicio de sesión'),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Redirigiendo...'),
+              SizedBox(height: 20),
+              CircularProgressIndicator(),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:incluye_me/views/task_list.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
 import '../controllers/usuario_controller.dart';
@@ -7,6 +8,7 @@ import '../views/user_list.dart';
 import '../views/home_view.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
+import '../components/bottom_navigation_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,10 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => CreateTaskCommand(userName: "Sergio", userSurname: "Lopez"),
-        '/registroPage': (context) => const HomeScreen(),
-        '/userList': (context) =>
-            UserListPage(userName: user, userSurname: user)
+        '/': (context) => CreateTaskCommand(userName: "sergio", userSurname: "muñoz",),
       },
     );
   }
@@ -33,7 +32,8 @@ class MyApp extends StatelessWidget {
 class CreateTaskCommand extends StatefulWidget {
   final String userName;
   final String userSurname;
-  const CreateTaskCommand({super.key, required this.userName, required this.userSurname});
+  const CreateTaskCommand(
+      {super.key, required this.userName, required this.userSurname});
 
   @override
   _CreateTaskCommandState createState() => _CreateTaskCommandState();
@@ -52,9 +52,6 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
   List<String> selectedOptions = [];
   TextEditingController _fechaController = TextEditingController();
 
-
-
-
   Future<void> loadUsers() async {
     for (var _student in await controlador.listaEstudiantes()) {
       _students.add(_student['estudiante']!['nombre'].toString() +
@@ -71,7 +68,6 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
     MultiSelectItem("5", "Viernes"),
   ];
 
-
   @override
   void initState() {
     super.initState();
@@ -83,7 +79,7 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
     return Scaffold(
       appBar: AppBar(
           title: const Text('Asignar Tarea Comanda'),
-          backgroundColor: const Color.fromARGB(255, 41, 218, 129)),
+          backgroundColor: Colors.blue),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -129,12 +125,14 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                           },
                           onSuggestionSelected: (suggestion) {
                             _controller.text = suggestion;
-                            _name = suggestion ; 
+                            _name = suggestion;
                             FocusScope.of(context).unfocus();
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'El nombre es obligatorio ';
+                            } else {
+                              _name = value;
                             }
                             return null;
                           },
@@ -187,7 +185,7 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                                   items: multiSelectOptions,
                                   initialValue: selectedOptions,
                                   title: const Text("Selecciona opciones"),
-                                  selectedColor: Colors.green,
+                                  selectedColor: Colors.blue,
                                   buttonText: const Text(
                                       'Elige el dia de la semana para la tarea'),
                                   onConfirm: (values) {
@@ -231,7 +229,7 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                                     if (picked != null &&
                                         picked != _selectedDate) {
                                       _selectedDate = picked;
-                                      _dates.add(_selectedDate!) ; 
+                                      _dates.add(_selectedDate!);
                                       _fechaController.text =
                                           DateFormat('dd-MM-yyyy')
                                               .format(picked);
@@ -263,11 +261,39 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                               actions: <Widget>[
                                 TextButton(
                                   child: const Text('Aceptar'),
-                                  onPressed: () {
-                                    for (var fecha in _dates) {
-                                      controlador.insertarTarea(
-                                          "comanda", fecha);
+                                  onPressed: () async {
+                                    List<String> parts = _name!.split(' ');
+                                    if (_selectedOption == 'Semanal') {
+                                      for (var fecha in _dates) {
+                                        var tarea = await controlador
+                                            .insertarTarea("comanda" + DateFormat('dd/MM/yyyy').format(fecha)  , fecha);
+
+                                        if (parts.length >= 2) {
+                                          controlador.insertarAsginada(
+                                              parts[0],
+                                              parts.sublist(1).join(' '),
+                                              tarea);
+                                        }
+                                      }
+                                    } else {
+                                      var tarea =
+                                          await controlador.insertarTarea(
+                                              "comanda " + DateFormat('dd/MM/yyyy').format(_selectedDate!), _selectedDate!);
+                                      if (parts.length >= 2) {
+                                        controlador.insertarAsginada(parts[0],
+                                            parts.sublist(1).join(' '), tarea);
+                                      }
                                     }
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => TaskListPage(
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
+                                        ),
+                                      ),
+                                    );
                                   },
                                 ),
                               ],
@@ -276,10 +302,8 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                         );
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(
-                          0xFF29DA81), // Cambia el color del botón a verde
-                    ),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                     child: const Text('Asignar'),
                   ),
                 )
@@ -288,9 +312,10 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
           ),
         ),
       ),
+      bottomNavigationBar: CustomNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
-
 
   List<DateTime> fechasDelDiaDeLaSemana(int diaDeLaSemana) {
     List<DateTime> fechas = [];

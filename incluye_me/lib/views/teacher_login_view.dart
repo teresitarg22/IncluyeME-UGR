@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/globals/globals.dart';
-import 'package:incluye_me/model/database_driver.dart';
 import 'package:incluye_me/views/user_list.dart';
+
+import '../model/teacher.dart';
 
 class TeacherLoginView extends StatefulWidget {
   const TeacherLoginView({super.key});
@@ -57,58 +58,119 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     }
   }
 
-  // --------------------------
+  Future<void> login(email) async {
+    var teacherData = await dbDriver.requestDataFromPersonal(email);
+    teacher = Teacher.fromJson(teacherData[0]
+        ['personal']!); //Convierte el usuario logueado en variable global
+
+    _showSuccessDialog();
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pop(context);
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UserListPage(
+                    userName: teacher!.getName(),
+                    userSurname: teacher!.getSurnames(),
+                  )),
+        );
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Profesores'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('Inicio de sesión',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            // --------------------------
-            TextField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: const OutlineInputBorder(),
-                errorText: _errorMessage,
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage('assets/fondo2.png'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.5),
+              BlendMode.dstATop,
             ),
-            const SizedBox(height: 16),
-            // --------------------------
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                border: const OutlineInputBorder(),
-                errorText: _passwordErrorMessage,
-              ),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(28),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // --------------------------
+                // Icono
+                const Icon(
+                  Icons.supervised_user_circle_rounded,
+                  size: 150,
+                  color: Colors.blue,
+                ),
+                // --------------------------
+                const SizedBox(height: 16),
+                // --------------------------
+                const Text(
+                  '¡Bienvenido!',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                // --------------------------
+                const SizedBox(height: 16),
+                // --------------------------
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    errorText: _errorMessage,
+                  ),
+                ),
+                // --------------------------
+                const SizedBox(height: 16),
+                // --------------------------
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                    errorText: _passwordErrorMessage,
+                  ),
+                ),
+                // --------------------------
+                const SizedBox(height: 24),
+                // --------------------------
+                ElevatedButton(
+                  onPressed: () {
+                    _handleLogin();
+                  },
+                  child: const Text('Iniciar sesión'),
+                ),
+                // --------------------------
+                TextButton(
+                  onPressed: () {
+                    // Acción para recuperar contraseña
+                  },
+                  child: const Text(
+                    '¿Olvidaste tu contraseña?',
+                    style: TextStyle(
+                        fontSize: 12, color: Color.fromARGB(255, 7, 90, 158)),
+                  ),
+                ),
+                // --------------------------
+                const SizedBox(height: 150),
+                // --------------------------
+              ],
             ),
-            const SizedBox(height: 24),
-            // --------------------------
-            ElevatedButton(
-              onPressed: () {
-                _handleLogin();
-              },
-              child: const Text('Login'),
-            ),
-            // --------------------------
-            TextButton(
-              onPressed: () {
-                // Acción para recuperar contraseña
-              },
-              child: const Text('¿Olvidaste tu contraseña?'),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -152,31 +214,18 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    var nombre;
-    var apellido;
-
     await dbDriver?.requestDataFromPersonal(email).then((value) {
-      nombre = value[0]['personal']?['nombre'];
-      apellido = value[0]['personal']?['apellidos'];
+      if (value.isEmpty) {
+        setState(() {
+          _errorMessage = 'Email no registrado';
+        });
+      }
     });
 
     await dbDriver?.verifyPassword(email, password).then((value) => {
           if (value == true)
             {
-              _showSuccessDialog(),
-              Future.delayed(const Duration(seconds: 2), () {
-                Navigator.pop(context);
-                Future.delayed(const Duration(seconds: 1), () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return UserListPage(
-                      userName: nombre,
-                      userSurname: apellido,
-                    );
-                  }));
-                });
-              })
+              login(email),
             }
           else
             {
