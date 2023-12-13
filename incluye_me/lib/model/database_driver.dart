@@ -315,4 +315,16 @@ class DataBaseDriver {
     return await request(
         "SELECT fecha_tarea FROM tarea WHERE id = $id AND fecha_tarea > NOW() - INTERVAL '7 days'");
   }
+
+  Future<void> insertarComanda(
+      int id, String nombre, String menu, var cantidad, int total) async {
+    await request(
+        "INSERT INTO comanda (id_tarea,nombre_clase,menu,cantidad,total) VALUES ('$id', '$nombre', '$menu', '$cantidad', $total)");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para marcar una tarea como completada
+  Future<void> completarTarea(int id) async {
+    await request("UPDATE tarea SET completada = true WHERE id = $id");
+  }
 }

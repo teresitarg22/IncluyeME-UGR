@@ -7,7 +7,7 @@ import '../components/bottom_navigation_bar.dart';
 import 'pedir_material.dart';
 import '../views/add_general_task.dart';
 import '../model/general_task.dart';
-import 'command_task_asign.dart';
+import 'task_asign.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
