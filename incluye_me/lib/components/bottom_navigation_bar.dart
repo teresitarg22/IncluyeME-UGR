@@ -46,10 +46,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
             );
           }));
         } else if (index == 2) {
-          // Lógica para la pestaña "Gráficos"
-        } else if (index == 3) {
           // Lógica para la pestaña "Chat"
-        } else if (index == 4) {
+        } else if (index == 3) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return UserDetailsPage(
               nombre: widget.userName,
@@ -59,7 +57,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               userSurname: widget.userSurname,
             );
           }));
-        } else if (index == 5) {
+        } else if (index == 4) {
           Navigator.pushNamed(context, '/');
         }
       },
@@ -73,11 +71,6 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           backgroundColor: Colors.blue,
           icon: Icon(Icons.assignment, color: Colors.white),
           label: 'Tareas',
-        ),
-        BottomNavigationBarItem(
-          backgroundColor: Colors.blue,
-          icon: Icon(Icons.bar_chart, color: Colors.white),
-          label: 'Gráficos',
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,
