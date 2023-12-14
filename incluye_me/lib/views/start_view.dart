@@ -147,6 +147,7 @@ class StartView extends StatelessWidget {
             // -----------------------------
             ElevatedButton(
               style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(buttonWidth * 0.1),
                 ),
@@ -160,6 +161,9 @@ class StartView extends StatelessWidget {
                 child: Text(
                   buttonText,
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
