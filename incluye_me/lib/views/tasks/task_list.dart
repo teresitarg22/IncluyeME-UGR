@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/commad_task_create.dart';
-import 'package:incluye_me/views/task_view.dart';
-import '../controllers/session_controller.dart';
-import '../controllers/task_controller.dart';
-import '../components/bottom_navigation_bar.dart';
-import 'pedir_material.dart';
-import '../views/add_general_task.dart';
-import '../model/general_task.dart';
-import 'task_asign.dart';
+import 'package:incluye_me/views/command/commad_task_create.dart';
+import 'package:incluye_me/views/tasks/task_view.dart';
+import '../../controllers/session_controller.dart';
+import '../../controllers/task_controller.dart';
+import '../../components/bottom_navigation_bar.dart';
+import '../material/material_task.dart';
+import '../general/add_general_task.dart';
+import '../../model/general_task.dart';
+import '../command/command_task_asign.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
