@@ -21,11 +21,13 @@ class _PedirMaterialState extends State<PedirMaterial> {
   List<String> materialList = [""];
   String selectedAula = "";
   String selectedStudent = "";
+  Future<int>? initFuture;
 
-  Future<void> loadMaterial() async {
+  Future<int> loadMaterial() async {
     for (var material in await Tcontrolador.monstrarListaMaterial()) {
       materialList.add(material['lista_material']!['nombre'].toString());
     }
+    return 1;
   }
 
   Future<void> loadAula() async {
@@ -62,18 +64,16 @@ class _PedirMaterialState extends State<PedirMaterial> {
 void addMaterialToStudent(String student, String aula) {
   List<String> material = [];
   List<int> cantidad = [];
+  List<bool> hecho = [];
     for (List<TextEditingController> listeInterne in controllersList) {
       if (listeInterne.isNotEmpty) {
         material.add(listeInterne[0].text);
-      }
-    }
-    for (List<TextEditingController> listeInterne in controllersList) {
-      if (listeInterne.isNotEmpty) {
         int isInt = int.parse(listeInterne[1].text);
         cantidad.add(isInt);
+        hecho.add(false);
       }
     }
-    Tcontrolador.addMaterialToStudent(student, aula, material, cantidad);
+    Tcontrolador.addMaterialToStudent(student, aula, material, cantidad, hecho);
   }
 
   @override
@@ -81,135 +81,146 @@ void addMaterialToStudent(String student, String aula) {
     super.initState();
     loadAula();
     loadEstudiante();
-    loadMaterial();
+    initFuture = loadMaterial();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Tarea Material'),
-        backgroundColor: Colors.blue,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Table(
-              border: TableBorder.all(),
-              columnWidths: const <int, TableColumnWidth>{
-                0: FlexColumnWidth(),
-                1: FlexColumnWidth(),
-              },
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+    return FutureBuilder(
+      future: initFuture,
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Tarea Material'),
+              backgroundColor: Colors.blue,
+            ),
+            body: Column(
               children: [
-                TableRow(
-                  children: [
-                    Center(
-                      child: Text(
-                        'Material',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        'Cuantidad',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                for (var controllers in controllersList)
-                  TableRow(
+                Expanded(
+                  child: Table(
+                    border: TableBorder.all(),
+                    columnWidths: const <int, TableColumnWidth>{
+                      0: FlexColumnWidth(),
+                      1: FlexColumnWidth(),
+                    },
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: DropdownButton<String>(
-                          value: controllers[0].text,
-                          items: materialList.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {
-                            setState(() {
-                              controllers[0].text = value!;
-                            });
-                          },
-                        ),
+                      TableRow(
+                        children: [
+                          Center(
+                            child: Text(
+                              'Material',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Center(
+                            child: Text(
+                              'Cuantidad',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: TextFormField(
-                          controller: controllers[1],
+                      for (var controllers in controllersList)
+                        TableRow(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: DropdownButton<String>(
+                                value: controllers[0].text,
+                                items: materialList.map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    controllers[0].text = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0),
+                              child: TextFormField(
+                                controller: controllers[1],
+                              ),
+                            ),
+                          ],
                         ),
+                    ],
+                  ),
+                ),
+                // Ajouter de l'espace en bas
+                SizedBox(height: 16),
+                Center(
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // Center the children horizontally
+                    children: [
+                      DropdownButton<String>(
+                        value: selectedStudent,
+                        items: studentList.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedStudent = value!;
+                          });
+                        },
+                      ),
+                      DropdownButton<String>(
+                        value: selectedAula,
+                        items: aulaList.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedAula = value!;
+                          });
+                        },
                       ),
                     ],
                   ),
+                ),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.all(16.0),
+                    ),
+                    child: Text("Asignar a este alumno"),
+                    onPressed: () {addMaterialToStudent(selectedStudent, selectedAula);}),
               ],
             ),
-          ),
-          // Ajouter de l'espace en bas
-          SizedBox(height: 16),
-          Center(
-            child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Center the children horizontally
-              children: [
-                DropdownButton<String>(
-                  value: selectedStudent,
-                  items: studentList.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedStudent = value!;
-                    });
-                  },
-                ),
-                DropdownButton<String>(
-                  value: selectedAula,
-                  items: aulaList.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedAula = value!;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                padding: const EdgeInsets.all(16.0),
-              ),
-              child: Text("Asignar a este alumno"),
-              onPressed: () {addMaterialToStudent(selectedStudent, selectedAula);}),
-        ],
-      ),
-      // Bouton flottant en bas à droite
-      floatingActionButton: FloatingActionButton(
-          onPressed: addLine,
-          child: Icon(Icons.add),
-          backgroundColor: Colors.blue),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            // Bouton flottant en bas à droite
+            floatingActionButton: FloatingActionButton(
+                onPressed: addLine,
+                child: Icon(Icons.add),
+                backgroundColor: Colors.blue),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
-      bottomNavigationBar: CustomNavigationBar(
-          userName: widget.userName, userSurname: widget.userSurname),
+            bottomNavigationBar: CustomNavigationBar(
+                userName: widget.userName, userSurname: widget.userSurname),
+          );
+        }
+      }
     );
   }
 }

@@ -8,6 +8,7 @@ import 'pedir_material.dart';
 import '../views/add_general_task.dart';
 import '../model/general_task.dart';
 import 'command_task_asign.dart';
+import '../views/material_view.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -595,9 +596,12 @@ class _TaskListPageState extends State<TaskListPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PedirMaterial(
-                                userName: widget.userName,
-                                userSurname: widget.userSurname),
+                            builder: (context) => MaterialView(
+                                userName: 'Teresa',
+                                userSurname: 'Reyes',
+                                majMin: 'Mayúscula',
+                                sabeLeer: false,
+                                taskID: 99),
                           ));
                     },
                     // --------------------------

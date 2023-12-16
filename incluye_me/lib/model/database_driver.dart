@@ -299,21 +299,23 @@ class DataBaseDriver {
 
   // ----------------------------------------------------
   // Funcion para añadir a las tablas tarea y tarea_material las informaciones necesarias
-  Future<void> insertarTareaMaterial(String mail, String aula, List<int> material, List<int> cantidad) async {
+  Future<void> insertarTareaMaterial(String mail, String aula, List<int> material, List<int> cantidad, List<bool> hecho) async {
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     await request(
         "INSERT INTO tarea(nombre, completada, fecha_tarea) VALUES ('tarea_material', false, '$date')");
     int id = (await request("SELECT max(id) FROM tarea"))[0][""]!["max"];
-    String material_list = "{${material[0]}", cantidad_list ="{${cantidad[0]}";
+    String material_list = "{${material[0]}", cantidad_list ="{${cantidad[0]}", hecho_list = "{${hecho[0]}";
     for(int i = 1; i<material.length; i++)
     {
         material_list = "$material_list, ${material[i]}";
         cantidad_list = "$cantidad_list, ${cantidad[i]}";
+        hecho_list = "$hecho_list, ${hecho[i]}";
     }
     material_list = "$material_list}";
     cantidad_list = "$cantidad_list}";
+    hecho_list = "$hecho_list}";
     await request(
-        "INSERT INTO tarea_material VALUES ('$id', '$mail', '$aula', '$material_list', '$cantidad_list')");
+        "INSERT INTO tarea_material VALUES ('$id', '$mail', '$aula', '$material_list', '$cantidad_list', $hecho_list)");
   }
 
   // ----------------------------------------------------
@@ -332,6 +334,30 @@ class DataBaseDriver {
   Future<List<Map<String, Map<String, dynamic>>>> materialNombreToID (String ID) async {
     return await request(
       "SELECT id FROM lista_material WHERE nombre = '$ID';"
+    );
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> materialIDToNombre (int ID) async {
+    return await request(
+      "SELECT nombre FROM lista_material WHERE id = $ID;"
+    );
+  }
+  
+  Future<List<Map<String, Map<String, dynamic>>>> getListMaterial (int ID) async {
+    return await request(
+      "SELECT material, cantidad, hecho FROM tarea_material WHERE id_tarea = $ID;"
+    );
+  }
+
+  Future<void> saveHechoMaterial(String hecho, int ID) async {
+    await request(
+      "UPDATE tarea_material SET hecho = '$hecho' where id_tarea = $ID"
+    );
+  }
+
+  Future<void> taskDone(int ID) async {
+    await request(
+      "UPDATE tarea SET completada = 'true' where id = $ID"
     );
   }
 }

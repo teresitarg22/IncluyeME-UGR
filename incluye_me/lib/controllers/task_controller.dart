@@ -104,7 +104,7 @@ class Controller {
   }
 
   // -----------------------------
-  Future<void> addMaterialToStudent (String nombreEntero, String aula, List<String> material, List<int> cantidad) async {
+  Future<void> addMaterialToStudent (String nombreEntero, String aula, List<String> material, List<int> cantidad, List<bool> hecho) async {
     String nombre;
     String apellidos;
     List<String> partes = nombreEntero.split(" ");
@@ -123,11 +123,40 @@ class Controller {
       materialInt.add(mat[0]["lista_material"]!["id"]) ;
     }
     
-    await dbDriver.insertarTareaMaterial(mail, aula, materialInt, cantidad);
+    await dbDriver.insertarTareaMaterial(mail, aula, materialInt, cantidad, hecho);
   }
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> getTarea(int id) async {
     return await dbDriver.getTarea(id);
+  }
+  
+  // -----------------------------
+  Future<List<Map<String, Map<String, dynamic>>>> getListMaterial(int id) async {
+    List<Map<String, Map<String, dynamic>>> lista = await dbDriver.getListMaterial(id);
+    
+    List<String> temp_list = [];
+
+    for (int i = 0; i < lista[0]['tarea_material']!['material'].length; i++)
+    {
+      List<Map<String, Map<String, dynamic>>> temp = await dbDriver.materialIDToNombre(lista[0]['tarea_material']!['material'][i]);
+      temp_list.add(temp[0]['lista_material']!['nombre']);
+    }
+    lista[0]['tarea_material']!['material'] = temp_list;
+    return lista;
+  }
+
+  Future<void> saveHechoMaterial(List<bool> hecho, int ID) async {
+    String hecho_list = "{${hecho[0]}";
+    for(int i = 1; i<hecho.length; i++)
+    {
+        hecho_list = "$hecho_list, ${hecho[i]}";
+    }
+    hecho_list = "$hecho_list}";
+    await dbDriver.saveHechoMaterial(hecho_list, ID);
+  }
+
+  Future<void> taskDone(int ID) async {
+    await dbDriver.taskDone(ID);
   }
 }
