@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:incluye_me/globals/globals.dart';
 import 'package:incluye_me/views/user_list.dart';
 
-import '../model/teacher.dart';
+import '../../model/teacher.dart';
 
 class TeacherLoginView extends StatefulWidget {
   const TeacherLoginView({super.key});
@@ -82,14 +82,23 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
 
   @override
   Widget build(BuildContext context) {
+    // Obtener el tamaño de la pantalla
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Determinar el fondo según el tamaño de la pantalla.
+    String fondo = screenWidth > 600
+        ? 'assets/fondo_login_horizontal.png' // Fondo para pantallas más grandes (horizontal)
+        : 'assets/fondo_login_vertical.png'; // Fondo para pantallas más pequeñas (vertical)
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Profesores'),
+        backgroundColor: Colors.blue,
       ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: const AssetImage('assets/fondo2.png'),
+            image: AssetImage(fondo),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.black.withOpacity(0.5),
@@ -99,7 +108,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(28),
+            padding: const EdgeInsets.all(100),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -111,14 +120,14 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
                   color: Colors.blue,
                 ),
                 // --------------------------
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 // --------------------------
                 const Text(
                   '¡Bienvenido!',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 // --------------------------
-                const SizedBox(height: 16),
+                const SizedBox(height: 25),
                 // --------------------------
                 TextField(
                   controller: _emailController,
@@ -152,7 +161,15 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
                   onPressed: () {
                     _handleLogin();
                   },
-                  child: const Text('Iniciar sesión'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue, // Color del botón
+                  ),
+                  child: Text(
+                    'Iniciar sesión',
+                    style: TextStyle(
+                      color: Colors.white, // Color del texto a blanco
+                    ),
+                  ),
                 ),
                 // --------------------------
                 TextButton(
@@ -166,7 +183,7 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
                   ),
                 ),
                 // --------------------------
-                const SizedBox(height: 150),
+                const SizedBox(height: 500),
                 // --------------------------
               ],
             ),

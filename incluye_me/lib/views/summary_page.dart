@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
+import '../../controllers/user_controller.dart'; 
 
 class SummaryPage extends StatelessWidget {
   Map<String, Map<String, Map<String, int>>> amount = {};
   Map<String, int> menus = {};
+  final taskID; 
 
-  SummaryPage({required this.amount, required this.menus});
+  SummaryPage({required this.amount, required this.menus, required this.taskID});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Resumen'),
-        backgroundColor: Colors.blue ,
+        backgroundColor: Colors.blue,
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment
-                  .center, // Centra los elementos verticalmente
+              mainAxisAlignment: MainAxisAlignment.center,
               children: amount.entries.map((entry) {
                 return Column(
                   children: [
@@ -27,8 +28,7 @@ class SummaryPage extends StatelessWidget {
                         style: TextStyle(fontSize: 24)),
                     ...entry.value.entries.map((menuEntry) {
                       int total = 0;
-                      // Verificamos si el menú está presente en la variable menus
-                      if (menus.containsKey(entry.key) ) {
+                      if (menus.containsKey(entry.key)) {
                         total = menus[entry.key]!;
                       }
 
@@ -51,8 +51,7 @@ class SummaryPage extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16)),
-                          SizedBox(
-                              height: 10), // Agregamos espacio entre los menús
+                          SizedBox(height: 10),
                         ],
                       );
                     }).toList(),
@@ -61,6 +60,29 @@ class SummaryPage extends StatelessWidget {
               }).toList(),
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: ElevatedButton(
+          onPressed: () {
+            Controller().completarTarea(taskID);
+            List<String> comanda = [];
+            for  ( var clase  in amount.keys)  {
+              for ( var menu in amount[clase]!.keys)  {
+                for ( var option in amount[clase]![menu]!.keys)  {
+                   
+                  comanda.add('${amount[clase]![menu]![option]}') ; 
+                }
+                Controller().insertarComanda(taskID, clase, menu , comanda.toString(), menus[clase]!);
+                comanda.clear() ;
+              }
+            }
+
+            Navigator.pop(context);
+          },
+          child: Text('Finalizar Tarea',
+          style: TextStyle(fontSize: 25),),
+          
         ),
       ),
     );

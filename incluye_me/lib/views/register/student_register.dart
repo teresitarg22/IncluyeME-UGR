@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
 import 'package:convert/convert.dart';
-import '../controllers/registro_controller.dart';
+import '../../controllers/register_controller.dart';
 
 class AlumnoRegistration extends StatefulWidget {
   const AlumnoRegistration({super.key});

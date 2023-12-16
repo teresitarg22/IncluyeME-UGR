@@ -9,6 +9,7 @@ class TaskCommandImage extends StatefulWidget {
 }
 
 class _CreateTaskImageCommandState extends State<TaskCommandImage> {
+  Map<String, int> amount = {};
   List<String> menus = [
     'assets/menu.png',
     'assets/no_carne.png',
@@ -16,20 +17,26 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
     'assets/fruta_triturada.png',
     'assets/yogur.png',
     'assets/fruta.png'
-  ]; // Lista de menús
+  ];
 
-  Map<String, int> amount = {};
+  int _currentPageIndex = 0;
+  List<String> pages = [
+    'assets/menu.png',
+    'assets/no_carne.png',
+    'assets/puré.png',
+    'assets/fruta_triturada.png',
+    'assets/yogur.png',
+    'assets/fruta.png'
+  ];
+
   Map<String, int> numeros = {};
-  int currentClassIndex = 0;
-
-  late String current_class;
+  late String currentClass;
   Map<String, String> contador = {};
 
   @override
   void initState() {
     super.initState();
-
-    current_class = widget.clase!;
+    currentClass = widget.clase!;
 
     amount = {};
 
@@ -37,6 +44,7 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
       amount[menu] = 0;
     }
 
+    numeros["assets/cero.png"] = 0;
     numeros["assets/uno.png"] = 1;
     numeros["assets/dos.png"] = 2;
     numeros["assets/tres.png"] = 3;
@@ -54,6 +62,7 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
   @override
   Widget build(BuildContext context) {
     List<String> repeatedImages = [
+      'assets/cero.png',
       'assets/uno.png',
       'assets/dos.png',
       'assets/tres.png',
@@ -64,20 +73,14 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Selecciona las comandas para $current_class',
+          'Selecciona las comandas para $currentClass',
         ),
         backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+        automaticallyImplyLeading: false,
       ),
-      body: ListView(
-        padding: EdgeInsets.all(16.0),
+      body: Column(
         children: [
-          buildRowWithImages('assets/menu.png', repeatedImages),
-          buildRowWithImages('assets/no_carne.png', repeatedImages),
-          buildRowWithImages('assets/puré.png', repeatedImages),
-          buildRowWithImages('assets/fruta_triturada.png', repeatedImages),
-          buildRowWithImages('assets/yogur.png', repeatedImages),
-          buildRowWithImages('assets/fruta.png', repeatedImages),
-          SizedBox(height: 20), // Separación entre los elementos de cada menú
+          buildRowWithImages(pages[_currentPageIndex], repeatedImages),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -85,12 +88,16 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
                 icon: Icon(Icons.arrow_back),
                 iconSize: 50.0,
                 onPressed: () {
-                  if (currentClassIndex > 0) {
+                  if (_currentPageIndex > 0) {
                     setState(() {
-                      currentClassIndex--;
+                      _currentPageIndex--;
+                      //currentClass = pages[_currentPageIndex];
                     });
                   } else {
-                    // Navega a la página anterior o realiza otra acción cuando se está en la primera clase
+                    Navigator.pop(
+                      context,
+                      {'devolver': widget.clase},
+                    );
                   }
                 },
               ),
@@ -98,10 +105,17 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
                 icon: Icon(Icons.arrow_forward),
                 iconSize: 50.0,
                 onPressed: () {
-                  Navigator.pop(
-                    context,
-                    {'clase': current_class, 'menu': amount},
-                  );
+                  if (_currentPageIndex < pages.length - 1) {
+                    setState(() {
+                      _currentPageIndex++;
+                      //currentClass = pages[_currentPageIndex];
+                    });
+                  } else {
+                    Navigator.pop(
+                      context,
+                      {'clase': currentClass, 'menu': amount},
+                    );
+                  }
                 },
               ),
             ],

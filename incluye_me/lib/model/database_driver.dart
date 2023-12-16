@@ -193,13 +193,13 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Función para mostrar las tareas generales
   Future<List<Map<String, Map<String, dynamic>>>> listaTareasGenerales() async {
-    return await request("SELECT * FROM general");
+    return await request("SELECT * FROM tareas_generales");
   }
 
   // ----------------------------------------------------
   // Función para mostrar las tareas de material
   Future<List<Map<String, Map<String, dynamic>>>> listaTareasMaterial() async {
-    return await request("SELECT * FROM material");
+    return await request("SELECT * FROM tarea_material");
   }
 
   // ----------------------------------------------------
@@ -211,14 +211,14 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Funicón para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaGeneral(int id) async {
-    return await request("SELECT * FROM general WHERE id = $id");
+    return await request("SELECT * FROM tareas_generales WHERE id = $id");
   }
 
   // ----------------------------------------------------
   // Función para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaMaterial(
       int id) async {
-    return await request("SELECT * FROM material WHERE id = $id ");
+    return await request("SELECT * FROM tarea_material WHERE id = $id ");
   }
 
   // ----------------------------------------------------
@@ -237,14 +237,14 @@ class DataBaseDriver {
   // Función para obtener una tarea general
   Future<List<Map<String, Map<String, dynamic>>>> getTareaGeneral(
       int id) async {
-    return await request("SELECT * FROM general WHERE id = $id");
+    return await request("SELECT * FROM tareas_generales WHERE id = $id");
   }
 
   // ----------------------------------------------------
   // Función para obtener una tarea material
   Future<List<Map<String, Map<String, dynamic>>>> getTareaMaterial(
       int id) async {
-    return await request("SELECT * FROM material WHERE id = $id");
+    return await request("SELECT * FROM tarea_material WHERE id = $id");
   }
 
   // ----------------------------------------------------
@@ -274,8 +274,8 @@ class DataBaseDriver {
     final results = await request(
         "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha') RETURNING id");
 
-    var primeraFila = results.first ; 
-    var id = primeraFila['tarea']!['id'] ;
+    var primeraFila = results.first;
+    var id = primeraFila['tarea']!['id'];
     return int.parse(id.toString());
   }
   // ----------------------------------------------------
@@ -295,7 +295,39 @@ class DataBaseDriver {
     return await request("SELECT * FROM tarea WHERE id = $id");
   }
 
-  //
+  // ----------------------------------------------------
+  // Función para obtener el id de las tareas asginadas de un alumno
+  Future<List<Map<String, Map<String, dynamic>>>> getTareasAsignadas(
+      String nombre, String apellidos) async {
+    return await request(
+        "SELECT id_tarea FROM asignada WHERE nombre_alumno = '$nombre' AND apellido_alumno = '$apellidos'");
+  }
+
+  //Funcion para obtener si una tarea ha sido completada segun su id
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaCompletada(
+      int id) async {
+    return await request(
+        "SELECT completada FROM tarea WHERE id = $id AND completada = true");
+  }
+
+  //Funcion para saber si la tarea ha sido creada en los úlitmos 7 días
+  Future<List<Map<String, Map<String, dynamic>>>> getTareaSemanal(
+      int id) async {
+    return await request(
+        "SELECT fecha_tarea FROM tarea WHERE id = $id AND fecha_tarea > NOW() - INTERVAL '7 days'");
+  }
+
+  Future<void> insertarComanda(
+      int id, String nombre, String menu, var cantidad, int total) async {
+    await request(
+        "INSERT INTO comanda (id_tarea,nombre_clase,menu,cantidad,total) VALUES ('$id', '$nombre', '$menu', '$cantidad', $total)");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para marcar una tarea como completada
+  Future<void> completarTarea(int id) async {
+    await request("UPDATE tarea SET completada = true WHERE id = $id");
+  }
 
   // ----------------------------------------------------
   // Funcion para añadir a las tablas tarea y tarea_material las informaciones necesarias

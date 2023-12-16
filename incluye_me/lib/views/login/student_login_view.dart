@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/student_password_view.dart';
+import 'package:incluye_me/views/login/student_password_view.dart';
 // import '../controllers/usuario_controller.dart';
 // import 'dart:typed_data';
 

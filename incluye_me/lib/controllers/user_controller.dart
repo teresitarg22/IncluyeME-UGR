@@ -81,4 +81,16 @@ class Controller {
   Future<void> insertarAsginada(String nombre, String apellidos, int id) async {
     await dbDriver.insertarAsginada(nombre, id, apellidos);
   }
+
+  // -----------------------------
+  Future<void> insertarComanda(int id, String nombre, String menu, String comanda, int total) async {
+    await dbDriver.insertarComanda(id, nombre, menu, comanda, total );
+  }
+
+  // -----------------------------
+  //Funcion para marcar una tarea como completada
+  Future<void> completarTarea(int id) async {
+    await dbDriver.completarTarea(id);
+  }
+  
 }

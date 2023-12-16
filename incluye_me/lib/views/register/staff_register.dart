@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../controllers/registro_controller.dart';
+import '../../controllers/register_controller.dart';
 
 class ProfesorRegistration extends StatefulWidget {
   const ProfesorRegistration({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/bottom_navigation_bar.dart';
-import 'mostrar_usuario.dart';
+import 'user_details.dart';
 import 'edit_user.dart';
-import '../controllers/usuario_controller.dart';
+import '../controllers/user_controller.dart';
 import '../controllers/session_controller.dart';
 
 // --------------------------------------------
@@ -332,10 +332,10 @@ class _UserListPageState extends State<UserListPage> {
                 // Usamos un Row para colocar el icono y el texto horizontalmente.
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.add),
+                  Icon(Icons.add, color: Colors.white), 
                   SizedBox(width: 8.0),
                   Text('Nuevo Usuario',
-                      style: TextStyle(fontSize: 16)), // El texto del botón.
+                      style: TextStyle(color: Colors.white, fontSize: 16)), // El texto del botón.
                 ],
               ),
             ),

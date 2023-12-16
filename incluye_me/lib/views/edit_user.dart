@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:incluye_me/model/user.dart';
-import 'package:incluye_me/model/estudiante.dart';
-import 'package:incluye_me/views/task_list.dart';
-import './mostrar_usuario.dart';
+import 'package:incluye_me/model/student.dart';
+import 'package:incluye_me/views/tasks/task_list.dart';
+import 'user_details.dart';
 import './user_list.dart';
-import '../controllers/usuario_controller.dart';
+import '../controllers/user_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import '../components/bottom_navigation_bar.dart';

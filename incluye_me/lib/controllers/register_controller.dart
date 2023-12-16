@@ -1,10 +1,7 @@
 import 'package:incluye_me/globals/globals.dart';
-
-
 import 'package:flutter/material.dart';
 
 class RegistroController {
-
 
   // ----------------------------------------------------
 
