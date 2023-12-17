@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../components/bottom_navigation_bar.dart';
 import '../controllers/task_controller.dart' as TC;
-import '../controllers/usuario_controller.dart' as UC;
+import '../controllers/user_controller.dart' as UC;
 
 class MaterialView extends StatefulWidget {
   String userName;
@@ -19,6 +19,7 @@ class MaterialView extends StatefulWidget {
 class _MaterialViewState extends State<MaterialView> {
   final UC.Controller Ucontrolador = UC.Controller();
   final TC.Controller Tcontrolador = TC.Controller();
+  final List<String> numeros = ["assets/cero.png", "assets/uno.png", "assets/dos.png", "assets/tres.png", "assets/cuatro.png", "assets/cinco.png"];
 
   List<int> listaCantidad = [];
   List<String> listaMaterial = [];
@@ -93,7 +94,16 @@ class _MaterialViewState extends State<MaterialView> {
                                 fit: BoxFit.contain,
                               ),
                     ),
-                    DataCell(Text(listaCantidad[index].toString())),
+                    DataCell(
+                      widget.sabeLeer
+                          ? Text(listaCantidad[index].toString())
+                          : Image.asset(
+                              numeros[listaCantidad[index]],
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.contain,
+                              ),
+                    ),
                     DataCell(Checkbox(
                       value: isDoneList[index],
                       onChanged: (bool? value) {
@@ -115,7 +125,16 @@ class _MaterialViewState extends State<MaterialView> {
                     // Navigate back to the previous screen
                     Navigator.pop(context);
                   },
-                  child: Text('Guardar'),
+                  child:
+                    widget.sabeLeer
+                    ? Text('Guardar')
+                    : Image.asset(
+                        'assets/sí.png',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.contain,
+                        ),
+                
                 ),
                 CustomNavigationBar(userName: widget.userName, userSurname: widget.userSurname),
               ],
