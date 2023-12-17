@@ -104,7 +104,7 @@ class Controller {
   }
 
   // -----------------------------
-  Future<void> addMaterialToStudent (String nombreEntero, String aula, List<String> material, List<int> cantidad, List<bool> hecho) async {
+  Future<void> addMaterialToStudent (String nombreEntero, String aula, List<String> material, List<int> cantidad, List<String> hecho) async {
     String nombre;
     String apellidos;
     List<String> partes = nombreEntero.split(" ");
@@ -123,7 +123,7 @@ class Controller {
       materialInt.add(mat[0]["lista_material"]!["id"]) ;
     }
     
-    await dbDriver.insertarTareaMaterial(mail, aula, materialInt, cantidad, hecho);
+    await dbDriver.insertarTareaMaterial(mail, nombre, apellidos, aula, materialInt, cantidad, hecho);
   }
 
   // -----------------------------

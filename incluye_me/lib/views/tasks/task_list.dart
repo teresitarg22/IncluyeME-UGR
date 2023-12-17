@@ -579,13 +579,12 @@ class _TaskListPageState extends State<TaskListPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MaterialView(
-                                userName: 'Teresa',
-                                userSurname: 'Reyes',
-                                majMin: 'Mayuscula',
-                                sabeLeer: false,
-                                taskID: 99,),
-                          ));
+                            builder: (context) => PedirMaterial(
+                              userName: widget.userName,
+                              userSurname: widget.userSurname,
+                          )
+                        )
+                      );
                     },
                     // --------------------------
                     style: ElevatedButton.styleFrom(

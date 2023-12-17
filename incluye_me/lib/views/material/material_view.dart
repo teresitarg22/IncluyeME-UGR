@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import '../components/bottom_navigation_bar.dart';
-import '../controllers/task_controller.dart' as TC;
-import '../controllers/user_controller.dart' as UC;
+import '../../components/bottom_navigation_bar.dart';
+import '../../controllers/task_controller.dart' as TC;
+import '../../controllers/user_controller.dart' as UC;
 
 class MaterialView extends StatefulWidget {
   String userName;
   String userSurname;
-  String majMin;
   bool sabeLeer;
   int taskID;
 
-  MaterialView({Key? key, required this.userName, required this.userSurname, required this.majMin, required this.sabeLeer, required this.taskID}) : super(key: key);
+  MaterialView({Key? key, required this.userName, required this.userSurname, required this.sabeLeer, required this.taskID}) : super(key: key);
 
   @override
   _MaterialViewState createState() => _MaterialViewState();

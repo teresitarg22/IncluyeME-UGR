@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
+import 'package:incluye_me/views/material/material_view.dart';
 
 class StudentInterface extends StatefulWidget {
   final String nombre;
   final String apellidos;
+  final bool sabeLeer;
 
   const StudentInterface({
     super.key,
     required this.nombre,
     required this.apellidos,
+    required this.sabeLeer,
   });
 
   @override
@@ -134,40 +137,52 @@ class _StudentInterfaceState extends State<StudentInterface> {
                   child: ListView.builder(
                     itemCount: tareasPendientes.length,
                     itemBuilder: (BuildContext context, int index) {
+                      String tareaNombre = tareasPendientes[index]['tarea']?['nombre'];
+
                       return InkWell(
-                          child: Card(
-                              color: const Color.fromARGB(255, 241, 233, 255),
-                              margin: const EdgeInsets.only(
-                                  top: 8.0,
-                                  bottom: 5.0,
-                                  left: 15.0,
-                                  right: 15.0),
-                              child: ListTile(
-                                title: GestureDetector(
-                                  // ----------------------
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        "${tareasPendientes[index]['tarea']?['nombre']}",
-                                        style: const TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 76, 76, 76),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                    ],
+                        onTap: () {
+                          if (tareaNombre == 'tarea_material') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MaterialView(userName: widget.nombre, userSurname: widget.apellidos, sabeLeer: widget.sabeLeer, taskID: tareasPendientes[index]['tarea']?['id']),
+                              ),
+                            );
+                          }
+                        },
+                        child: Card(
+                          color: const Color.fromARGB(255, 241, 233, 255),
+                          margin: const EdgeInsets.only(
+                            top: 8.0,
+                            bottom: 5.0,
+                            left: 15.0,
+                            right: 15.0,
+                          ),
+                          child: ListTile(
+                            title: GestureDetector(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "$tareaNombre",
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 76, 76, 76),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                leading: const Icon(
-                                  Icons.task_outlined,
-                                  size: 35,
-                                ),
-                              )));
+                                  const SizedBox(height: 8),
+                                ],
+                              ),
+                            ),
+                            leading: const Icon(
+                              Icons.task_outlined,
+                              size: 35,
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),

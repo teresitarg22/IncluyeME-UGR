@@ -331,7 +331,7 @@ class DataBaseDriver {
 
   // ----------------------------------------------------
   // Funcion para añadir a las tablas tarea y tarea_material las informaciones necesarias
-  Future<void> insertarTareaMaterial(String mail, String aula, List<int> material, List<int> cantidad, List<bool> hecho) async {
+  Future<void> insertarTareaMaterial(String mail, String nombre, String apeliidos, String aula, List<int> material, List<int> cantidad, List<String> hecho) async {
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     await request(
         "INSERT INTO tarea(nombre, completada, fecha_tarea) VALUES ('tarea_material', false, '$date')");
@@ -347,7 +347,9 @@ class DataBaseDriver {
     cantidad_list = "$cantidad_list}";
     hecho_list = "$hecho_list}";
     await request(
-        "INSERT INTO tarea_material VALUES ('$id', '$mail', '$aula', '$material_list', '$cantidad_list', $hecho_list)");
+        "INSERT INTO tarea_material VALUES ('$id', '$mail', '$aula', '$material_list', '$cantidad_list', '$hecho_list')");
+    await request(
+        "INSERT INTO asignada VALUES ('$id', '$nombre', '$apeliidos')");
   }
 
   // ----------------------------------------------------
