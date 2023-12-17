@@ -8,7 +8,7 @@ import '../material/material_task.dart';
 import '../general/add_general_task.dart';
 import '../../model/general_task.dart';
 import '../command/command_task_asign.dart';
-import '../material_view.dart';
+import '../material/material_view.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
