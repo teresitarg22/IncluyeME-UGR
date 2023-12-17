@@ -596,11 +596,11 @@ class _TaskListPageState extends State<TaskListPage> {
                       // Usamos un Row para colocar el icono y el texto horizontalmente.
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.add),
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Nueva Tarea Reparto Material',
-                            style:
-                                TextStyle(fontSize: 16)), // El texto del botón.
                       ],
                     ),
                   ),

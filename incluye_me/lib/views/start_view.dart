@@ -16,6 +16,7 @@ class StartView extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: LayoutBuilder(
