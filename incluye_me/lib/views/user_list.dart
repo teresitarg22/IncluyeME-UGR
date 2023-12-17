@@ -93,8 +93,12 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Usuarios'),
+        title: const Text(
+          'Lista Usuarios',
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             onPressed: () {
@@ -332,10 +336,12 @@ class _UserListPageState extends State<UserListPage> {
                 // Usamos un Row para colocar el icono y el texto horizontalmente.
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.add, color: Colors.white), 
+                  Icon(Icons.add, color: Colors.white),
                   SizedBox(width: 8.0),
                   Text('Nuevo Usuario',
-                      style: TextStyle(color: Colors.white, fontSize: 16)), // El texto del botón.
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16)), // El texto del botón.
                 ],
               ),
             ),

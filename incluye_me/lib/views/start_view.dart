@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/login/student_login_view.dart';
-import 'package:path/path.dart';
 import 'login/teacher_login_view.dart';
 
 class StartView extends StatelessWidget {
@@ -10,8 +9,14 @@ class StartView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bienvenido a Incluye-Me'),
+        title: const Text(
+          'Bienvenido a Incluye-Me',
+          style: TextStyle(
+            color: Colors.white, // Cambia el color del texto a blanco
+          ),
+        ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: LayoutBuilder(
@@ -136,6 +141,7 @@ class StartView extends StatelessWidget {
                 padding: const EdgeInsets.all(2.0),
                 child: Image.asset(
                   imagePath,
+                  semanticLabel: buttonText,
                   fit: BoxFit.cover,
                   height: iconSize,
                   width: iconSize,

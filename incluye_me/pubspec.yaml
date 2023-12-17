@@ -59,6 +59,7 @@ dev_dependencies:
   image: ^3.0.2
   shared_preferences: ^2.0.6
   flutter_typeahead: ^4.8.0
+  responsive_builder: ^0.4.0
 
 
   # The "flutter_lints" package below contains a set of recommended lints to

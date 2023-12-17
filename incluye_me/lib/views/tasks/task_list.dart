@@ -177,18 +177,6 @@ class _TaskListPageState extends State<TaskListPage> {
                       });
 
                       return InkWell(
-                        // onTap: () {
-                        //   Navigator.push(context,
-                        //       MaterialPageRoute(builder: (context) {
-                        //     return TaskDetailsPage(
-                        //       taskID: tareas[index]['tarea']['id'],
-                        //       tipo: tipo,
-                        //       userName: widget.userName,
-                        //       userSurname: widget.userSurname,
-                        //     );
-                        //   }));
-                        // },
-                        // ---------------------------------------
                         child: Card(
                           color: tareas[index]['tarea']['completada']
                               ? Color.fromARGB(255, 229, 250, 238)
@@ -505,10 +493,8 @@ class _TaskListPageState extends State<TaskListPage> {
                                     "${tareas[index]?['tarea']?['nombre']}",
                                     style: const TextStyle(
                                       color: Color.fromARGB(255, 76, 76, 76),
-                                      fontSize:
-                                          14, // Tamaño de fuente más grande.
-                                      fontWeight:
-                                          FontWeight.bold, // Texto en negrita.
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -614,11 +600,11 @@ class _TaskListPageState extends State<TaskListPage> {
                       // Usamos un Row para colocar el icono y el texto horizontalmente.
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.add),
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
                         SizedBox(width: 8.0),
-                        Text('Nueva Tarea Reparto Material',
-                            style:
-                                TextStyle(fontSize: 16)), // El texto del botón.
                       ],
                     ),
                   ),
