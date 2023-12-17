@@ -3,6 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
 import '../components/bottom_navigation_bar.dart';
 
+// --------------------------------------------------------------------------------------------
+
 class EstadisticaPage extends StatefulWidget {
   String nombre;
   String apellidos;
@@ -18,6 +20,8 @@ class EstadisticaPage extends StatefulWidget {
   @override
   _EstadisticaPageState createState() => _EstadisticaPageState();
 }
+
+// --------------------------------------------------------------------------------------------
 
 class _EstadisticaPageState extends State<EstadisticaPage> {
   Controller controlador = Controller();
@@ -41,10 +45,14 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
     });
   }
 
+  // -------------------------------------------------------------------
+
   Future<List<Map<String, dynamic>>> setTareas() async {
     return controlador.getTareaAsignadaPorEstudiante(
         widget.nombre, widget.apellidos);
   }
+
+  // -------------------------------------------------------------------
 
   Future<void> setDatos() async {
     var tareas = await tareasFuture;
@@ -72,6 +80,8 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
     }
   }
 
+  // -------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +103,7 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
                 centerSpaceRadius: 60,
                 sections: loadDatos(),
               ))
-          : Center(
+          : const Center(
               child: CircularProgressIndicator(),
             ),
       bottomNavigationBar: CustomNavigationBar(
@@ -110,7 +120,7 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
         value: tareasCompletadasPorcentaje,
         title: 'Tareas Realizadas: ${tareasCompletadas}',
         radius: 80,
-        titleStyle: TextStyle(
+        titleStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -121,7 +131,7 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
         value: tareasNoCompletadasPorcentaje,
         title: ' Tareas No Realizadas: ${tareasNoCompletadas}',
         radius: 80,
-        titleStyle: TextStyle(
+        titleStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.black,

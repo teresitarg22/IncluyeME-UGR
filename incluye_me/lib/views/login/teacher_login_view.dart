@@ -92,8 +92,14 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login Profesores'),
+        title: const Text(
+          'Login Profesores',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -162,11 +168,12 @@ class _TeacherLoginViewState extends State<TeacherLoginView> {
                     _handleLogin();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue, // Color del botón
+                    backgroundColor: Colors.blue, // Color del botón
                   ),
-                  child: Text(
+                  child: const Text(
                     'Iniciar sesión',
                     style: TextStyle(
+                      fontSize: 17,
                       color: Colors.white, // Color del texto a blanco
                     ),
                   ),
