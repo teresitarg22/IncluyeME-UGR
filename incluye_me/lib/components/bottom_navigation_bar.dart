@@ -23,42 +23,43 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Colors.blue,
-      currentIndex: _currentIndex,
       onTap: (int index) {
-        setState(() {
-          _currentIndex = index;
-          currentBottomNavigationBarIndex = index;
-        });
-
         if (index == 0) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserListPage(
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/userList') {
+            print(currentRouteName);
+            print("Test");
+            Navigator.pushReplacementNamed(context, '/userList', arguments: {
+              'userName': teacher!.getName(),
+              'userSurname': teacher!.getSurnames(),
+            });
+          }
         } else if (index == 1) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return TaskListPage(
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          // Lógica para la pestaña "Tareas"
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/taskList') {
+            print(currentRouteName);
+            print("Test");
+            Navigator.pushReplacementNamed(context, '/taskList', arguments: {
+              'userName': teacher!.getName(),
+              'userSurname': teacher!.getSurnames(),
+            });
+          }
+
         } else if (index == 2) {
-          // Lógica para la pestaña "Chat"
+          // Lógica para la pestaña "Gráficos"
         } else if (index == 3) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserDetailsPage(
-              nombre: widget.userName,
-              apellidos: widget.userSurname,
-              esEstudiante: false,
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          // Lógica para la pestaña "Chat"
         } else if (index == 4) {
-          Navigator.pushNamed(context, '/');
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/userDetails') {
+            print(currentRouteName);
+            print("Test");
+            Navigator.pushReplacementNamed(context, '/userDetails');
+          }
+        } else if (index == 5) {
+          teacher = null;
+          Navigator.pushReplacementNamed(context, '/');
         }
       },
       items: const <BottomNavigationBarItem>[
@@ -71,6 +72,11 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           backgroundColor: Colors.blue,
           icon: Icon(Icons.assignment, color: Colors.white),
           label: 'Tareas',
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Colors.blue,
+          icon: Icon(Icons.bar_chart, color: Colors.white),
+          label: 'Gráficos',
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,

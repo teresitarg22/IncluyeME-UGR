@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="66290c39-47ed-4d83-a60b-dc4daaac8cad" name="Changes" comment="" />
+    <list default="true" id="66290c39-47ed-4d83-a60b-dc4daaac8cad" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,7 +30,7 @@
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "C:/Users/anton/Desktop/incluye-me/DGP-IncluyeME",
+    "last_opened_file_path": "C:/Users/anton/Desktop/incluyeme/DGP-IncluyeME/incluye_me",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
