@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/commad_task_create.dart';
-import 'package:incluye_me/views/task_view.dart';
-import '../controllers/session_controller.dart';
-import '../controllers/task_controller.dart';
-import '../components/bottom_navigation_bar.dart';
-import 'pedir_material.dart';
-import '../views/add_general_task.dart';
-import '../model/general_task.dart';
-import 'task_asign.dart';
+import 'package:incluye_me/views/command/commad_task_create.dart';
+import 'package:incluye_me/views/tasks/task_view.dart';
+import '../../controllers/session_controller.dart';
+import '../../controllers/task_controller.dart';
+import '../../components/bottom_navigation_bar.dart';
+import '../material/material_task.dart';
+import '../general/add_general_task.dart';
+import '../../model/general_task.dart';
+import '../command/command_task_asign.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -314,6 +314,7 @@ class _TaskListPageState extends State<TaskListPage> {
                             ),
                           ),
                         ),
+                      ),
                       );
                     },
                   ),
@@ -541,7 +542,7 @@ class _TaskListPageState extends State<TaskListPage> {
                                       fontSize:
                                           14, // Tamaño de fuente más grande
                                       fontWeight:
-                                      FontWeight.bold, // Texto en negrita.
+                                      FontWeight.bold, // Texto en negrita
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -643,9 +644,11 @@ class _TaskListPageState extends State<TaskListPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => PedirMaterial(
-                                userName: widget.userName,
-                                userSurname: widget.userSurname),
-                          ));
+                              userName: widget.userName,
+                              userSurname: widget.userSurname,
+                          )
+                        )
+                      );
                     },
                     // --------------------------
                     style: ElevatedButton.styleFrom(
@@ -660,12 +663,15 @@ class _TaskListPageState extends State<TaskListPage> {
                       // Usamos un Row para colocar el icono y el texto horizontalmente.
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.add),
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
                         SizedBox(width: 8.0),
                         Text('Nueva Tarea Reparto Material',
                             style:
                             TextStyle(fontSize: 16)), // El texto del botón.
-                      ],
+                     ],
                     ),
                   ),
                 ),

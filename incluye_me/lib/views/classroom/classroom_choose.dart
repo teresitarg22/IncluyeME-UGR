@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/task_asign.dart';
-import 'command_task.dart';
-import '../controllers/registro_controller.dart';
-import 'summary_page.dart';
+import 'package:incluye_me/views/command/command_task_asign.dart';
+import '../command/command_task.dart';
+import '../../controllers/register_controller.dart';
+import '../summary_page.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../globals/globals.dart';
-import '../components/bottom_navigation_bar.dart';
-import '../model/general_task.dart';
-import '../controllers/task_controller.dart';
-import '../views/add_general_task.dart';
+import '../../controllers/task_controller.dart';
+import '../../model/general_task.dart';
+import 'add_general_task.dart';
 
 class TaskView extends StatefulWidget {
   final Controller controller;
@@ -84,8 +82,8 @@ class _TaskViewState extends State<TaskView> {
                     },
                     child: Text('Añadir Tarea'),
                     style: ElevatedButton.styleFrom(
-                      primary: const Color(0xFF29DA81),
-                      onPrimary: Colors.white,
+                      backgroundColor: const Color(0xFF29DA81),
+                      foregroundColor: Colors.white,
                     ),
                   ),
                 ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/command_task_image.dart';
-import '../controllers/usuario_controller.dart';
-import 'sumary_page_image.dart';
+import 'package:incluye_me/views/command/command_task_image.dart';
+import '../../controllers/user_controller.dart';
+import '../sumary_page_image.dart';
 
 void main() {
   runApp(const MyApp());

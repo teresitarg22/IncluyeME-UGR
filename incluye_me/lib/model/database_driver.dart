@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import 'package:postgres/postgres.dart';
 import 'package:incluye_me/model/general_task.dart';
@@ -272,8 +273,9 @@ class DataBaseDriver {
   Future<int> insertarTarea(String nombre, DateTime fecha) async {
     final results = await request(
         "INSERT INTO tarea (nombre, fecha_tarea) VALUES ('$nombre', '$fecha') RETURNING id");
-    var primeraFila = results.first ;
-    var id = primeraFila['tarea']!['id'] ;
+
+    var primeraFila = results.first;
+    var id = primeraFila['tarea']!['id'];
     return int.parse(id.toString());
   }
   // ----------------------------------------------------
@@ -365,7 +367,6 @@ class DataBaseDriver {
     }
   }
 
-=======
   // Función para obtener el id de las tareas asginadas de un alumno
   Future<List<Map<String, Map<String, dynamic>>>> getTareasAsignadas(
       String nombre, String apellidos) async {
@@ -397,5 +398,71 @@ class DataBaseDriver {
   // Funcion para marcar una tarea como completada
   Future<void> completarTarea(int id) async {
     await request("UPDATE tarea SET completada = true WHERE id = $id");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para añadir a las tablas tarea y tarea_material las informaciones necesarias
+  Future<void> insertarTareaMaterial(String mail, String nombre, String apeliidos, String aula, List<int> material, List<int> cantidad, List<String> hecho) async {
+    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    await request(
+        "INSERT INTO tarea(nombre, completada, fecha_tarea) VALUES ('tarea_material', false, '$date')");
+    int id = (await request("SELECT max(id) FROM tarea"))[0][""]!["max"];
+    String material_list = "{${material[0]}", cantidad_list ="{${cantidad[0]}", hecho_list = "{${hecho[0]}";
+    for(int i = 1; i<material.length; i++)
+    {
+        material_list = "$material_list, ${material[i]}";
+        cantidad_list = "$cantidad_list, ${cantidad[i]}";
+        hecho_list = "$hecho_list, ${hecho[i]}";
+    }
+    material_list = "$material_list}";
+    cantidad_list = "$cantidad_list}";
+    hecho_list = "$hecho_list}";
+    await request(
+        "INSERT INTO tarea_material VALUES ('$id', '$mail', '$aula', '$material_list', '$cantidad_list', '$hecho_list')");
+    await request(
+        "INSERT INTO asignada VALUES ('$id', '$nombre', '$apeliidos')");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
+  Future<List<Map<String, Map<String, dynamic>>>> monstrarTareaMaterial (String mail, DateTime fecha) async {
+    return await request(
+        "SELECT tm.id_tarea, ta.fecha_tarea, ta.completada, tm.aula, ARRAY_AGG(lm.nombre) AS nombres, cantidad FROM tarea_material tm JOIN lista_material lm ON tm.material @> ARRAY[lm.id] JOIN tarea ta ON tm.id_tarea = ta.id WHERE tm.correo_estudiante = '$mail' AND ta.fecha_tarea = '$fecha' GROUP BY tm.id_tarea, ta.fecha_tarea, ta.completada;");
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> monstrarListaMaterial () async {
+    return await request(
+        "SELECT * FROM lista_material"
+    );
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> materialNombreToID (String ID) async {
+    return await request(
+      "SELECT id FROM lista_material WHERE nombre = '$ID';"
+    );
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> materialIDToNombre (int ID) async {
+    return await request(
+      "SELECT nombre FROM lista_material WHERE id = $ID;"
+    );
+  }
+
+  Future<List<Map<String, Map<String, dynamic>>>> getListMaterial (int ID) async {
+    return await request(
+      "SELECT material, cantidad, hecho FROM tarea_material WHERE id_tarea = $ID;"
+    );
+  }
+
+  Future<void> saveHechoMaterial(String hecho, int ID) async {
+    await request(
+      "UPDATE tarea_material SET hecho = '$hecho' where id_tarea = $ID"
+    );
+  }
+
+  Future<void> taskDone(int ID) async {
+    await request(
+      "UPDATE tarea SET completada = 'true' where id = $ID"
+    );
   }
 }

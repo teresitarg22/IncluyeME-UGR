@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/mostrar_usuario.dart';
 import 'package:incluye_me/views/start_view.dart';
-import 'globals/globals.dart';
-import 'views/registro.dart';
+import 'views/register/register.dart';
 import 'views/user_list.dart';
-import 'package:incluye_me/globals/globals.dart';
-import 'views/general_task_manager.dart';
-import 'views/add_general_task.dart';
-import 'controllers/task_controller.dart';
 
 // -------------------------------------------------------------------
 

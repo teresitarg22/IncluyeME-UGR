@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:incluye_me/views/task_list.dart';
+import 'package:incluye_me/views/tasks/task_list.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
-import '../controllers/usuario_controller.dart';
+import '../../controllers/user_controller.dart';
 import '../views/user_list.dart';
 import '../views/home_view.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';

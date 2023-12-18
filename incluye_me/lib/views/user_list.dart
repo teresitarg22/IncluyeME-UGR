@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/estadisticasPage.dart';
 import '../components/bottom_navigation_bar.dart';
-import 'mostrar_usuario.dart';
+import 'user_details.dart';
 import 'edit_user.dart';
-import '../controllers/usuario_controller.dart';
+import '../controllers/user_controller.dart';
 import '../controllers/session_controller.dart';
 
 // --------------------------------------------
@@ -94,8 +93,12 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Usuarios'),
+        title: const Text(
+          'Lista Usuarios',
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             onPressed: () {
@@ -234,21 +237,6 @@ class _UserListPageState extends State<UserListPage> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (tipo == "estudiante")
-                            IconButton(
-                                icon: Icon(Icons.bar_chart,
-                                    color: Color.fromARGB(255, 76, 76, 76)),
-                                onPressed: () => Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return EstadisticaPage(
-                                        nombre: filteredUsers[index][tipo]
-                                            ['nombre'],
-                                        apellidos: filteredUsers[index][tipo]
-                                            ['apellidos'],
-                                        userName: widget.userName,
-                                        userSurname: widget.userSurname,
-                                      );
-                                    }))),
                           // ------------------------------------
                           IconButton(
                             icon: const Icon(Icons.edit,
@@ -348,10 +336,12 @@ class _UserListPageState extends State<UserListPage> {
                 // Usamos un Row para colocar el icono y el texto horizontalmente.
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.add),
+                  Icon(Icons.add, color: Colors.white),
                   SizedBox(width: 8.0),
                   Text('Nuevo Usuario',
-                      style: TextStyle(fontSize: 16)), // El texto del botón.
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16)), // El texto del botón.
                 ],
               ),
             ),
@@ -473,24 +463,8 @@ class _UserListPageState extends State<UserListPage> {
                         Icons.person,
                         size: 45,
                       ),
-                      trailing: Row(
+                      trailing: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              icon: Icon(Icons.bar_chart,
-                                  color: Color.fromARGB(255, 76, 76, 76)),
-                              onPressed: () => Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return EstadisticaPage(
-                                      nombre: filteredUsers[index]['estudiante']
-                                          ['nombre'],
-                                      apellidos: filteredUsers[index]
-                                          ['estudiante']['apellidos'],
-                                      userName: widget.userName,
-                                      userSurname: widget.userSurname,
-                                    );
-                                  }))),
-                        ],
                       ),
                     ),
                   ),
