@@ -23,7 +23,12 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      currentIndex: _currentIndex,
       onTap: (int index) {
+        setState(() {
+          _currentIndex = index;
+          currentBottomNavigationBarIndex = index;
+        });
         if (index == 0) {
           String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
           if (currentRouteName != '/userList') {
