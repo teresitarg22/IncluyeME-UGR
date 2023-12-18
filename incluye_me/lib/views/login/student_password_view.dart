@@ -179,6 +179,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                                   return const StudentInterface(
                                     nombre: "Sergio",
                                     apellidos: "Lopez",
+                                    sabeLeer: false,
                                   );
                                 }));
                               });
