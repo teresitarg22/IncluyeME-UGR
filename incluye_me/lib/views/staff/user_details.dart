@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/controllers/session_controller.dart';
 import '../../components/bottom_navigation_bar.dart';
-import '../../globals/globals.dart';
-import 'package:incluye_me/views/tasks/task_list.dart';
 import '../../model/student.dart';
 import '../../model/user.dart';
-import 'user_list.dart';
 import '../../controllers/user_controller.dart';
 
 // ----------------------------------------------------------
@@ -34,6 +30,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   final Controller controlador = Controller();
   var resultado;
   User? user;
+
+  // -------------------------
 
   @override
   void initState() {
@@ -84,12 +82,18 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     }
   }
 
+  // --------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalles del Usuario'),
+        title: const Text(
+          'Detalles del Usuario',
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
         backgroundColor: Colors.blue,
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -127,6 +131,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // -----------------------------
                         const Text(
                           'Información personal',
                           style: TextStyle(
@@ -135,10 +140,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
+                        // -----------------------------
                         const SizedBox(height: 10),
                         // -----------------------------
                         Row(
                           children: [
+                            // -----------------------------
                             const Text(
                               'Nombre:',
                               style: TextStyle(
@@ -155,10 +162,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 4),
                         // -----------------------------
                         Row(
                           children: [
+                            // -----------------------------
                             const Text(
                               'Apellido:',
                               style: TextStyle(
@@ -179,6 +188,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         // -----------------------------
                         Row(
                           children: [
+                            // -----------------------------
                             const Text('Email:',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
@@ -191,7 +201,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 10),
+                        // -----------------------------
                         const Text(
                           'Autentificación',
                           style: TextStyle(
@@ -200,6 +212,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
+                        // -----------------------------
                         const SizedBox(height: 10),
                         // -----------------------------
                         Row(
@@ -220,6 +233,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 4),
                         // -----------------------------
                         Row(
@@ -243,7 +257,9 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 10),
+                        // -----------------------------
                         Text(
                           widget.esEstudiante ? 'Accesibilidad' : "",
                           style: const TextStyle(
@@ -252,6 +268,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
+                        // -----------------------------
                         const SizedBox(height: 10),
                         // -----------------------------
                         Row(
@@ -274,6 +291,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 4),
                         // -----------------------------
                         Row(
@@ -298,6 +316,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 4),
                         // -----------------------------
                         Row(
@@ -320,6 +339,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 4),
                         // -----------------------------
                         Row(
@@ -344,6 +364,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             ),
                           ],
                         ),
+                        // -----------------------------
                         const SizedBox(height: 4),
                       ],
                     ),
@@ -352,6 +373,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               ]),
         ),
       ),
+      // --------------------------------------------------------------------------
       bottomNavigationBar: CustomNavigationBar(
           userName: widget.userName, userSurname: widget.userSurname),
     );

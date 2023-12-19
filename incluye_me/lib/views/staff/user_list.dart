@@ -98,31 +98,29 @@ class _UserListPageState extends State<UserListPage> {
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         backgroundColor: Colors.blue,
+        automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             onPressed: () {
-              // Abre un cuadro de diálogo para la búsqueda.
+              // Cuadro de diálogo para la búsqueda.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  String query =
-                      ''; // Variable para almacenar la consulta de búsqueda.
+                  String query = '';
 
                   return AlertDialog(
                     title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
-                        query =
-                            text; // Almacena la consulta a medida que se escribe.
+                        query = text;
                       },
                     ),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          // Cierra el cuadro de diálogo y realiza la búsqueda
                           Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query".
+
                           var searchResults = usuarios.where((user) {
                             final estudianteNombre =
                                 user['estudiante']?['nombre']?.toLowerCase() ??
@@ -136,9 +134,7 @@ class _UserListPageState extends State<UserListPage> {
                                 personalNombre.contains(query.toLowerCase());
                           }).toList();
 
-                          // Filtra la lista de usuarios según "query".
                           setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
                             filteredUsers.clear();
                             filteredUsers.addAll(searchResults
                                 .cast<Map<String, Map<String, dynamic>>>());
@@ -151,8 +147,9 @@ class _UserListPageState extends State<UserListPage> {
                 },
               );
             },
-            icon: const Icon(Icons.search), // Icono de lupa.
+            icon: const Icon(Icons.search),
           ),
+          // -----------------------------
           DropdownButton<String?>(
             value: selectedFilter,
             onChanged: (String? newValue) {
@@ -170,6 +167,7 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
+      // -------------------------------------------------------
       body: Column(
         children: [
           Expanded(
@@ -206,6 +204,7 @@ class _UserListPageState extends State<UserListPage> {
                       );
                     }));
                   },
+                  // -----------------------------
                   child: Card(
                     margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
@@ -228,6 +227,7 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
+                      // -----------------------------
                       subtitle:
                           Text(filteredUsers[index][tipo]?['correo'] ?? ''),
                       leading: const Icon(
@@ -361,32 +361,34 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Alumnos'),
+        title: const Text(
+          'Lista de Estudiantes',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () {
-              // Abre un cuadro de diálogo para la búsqueda.
+              // Cuadro de diálogo para la búsqueda.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  String query =
-                      ''; // Variable para almacenar la consulta de búsqueda.
+                  String query = '';
 
                   return AlertDialog(
                     title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
-                        query =
-                            text; // Almacena la consulta a medida que se escribe.
+                        query = text;
                       },
                     ),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          // Cierra el cuadro de diálogo y realiza la búsqueda.
                           Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query".
+
                           var searchResults = estudiantes
                               .where((user) =>
                                   user['nombre'] != null &&
@@ -394,9 +396,8 @@ class _UserListPageState extends State<UserListPage> {
                                       .toLowerCase()
                                       .contains(query.toLowerCase()))
                               .toList();
-                          // Filtra la lista de usuarios según "query".
+                          // -----------------------------
                           setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
                             filteredUsers.clear();
                             filteredUsers.addAll(searchResults
                                 .cast<Map<String, Map<String, dynamic>>>());
@@ -409,7 +410,7 @@ class _UserListPageState extends State<UserListPage> {
                 },
               );
             },
-            icon: const Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search),
           ),
         ],
       ),
@@ -434,6 +435,7 @@ class _UserListPageState extends State<UserListPage> {
                       );
                     }));
                   },
+                  // -----------------------------
                   child: Card(
                     margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
@@ -451,6 +453,7 @@ class _UserListPageState extends State<UserListPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            // -----------------------
                             const SizedBox(height: 4),
                           ],
                         ),

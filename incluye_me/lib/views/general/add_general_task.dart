@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/model/general_task.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/controllers/task_controller.dart';
 
 class AddTaskView extends StatefulWidget {
   final Function(Tarea) onAddTask;
+  final TaskController controller;
 
-  AddTaskView({Key? key, required this.onAddTask}) : super(key: key);
+  AddTaskView({Key? key, required this.onAddTask, required this.controller}) : super(key: key); // Agrega controller aquí
 
   @override
   _AddTaskPageState createState() => _AddTaskPageState();
@@ -16,13 +19,20 @@ class _AddTaskPageState extends State<AddTaskView> {
 
   void addPaso() {
     setState(() {
-      pasos.add(Paso(descripcion: '', imagen: ''));
+      pasos.add(Paso(descripcion: '', imagen: '', propietario: teacher!.getName() + ' ' + teacher!.getSurnames()));
     });
   }
 
-  void _saveTask() {
-    final tarea = Tarea(titulo: _titleController.text, pasos: pasos);
+  void _saveTask() async {
+    List<int> indicesPasos = await widget.controller.insertarPasosYObtenerIds(pasos);
+    final tarea = Tarea(
+        titulo: _titleController.text,
+        indicesPasos: indicesPasos,
+        propietario: teacher!.getName() + ' ' + teacher!.getSurnames()
+    );
+    await widget.controller.addTarea(tarea.titulo, false, DateTime.now());
     widget.onAddTask(tarea);
+
     Navigator.pop(context);
   }
 

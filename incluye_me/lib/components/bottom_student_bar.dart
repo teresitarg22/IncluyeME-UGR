@@ -32,23 +32,39 @@ class _StudentNavigationBarState extends State<StudentNavigationBar> {
         });
 
         if (index == 0) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return StudentTasks(
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          // ----------------------------------------------------------
+          // Lista de tareas del estudiante
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/studentTasks') {
+            print(currentRouteName);
+            print("Test");
+            Navigator.pushReplacementNamed(context, '/studentTasks',
+                arguments: {
+                  'userName': widget.userName,
+                  'userSurname': widget.userSurname,
+                });
+          }
         } else if (index == 1) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return StudentDetailsPage(
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          // ----------------------------------------------------------
+          // Detalles del estudiante
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/studentDetails') {
+            print(currentRouteName);
+            print("Test");
+            Navigator.pushReplacementNamed(context, '/studentDetails',
+                arguments: {
+                  'userName': widget.userName,
+                  'userSurname': widget.userSurname,
+                });
+          }
         } else if (index == 2) {
-          Navigator.pushNamed(context, '/');
+          // ----------------------------------------------------------
+          // Cerrar sesión
+          teacher = null;
+          Navigator.pushReplacementNamed(context, '/');
         }
       },
+      // ----------------------------------------------------------
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,

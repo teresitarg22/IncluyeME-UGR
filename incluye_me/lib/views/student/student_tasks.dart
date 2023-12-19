@@ -264,6 +264,7 @@ class _StudentTasksState extends State<StudentTasks> {
                                     ],
                                   ),
                                 ),
+                                // -----------------------------
                                 leading: CircleAvatar(
                                   radius: 17.5,
                                   backgroundColor: Colors.transparent,

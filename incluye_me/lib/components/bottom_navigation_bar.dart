@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-
 import '../globals/globals.dart';
-import '../views/tasks/task_list.dart';
-import '../views/staff/user_list.dart';
-import '../views/staff/user_details.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   final String userName;
   final String userSurname;
 
   const CustomNavigationBar(
-      {required this.userName, required this.userSurname});
+      {super.key, required this.userName, required this.userSurname});
 
   @override
   _CustomNavigationBarState createState() => _CustomNavigationBarState();
 }
+
+// ----------------------------------------------------------
 
 class _CustomNavigationBarState extends State<CustomNavigationBar> {
   int _currentIndex = currentBottomNavigationBarIndex;
@@ -22,44 +20,60 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Colors.blue,
       currentIndex: _currentIndex,
       onTap: (int index) {
         setState(() {
           _currentIndex = index;
           currentBottomNavigationBarIndex = index;
         });
-
+        // -----------------------
         if (index == 0) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserListPage(
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          // ----------------------------------------------------------
+          // Lista de usuarios
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/userList') {
+            print(currentRouteName);
+            print("Test");
+            Navigator.pushReplacementNamed(context, '/userList', arguments: {
+              'userName': teacher!.getName(),
+              'userSurname': teacher!.getSurnames(),
+            });
+          }
         } else if (index == 1) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return TaskListPage(
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          // ----------------------------------------------------------
+          // Lista de tareas
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/taskList') {
+            Navigator.pushReplacementNamed(context, '/taskList', arguments: {
+              'userName': teacher!.getName(),
+              'userSurname': teacher!.getSurnames(),
+            });
+          }
         } else if (index == 2) {
-          // Lógica para la pestaña "Chat"
+          // ----------------------------------------------------------
+          // Gráficos
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/graphics') {
+            Navigator.pushReplacementNamed(context, '/graphics', arguments: {
+              'userName': teacher!.getName(),
+              'userSurname': teacher!.getSurnames(),
+            });
+          }
         } else if (index == 3) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserDetailsPage(
-              nombre: widget.userName,
-              apellidos: widget.userSurname,
-              esEstudiante: false,
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
+          // ----------------------------------------------------------
+          // Detalles del usuario
+          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
+          if (currentRouteName != '/userDetails') {
+            Navigator.pushReplacementNamed(context, '/userDetails');
+          }
         } else if (index == 4) {
-          Navigator.pushNamed(context, '/');
+          // ----------------------------------------------------------
+          // Cerrar sesión
+          teacher = null;
+          Navigator.pushReplacementNamed(context, '/');
         }
       },
+      // ----------------------------------------------------------
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,
@@ -73,8 +87,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,
-          icon: Icon(Icons.chat, color: Colors.white),
-          label: 'Chat',
+          icon: Icon(Icons.bar_chart, color: Colors.white),
+          label: 'Gráficos',
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,
@@ -89,6 +103,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ],
     );
   }
+
+  // ----------------------------------------------------------
 
   void navigateToRoute(BuildContext context, String newRouteName,
       [Map<String, dynamic> Function()? getArguments]) {

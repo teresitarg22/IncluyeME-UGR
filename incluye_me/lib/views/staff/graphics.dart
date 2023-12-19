@@ -5,13 +5,13 @@ import '../../components/bottom_navigation_bar.dart';
 
 // --------------------------------------------------------------------------------------------
 
-class EstadisticaPage extends StatefulWidget {
+class GraphicsPage extends StatefulWidget {
   final String nombre;
   final String apellidos;
   final String userName;
   final String userSurname;
 
-  EstadisticaPage(
+  GraphicsPage(
       {super.key,
       required this.nombre,
       required this.apellidos,
@@ -19,12 +19,12 @@ class EstadisticaPage extends StatefulWidget {
       required this.userSurname});
 
   @override
-  _EstadisticaPageState createState() => _EstadisticaPageState();
+  _GraphicsPageState createState() => _GraphicsPageState();
 }
 
 // --------------------------------------------------------------------------------------------
 
-class _EstadisticaPageState extends State<EstadisticaPage> {
+class _GraphicsPageState extends State<GraphicsPage> {
   TaskController controlador = TaskController();
   var tareasFuture;
   bool datosCargados = false;
@@ -36,6 +36,8 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
 
   double tareasCompletadasPorcentaje = 50.0;
   double tareasNoCompletadasPorcentaje = 50.0;
+
+  // --------------------------------------------------------------------
 
   @override
   void initState() {
@@ -88,12 +90,13 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Gráfico Semanal',
-          style: TextStyle(fontSize: 20),
+          'Gráfica Semanal',
+          style: TextStyle(fontSize: 20, color: Colors.white),
           textAlign: TextAlign.center,
           selectionColor: Colors.white,
         ),
         backgroundColor: Colors.blue,
+        automaticallyImplyLeading: false,
       ),
       body: datosCargados
           ? PieChart(
@@ -113,6 +116,8 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
       ),
     );
   }
+
+  // --------------------------------------------------------------
 
   List<PieChartSectionData> loadDatos() {
     return [

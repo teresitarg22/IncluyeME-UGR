@@ -16,15 +16,19 @@ class StudentDetailsPage extends StatefulWidget {
   _StudentDetailsPageState createState() => _StudentDetailsPageState();
 }
 
+// ----------------------------------------------------------------------
+
 class _StudentDetailsPageState extends State<StudentDetailsPage> {
   List<Map<String, dynamic>> tareasPendientes = [];
   List<Map<String, dynamic>> tareasCompletadas = [];
+
   double tareasCompletadasPorcentaje = 50.0;
   double tareasNoCompletadasPorcentaje = 50.0;
   int tareasTotales = 0;
 
   final TaskController taskController = TaskController();
   final Controller detailController = Controller();
+
   var resultado;
   User? user;
 
@@ -54,14 +58,12 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
   // -----------------------------------------------------------------
 
   Future<void> setTareas() async {
-    // Llama a la función que obtiene las tareas asignadas
     List<Map<String, dynamic>> tareasAsignadas =
         await taskController.getTareaAsignadaPorEstudiante(
       widget.userName,
       widget.userSurname,
     );
 
-    // Inicializa las listas de tareas pendientes y completadas
     List<Map<String, dynamic>> pendientes = [];
     List<Map<String, dynamic>> completadas = [];
 
@@ -93,14 +95,15 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
     }
   }
 
-  // -------------------------------------------
-
+  // ---------------------------
   @override
   void initState() {
     super.initState();
     buscarDatosUsuario();
     //setTareas();
   }
+
+  // ---------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -151,10 +154,12 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Información personal',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: MediaQuery.of(context).size.width > 600
+                                ? 18
+                                : 15,
                             color: Color.fromARGB(255, 25, 72, 110),
                           ),
                           textAlign: TextAlign.center,
@@ -163,10 +168,13 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                         // -----------------------------
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               'Nombre:',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize:
+                                    MediaQuery.of(context).size.width > 600
+                                        ? 18
+                                        : 15,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -174,7 +182,7 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                             Text(
                               '${user?.nombre}',
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 15,
                               ),
                             ),
                           ],
@@ -184,10 +192,13 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                         // -----------------------------
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               'Apellido:',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize:
+                                    MediaQuery.of(context).size.width > 600
+                                        ? 18
+                                        : 15,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -195,7 +206,7 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                             Text(
                               '${user?.apellidos}',
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 15,
                               ),
                             ),
                           ],
@@ -204,14 +215,18 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                         // -----------------------------
                         Row(
                           children: [
-                            const Text('Email:',
+                            Text('Email:',
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                                    fontSize:
+                                        MediaQuery.of(context).size.width > 600
+                                            ? 18
+                                            : 15,
+                                    fontWeight: FontWeight.bold)),
                             const SizedBox(width: 8),
                             Text(
                               user?.correo ?? 'No tiene',
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 15,
                               ),
                             ),
                           ],

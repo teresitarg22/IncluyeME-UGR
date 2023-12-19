@@ -1,3 +1,7 @@
 {
-    "cmake.sourceDirectory": "/home/julia/Escritorio/DGP/DGP-IncluyeME/incluye_me/linux"
+    "cmake.sourceDirectory": "/home/julia/Escritorio/DGP/DGP-IncluyeME/incluye_me/linux",
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "xstring": "cpp"
+    }
 }
