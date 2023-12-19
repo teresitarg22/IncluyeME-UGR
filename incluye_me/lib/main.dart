@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/views/login/student_login_view.dart';
 import 'package:incluye_me/views/staff/graphics.dart';
 import 'package:incluye_me/views/start_view.dart';
 import 'package:incluye_me/views/student/student_details.dart';
@@ -10,6 +11,7 @@ import 'views/register/register.dart';
 import 'views/staff/user_list.dart';
 
 // -------------------------------------------------------------------
+
 
 void main() {
   runApp(const MyApp());
@@ -70,6 +72,48 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+class MyTest extends StatelessWidget {
+  const MyTest({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    String user = "";
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const StudentLoginView(),
+        // ----------------------------------------------------------
+        '/registroPage': (context) => const HomeScreen(),
+        // ----------------------------------------------------------
+        '/taskList': (context) =>
+        const TaskListPage(userName: '', userSurname: ''),
+        // ----------------------------------------------------------
+        '/userList': (context) =>
+            UserListPage(userName: user, userSurname: user),
+        // ----------------------------------------------------------
+        '/userDetails': (context) => UserDetailsPage(
+            nombre: teacher!.name,
+            apellidos: teacher!.surnames,
+            esEstudiante: false,
+            userName: teacher!.name,
+            userSurname: teacher!.surnames),
+        // ----------------------------------------------------------
+        '/graphics': (context) => GraphicsPage(
+            nombre: teacher!.name,
+            apellidos: teacher!.surnames,
+            userName: teacher!.name,
+            userSurname: teacher!.surnames),
+        // ----------------------------------------------------------
+        '/studentDetails': (context) =>
+        const StudentDetailsPage(userName: "Sergio", userSurname: "Lopez"),
+        // ----------------------------------------------------------
+        '/studentTasks': (context) =>
+        const StudentTasks(userName: "Sergio", userSurname: "Lopez")
+      },
+    );
+  }
+}
 
 
 

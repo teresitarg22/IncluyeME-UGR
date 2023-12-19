@@ -2,7 +2,7 @@ class User {
   String nombre;
   String apellidos;
   String correo;
-  String foto;
+  var foto;
   String contrasenia;
 
   User({

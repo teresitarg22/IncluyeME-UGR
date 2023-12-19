@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/globals/globals.dart';
 import 'package:incluye_me/views/login/student_password_view.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+
+import '../../model/student.dart';
 
 // -------------------------------------------------------------------
 
@@ -18,6 +21,8 @@ class _StudentLoginViewState extends State<StudentLoginView> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    studentList = [];
+    initializeList();
   }
 
   @override
@@ -35,7 +40,7 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                 child: PageView.builder(
                   controller: _pageController,
                   scrollDirection: Axis.horizontal,
-                  itemCount: 6,
+                  itemCount: studentList!.length ~/ 6 + 1 ?? 1,
                   itemBuilder: (BuildContext context, int pageIndex) {
                     return GridView.builder(
                       shrinkWrap: true,
@@ -50,7 +55,9 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                             sizingInformation.isMobile ? 25.0 : 25.0,
                         childAspectRatio: childAspectRatio,
                       ),
+                      itemCount: studentList!.length - pageIndex * 6,
                       itemBuilder: (BuildContext context, int index) {
+                        Estudiante estudiante = studentList![index + pageIndex * 6];
                         return ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -71,10 +78,9 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                               vertical: 20,
                             ),
                           ),
-                          child: Image.asset('assets/usuario_sin_foto.png'),
+                          child: Image.memory(estudiante.foto!),
                         );
                       },
-                      itemCount: 6,
                     );
                   },
                 ),
@@ -124,4 +130,11 @@ class _StudentLoginViewState extends State<StudentLoginView> {
       ),
     );
   }
+
+  Future<void> initializeList() async {
+    var contenido = await dbDriver.request("Select * from estudiante");
+    studentList = Estudiante.fromJsonList(contenido);
+    setState(() {}); // Actualiza la interfaz de usuario una vez que los datos están listos
+  }
+
 }
