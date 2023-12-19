@@ -46,7 +46,7 @@ class RegistroController {
         // Verificar si el aula ya existe
         var aulaResult = await dbDriver.comprobarAula(aula);
         // Si el aula no existe, insertarla
-        if (aulaResult!.isEmpty) {
+        if (aulaResult.isEmpty) {
           await dbDriver.insertarAula(aula);
         }
         await dbDriver.insertarImparteEn(aula, nombre, apellidos);

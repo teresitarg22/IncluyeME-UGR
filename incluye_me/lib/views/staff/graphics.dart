@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
-import '../components/bottom_navigation_bar.dart';
+import '../../components/bottom_navigation_bar.dart';
 
 // --------------------------------------------------------------------------------------------
 
 class EstadisticaPage extends StatefulWidget {
-  String nombre;
-  String apellidos;
-  String userName;
-  String userSurname;
+  final String nombre;
+  final String apellidos;
+  final String userName;
+  final String userSurname;
 
   EstadisticaPage(
-      {required this.nombre,
+      {super.key,
+      required this.nombre,
       required this.apellidos,
       required this.userName,
       required this.userSurname});
@@ -24,7 +25,7 @@ class EstadisticaPage extends StatefulWidget {
 // --------------------------------------------------------------------------------------------
 
 class _EstadisticaPageState extends State<EstadisticaPage> {
-  Controller controlador = Controller();
+  TaskController controlador = TaskController();
   var tareasFuture;
   bool datosCargados = false;
 
@@ -96,7 +97,7 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
       ),
       body: datosCargados
           ? PieChart(
-              swapAnimationDuration: Duration(milliseconds: 1500),
+              swapAnimationDuration: const Duration(milliseconds: 1500),
               PieChartData(
                 startDegreeOffset: 90,
                 sectionsSpace: 0,
@@ -118,7 +119,7 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
       PieChartSectionData(
         color: const Color.fromARGB(255, 139, 243, 143),
         value: tareasCompletadasPorcentaje,
-        title: 'Tareas Realizadas: ${tareasCompletadas}',
+        title: 'Tareas Realizadas: $tareasCompletadas',
         radius: 80,
         titleStyle: const TextStyle(
           fontSize: 16,
@@ -129,7 +130,7 @@ class _EstadisticaPageState extends State<EstadisticaPage> {
       PieChartSectionData(
         color: const Color.fromARGB(255, 238, 115, 106),
         value: tareasNoCompletadasPorcentaje,
-        title: ' Tareas No Realizadas: ${tareasNoCompletadas}',
+        title: ' Tareas No Realizadas: $tareasNoCompletadas',
         radius: 80,
         titleStyle: const TextStyle(
           fontSize: 16,

@@ -24,7 +24,7 @@ class TaskDetailsPage extends StatefulWidget {
 // -----------------------------------------------------------------------
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
-  final Controller controlador = Controller();
+  final TaskController controlador = TaskController();
   bool asignada = false;
   var tarea_asignada;
   var tarea;

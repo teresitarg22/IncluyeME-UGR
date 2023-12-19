@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:incluye_me/views/login/student_login_view.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-import '../student_interface.dart';
+import '../student/student_tasks.dart';
 
 class LoginWithSymbols extends StatefulWidget {
   const LoginWithSymbols({Key? key});
@@ -176,9 +176,9 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                                 Navigator.pop(context);
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return const StudentInterface(
-                                    nombre: "Sergio",
-                                    apellidos: "Lopez",
+                                  return const StudentTasks(
+                                    userName: "Sergio",
+                                    userSurname: "Lopez",
                                   );
                                 }));
                               });

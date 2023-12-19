@@ -35,7 +35,7 @@ class _TaskListPageState extends State<TaskListPage> {
   bool mostrarBoton = false;
   String alumnoAsignado = "";
 
-  Controller controlador = Controller();
+  TaskController controlador = TaskController();
 
   SessionController sessionController = SessionController();
   //-------------------------------
@@ -206,9 +206,9 @@ class _TaskListPageState extends State<TaskListPage> {
                             // -----------------------
                             subtitle: Text(
                                 tareas[index]['tarea']['completada'] == true
-                                    ? "Completada ${alumnoAsignado}"
+                                    ? "Completada $alumnoAsignado"
                                     : asignada
-                                        ? "Asignada ${alumnoAsignado}"
+                                        ? "Asignada $alumnoAsignado"
                                         : "No asignada"),
                             leading: const Icon(
                               Icons.task,

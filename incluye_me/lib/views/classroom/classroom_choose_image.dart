@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/command/command_task_image.dart';
 import '../../controllers/user_controller.dart';
-import '../sumary_page_image.dart';
+import '../command/sumary_page_image.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +16,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => ClaseDropdownImage(),
-        '/classroomChoose': (context) => ClaseDropdownImage(),
+        '/': (context) => const ClaseDropdownImage(),
+        '/classroomChoose': (context) => const ClaseDropdownImage(),
       },
     );
   }
 }
 
 class ClaseDropdownImage extends StatefulWidget {
+  const ClaseDropdownImage({super.key});
+
   @override
   _ClaseDropdownImageState createState() => _ClaseDropdownImageState();
 }
@@ -33,7 +35,8 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
   final Controller controlador = Controller();
   List<String> aulas = [];
   Map<String, Map<String, int>> amount = {};
-  PageController _pageController = PageController(); // Controlador de la página
+  final PageController _pageController =
+      PageController(); // Controlador de la página
   int _currentPageIndex = 0; // Índice de la página actual
 
   @override
@@ -54,13 +57,13 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Selecciona una Clase',
           style: TextStyle(fontSize: 28),
         ),
         backgroundColor: const Color.fromARGB(255, 41, 218, 129),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return TaskCommandImage(clase: amount.keys.last);
@@ -68,8 +71,8 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
               amount.remove(amount.keys.last);
               if (result != null && result['clase'] != null) {
                 setState(() {
-                  Map<String, int> amount_aux = result['menu'];
-                  amount[result['clase']] = amount_aux;
+                  Map<String, int> amountAux = result['menu'];
+                  amount[result['clase']] = amountAux;
                   aulas.remove(result['clase']);
                   _selectedClase = aulas.isNotEmpty ? aulas[0] : null;
 
@@ -93,7 +96,7 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
         ),
       ),
       body: aulas.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 Expanded(
@@ -120,9 +123,8 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                               })).then((result) {
                                 if (result != null && result['clase'] != null) {
                                   setState(() {
-                                    Map<String, int> amount_aux =
-                                        result['menu'];
-                                    amount[result['clase']] = amount_aux;
+                                    Map<String, int> amountAux = result['menu'];
+                                    amount[result['clase']] = amountAux;
                                     aulas.remove(result['clase']);
                                     _selectedClase =
                                         aulas.isNotEmpty ? aulas[0] : null;
@@ -137,7 +139,8 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                                     } else {
                                       _pageController.animateToPage(
                                         index - 1 >= 0 ? index - 1 : 0,
-                                        duration: Duration(milliseconds: 500),
+                                        duration:
+                                            const Duration(milliseconds: 500),
                                         curve: Curves.easeInOut,
                                       );
                                     }
@@ -151,7 +154,7 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                             ),
                             child: Image.asset('assets/aula.png'),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(_selectedClase!),
                         ],
                       );
@@ -162,22 +165,22 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back),
                       onPressed: () {
                         if (_currentPageIndex > 0) {
                           _pageController.previousPage(
-                            duration: Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             curve: Curves.easeInOut,
                           );
                         }
                       },
                     ),
                     IconButton(
-                      icon: Icon(Icons.arrow_forward),
+                      icon: const Icon(Icons.arrow_forward),
                       onPressed: () {
                         if (_currentPageIndex < aulas.length - 1) {
                           _pageController.nextPage(
-                            duration: Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             curve: Curves.easeInOut,
                           );
                         }

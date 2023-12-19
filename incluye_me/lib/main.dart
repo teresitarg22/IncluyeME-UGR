@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/views/start_view.dart';
 import 'views/register/register.dart';
-import 'views/user_list.dart';
+import 'views/staff/user_list.dart';
 
 // -------------------------------------------------------------------
 

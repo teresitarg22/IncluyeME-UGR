@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:incluye_me/views/command/command_task_asign.dart';
 import '../command/command_task.dart';
 import '../../controllers/register_controller.dart';
-import '../summary_page.dart';
+import '../command/summary_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => ClaseDropdown(taskID: 88),
+        '/': (context) => const ClaseDropdown(taskID: 88),
       },
     );
   }
@@ -27,18 +26,21 @@ class ClaseList extends StatelessWidget {
   final List<String> classList;
   final Function(String) onClassSelected;
 
-  ClaseList({required this.classList, required this.onClassSelected});
+  const ClaseList(
+      {super.key, required this.classList, required this.onClassSelected});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           'Selecciona una Clase:',
           style: TextStyle(fontSize: 25),
         ),
-        SizedBox(height: 20),
+        // ----------------------------
+        const SizedBox(height: 20),
+        // ----------------------------
         ListView.builder(
           shrinkWrap: true,
           itemCount: classList.length,
@@ -51,7 +53,7 @@ class ClaseList extends StatelessWidget {
                 },
                 child: Text(
                   classList[index],
-                  style: TextStyle(fontSize: 26),
+                  style: const TextStyle(fontSize: 26),
                 ),
               ),
             );
@@ -74,7 +76,7 @@ class ClaseDropdown extends StatefulWidget {
 class _ClaseDropdownState extends State<ClaseDropdown> {
   String? _selectedClase;
   RegistroController controlador = RegistroController();
-  List<String> _classList = [];
+  final List<String> _classList = [];
   Map<String, Map<String, Map<String, int>>> amount = {};
   Map<String, int> menus = {};
 
@@ -91,15 +93,15 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
       future: loadClass(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.error != null) {
           // Si algo sale mal...
-          return Center(child: Text('Ha ocurrido un error!'));
+          return const Center(child: Text('Ha ocurrido un error!'));
         } else {
           // Cuando los datos están listos, muestra tu widget
           return Scaffold(
             appBar: AppBar(
-              title: Text(
+              title: const Text(
                 'Selecciona una Clase',
                 style: TextStyle(fontSize: 28),
               ),
@@ -109,16 +111,16 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
               children: [
                 Center(
                   child: _classList.isEmpty
-                      ? Text('No hay clases disponibles')
+                      ? const Text('No hay clases disponibles')
                       : ClaseList(
-                          classList: _classList, 
+                          classList: _classList,
                           onClassSelected: (selectedClase) {
                             setState(() {
                               _selectedClase = selectedClase;
-                              
+
                               if (_selectedClase == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     duration: Duration(
                                         hours: 24), // Duración indefinida
                                     content: Text(
@@ -146,18 +148,18 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                                   if (result != null) {
                                     if (result['clase'] != null) {
                                       setState(() {
-                                        Map<String, int> amount_aux =
+                                        Map<String, int> amountAux =
                                             result['menu'];
                                         Map<String, Map<String, int>>
-                                            amount_aux2 = {};
-                                        for (var key in amount_aux.keys) {
-                                          amount_aux2[key] =
+                                            amountAux2 = {};
+                                        for (var key in amountAux.keys) {
+                                          amountAux2[key] =
                                               result['specialOptions'];
                                           menus[result['clase']] =
-                                              amount_aux[key]!;
+                                              amountAux[key]!;
                                         }
 
-                                        amount[result['clase']] = amount_aux2;
+                                        amount[result['clase']] = amountAux2;
 
                                         _classList.remove(result['clase']);
                                         _selectedClase = _classList.isNotEmpty
@@ -198,7 +200,7 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                   left: 0,
                   top: MediaQuery.of(context).size.height / 1.5,
                   child: IconButton(
-                    icon: Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.arrow_back),
                     iconSize: 50.0,
                     onPressed: () {
                       // Resto del código al presionar el botón izquierdo
@@ -216,14 +218,14 @@ class _ClaseDropdownState extends State<ClaseDropdown> {
                           if (result != null) {
                             if (result['clase'] != null) {
                               setState(() {
-                                Map<String, int> amount_aux = result['menu'];
-                                Map<String, Map<String, int>> amount_aux2 = {};
-                                for (var key in amount_aux.keys) {
-                                  amount_aux2[key] = result['specialOptions'];
-                                  menus[result['clase']] = amount_aux[key]!;
+                                Map<String, int> amountAux = result['menu'];
+                                Map<String, Map<String, int>> amountAux2 = {};
+                                for (var key in amountAux.keys) {
+                                  amountAux2[key] = result['specialOptions'];
+                                  menus[result['clase']] = amountAux[key]!;
                                 }
 
-                                amount[result['clase']] = amount_aux2;
+                                amount[result['clase']] = amountAux2;
 
                                 _classList.remove(result['clase']);
                                 _selectedClase = _classList.isNotEmpty

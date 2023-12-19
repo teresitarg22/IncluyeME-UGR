@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/controllers/session_controller.dart';
-import '../components/bottom_navigation_bar.dart';
-import '../globals/globals.dart';
+import '../../components/bottom_navigation_bar.dart';
+import '../../globals/globals.dart';
 import 'package:incluye_me/views/tasks/task_list.dart';
-import '../model/student.dart';
-import '../model/user.dart';
-import './user_list.dart';
-import '../controllers/user_controller.dart';
+import '../../model/student.dart';
+import '../../model/user.dart';
+import 'user_list.dart';
+import '../../controllers/user_controller.dart';
 
 // ----------------------------------------------------------
 

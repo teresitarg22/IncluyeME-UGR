@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/components/bottom_student_bar.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
 
-class StudentInterface extends StatefulWidget {
-  final String nombre;
-  final String apellidos;
+class StudentTasks extends StatefulWidget {
+  final String userName;
+  final String userSurname;
 
-  const StudentInterface({
+  const StudentTasks({
     super.key,
-    required this.nombre,
-    required this.apellidos,
+    required this.userName,
+    required this.userSurname,
   });
 
   @override
-  _StudentInterfaceState createState() => _StudentInterfaceState();
+  _StudentTasksState createState() => _StudentTasksState();
 }
 
 // ----------------------------------------------------------------------------
 
-class _StudentInterfaceState extends State<StudentInterface> {
-  final Controller taskController = Controller();
-  String tipo = ""; // Variable para almacenar el tipo de tarea
+class _StudentTasksState extends State<StudentTasks> {
+  final TaskController taskController = TaskController();
+  String tipo = "";
+  String pictograma = "";
 
   List<Map<String, dynamic>> tareasPendientes = [];
   List<Map<String, dynamic>> tareasCompletadas = [];
@@ -30,19 +32,17 @@ class _StudentInterfaceState extends State<StudentInterface> {
     // Llama a la función que obtiene las tareas asignadas
     List<Map<String, dynamic>> tareasAsignadas =
         await taskController.getTareaAsignadaPorEstudiante(
-      widget.nombre,
-      widget.apellidos,
+      widget.userName,
+      widget.userSurname,
     );
 
     // Inicializa las listas de tareas pendientes y completadas
     List<Map<String, dynamic>> pendientes = [];
     List<Map<String, dynamic>> completadas = [];
 
-    // Itera sobre los IDs de tareas y obtiene los datos
     for (var tareaAsignada in tareasAsignadas) {
       int idTarea = tareaAsignada['asignada']['id_tarea'];
 
-      // Llama a la función que obtiene los detalles de la tarea
       List<Map<String, Map<String, dynamic>>> detallesTarea =
           await taskController.getTarea(idTarea);
 
@@ -76,6 +76,7 @@ class _StudentInterfaceState extends State<StudentInterface> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
+        automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Container(
           margin: const EdgeInsets.only(left: 8.0),
@@ -99,15 +100,6 @@ class _StudentInterfaceState extends State<StudentInterface> {
             ],
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.house),
-            onPressed: () {
-              Navigator.pushNamed(context, '/');
-            },
-            color: Colors.white,
-          ),
-        ],
       ),
       body: Container(
         width: double.infinity,
@@ -134,9 +126,30 @@ class _StudentInterfaceState extends State<StudentInterface> {
                   child: ListView.builder(
                     itemCount: tareasPendientes.length,
                     itemBuilder: (BuildContext context, int index) {
+                      taskController
+                          .tipoTarea(tareasPendientes[index]['tarea']['id'])
+                          .then((resultado) {
+                        tipo = resultado;
+                      });
+
+                      switch (tipo) {
+                        case "general":
+                          pictograma = "assets/tarea_general.png";
+                          break;
+                        case "material":
+                          pictograma = "assets/tarea_material.png";
+                          break;
+                        case "comanda":
+                          pictograma = "assets/tarea_comanda.png";
+                          break;
+                        default:
+                          pictograma = "assets/tarea.png";
+                          break;
+                      }
+
                       return InkWell(
                           child: Card(
-                              color: const Color.fromARGB(255, 241, 233, 255),
+                              color: const Color.fromARGB(255, 221, 234, 255),
                               margin: const EdgeInsets.only(
                                   top: 8.0,
                                   bottom: 5.0,
@@ -163,9 +176,14 @@ class _StudentInterfaceState extends State<StudentInterface> {
                                     ],
                                   ),
                                 ),
-                                leading: const Icon(
-                                  Icons.task_outlined,
-                                  size: 35,
+                                leading: CircleAvatar(
+                                  radius: 17.5,
+                                  backgroundColor: Colors.transparent,
+                                  child: Image.asset(
+                                    pictograma,
+                                    width: 35,
+                                    height: 35,
+                                  ),
                                 ),
                               )));
                     },
@@ -196,6 +214,27 @@ class _StudentInterfaceState extends State<StudentInterface> {
                   child: ListView.builder(
                     itemCount: tareasCompletadas.length,
                     itemBuilder: (BuildContext context, int index) {
+                      taskController
+                          .tipoTarea(tareasCompletadas[index]['tarea']['id'])
+                          .then((resultado) {
+                        tipo = resultado;
+                      });
+
+                      switch (tipo) {
+                        case "general":
+                          pictograma = "assets/tarea_general.png";
+                          break;
+                        case "material":
+                          pictograma = "assets/tarea_material.png";
+                          break;
+                        case "comanda":
+                          pictograma = "assets/tarea_comanda.png";
+                          break;
+                        default:
+                          pictograma = "assets/tarea.png";
+                          break;
+                      }
+
                       return InkWell(
                           child: Card(
                               color: const Color.fromARGB(255, 229, 250, 238),
@@ -225,9 +264,14 @@ class _StudentInterfaceState extends State<StudentInterface> {
                                     ],
                                   ),
                                 ),
-                                leading: const Icon(
-                                  Icons.task,
-                                  size: 35,
+                                leading: CircleAvatar(
+                                  radius: 17.5,
+                                  backgroundColor: Colors.transparent,
+                                  child: Image.asset(
+                                    pictograma,
+                                    width: 35,
+                                    height: 35,
+                                  ),
                                 ),
                               )));
                     },
@@ -238,6 +282,8 @@ class _StudentInterfaceState extends State<StudentInterface> {
           ],
         ),
       ),
+      bottomNavigationBar: StudentNavigationBar(
+          userName: widget.userName, userSurname: widget.userSurname),
     );
   }
 }

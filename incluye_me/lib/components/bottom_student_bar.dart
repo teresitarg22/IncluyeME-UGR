@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 
+import 'package:incluye_me/views/student/student_details.dart';
+import 'package:incluye_me/views/student/student_tasks.dart';
 import '../globals/globals.dart';
-import '../views/tasks/task_list.dart';
-import '../views/staff/user_list.dart';
-import '../views/staff/user_details.dart';
 
-class CustomNavigationBar extends StatefulWidget {
+class StudentNavigationBar extends StatefulWidget {
   final String userName;
   final String userSurname;
 
-  const CustomNavigationBar(
+  const StudentNavigationBar(
       {required this.userName, required this.userSurname});
 
   @override
-  _CustomNavigationBarState createState() => _CustomNavigationBarState();
+  _StudentNavigationBarState createState() => _StudentNavigationBarState();
 }
 
-class _CustomNavigationBarState extends State<CustomNavigationBar> {
+class _StudentNavigationBarState extends State<StudentNavigationBar> {
   int _currentIndex = currentBottomNavigationBarIndex;
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       backgroundColor: Colors.blue,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Color.fromARGB(255, 209, 209, 209),
       currentIndex: _currentIndex,
       onTap: (int index) {
         setState(() {
@@ -32,49 +33,27 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
 
         if (index == 0) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserListPage(
+            return StudentTasks(
               userName: widget.userName,
               userSurname: widget.userSurname,
             );
           }));
         } else if (index == 1) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return TaskListPage(
+            return StudentDetailsPage(
               userName: widget.userName,
               userSurname: widget.userSurname,
             );
           }));
         } else if (index == 2) {
-          // Lógica para la pestaña "Chat"
-        } else if (index == 3) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UserDetailsPage(
-              nombre: widget.userName,
-              apellidos: widget.userSurname,
-              esEstudiante: false,
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            );
-          }));
-        } else if (index == 4) {
           Navigator.pushNamed(context, '/');
         }
       },
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,
-          icon: Icon(Icons.people, color: Colors.white),
-          label: 'Usuarios',
-        ),
-        BottomNavigationBarItem(
-          backgroundColor: Colors.blue,
           icon: Icon(Icons.assignment, color: Colors.white),
           label: 'Tareas',
-        ),
-        BottomNavigationBarItem(
-          backgroundColor: Colors.blue,
-          icon: Icon(Icons.chat, color: Colors.white),
-          label: 'Chat',
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,

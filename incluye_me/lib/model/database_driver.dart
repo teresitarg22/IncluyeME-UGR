@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
 
@@ -145,7 +144,7 @@ class DataBaseDriver {
   }
 
   // ----------------------------------------------------
-  Future<List<Map<String, Map<String, dynamic>>>> Login(
+  Future<List<Map<String, Map<String, dynamic>>>> login(
       String email, String password) async {
     return await request(
         "SELECT * FROM personal WHERE correo = '$email' AND contrasenia = '$password'");

@@ -2,7 +2,7 @@ import 'package:incluye_me/globals/globals.dart';
 
 // -------------------------------------------
 
-class Controller {
+class TaskController {
   Future<bool> esAdmin(String nombre, String apellidos) async {
     var value = await dbDriver.comprobarPersonal(nombre, apellidos);
 
