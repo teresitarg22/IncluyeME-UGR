@@ -63,7 +63,7 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const LoginWithSymbols(),
+                                builder: (context) => LoginWithSymbols(student: estudiante),
                               ),
                             );
                           },
@@ -78,7 +78,21 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                               vertical: 20,
                             ),
                           ),
-                          child: Image.memory(estudiante.foto!),
+                          //Image and text
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              Image.memory(estudiante.foto), // La imagen del estudiante
+                              Text(
+                                estudiante.nombre, // Suponiendo que estudiante tiene un campo 'nombre'
+                                style: TextStyle(
+                                  color: Colors.white, // Color del texto
+                                  fontSize: 16, // Tamaño del texto
+                                  backgroundColor: Colors.black45, // Fondo del texto para mayor legibilidad
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     );

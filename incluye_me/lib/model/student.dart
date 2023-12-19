@@ -49,4 +49,8 @@ class Estudiante extends User {
           foto: foto ?? '',
           contrasenia: contrasenia ?? '',
         );
+
+  getPasswordAsList() {
+    return contrasenia_iconos.split(",").map((e) => int.parse(e)).toList();
+  }
 }

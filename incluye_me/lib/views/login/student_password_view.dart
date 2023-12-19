@@ -1,29 +1,44 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:incluye_me/globals/globals.dart';
 import 'package:incluye_me/views/login/student_login_view.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
+import '../../model/student.dart';
 import '../student/student_tasks.dart';
 
 class LoginWithSymbols extends StatefulWidget {
-  const LoginWithSymbols({Key? key});
+
+  // Variable estudiante
+  Estudiante student;
+
+  // Constructor
+  LoginWithSymbols({Key? key, required this.student}) : super(key: key);
 
   @override
-  _LoginWithSymbolsState createState() => _LoginWithSymbolsState();
+  _LoginWithSymbolsState createState() => _LoginWithSymbolsState(student: student);
 }
 
 // -----------------------------------------------------------------------------------
 
 class _LoginWithSymbolsState extends State<LoginWithSymbols> {
-  List<String> selectedSymbols = [];
+  // Variable estudiante
+  Estudiante student;
+  late List<int> studentPassword;
+
+  // Constructor
+  _LoginWithSymbolsState({required this.student}) {
+    student = this.student;
+    studentPassword= student.getPasswordAsList();
+  }
+
+  List<int> selectedSymbols = []; // Guarda los indices de los símbolos seleccionados
   final List<String> symbols =
       List.generate(9, (index) => 'assets/symbol$index.png');
 
   // Combinación correcta de símbolos
-  final List<String> correctCombination = [
-    'assets/symbol0.png',
-    'assets/symbol1.png',
-    'assets/symbol2.png',
-  ];
+
 
   // ------------------------------------------------------------------------
   @override
@@ -96,7 +111,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                       onTap: () {
                         if (selectedSymbols.length < 3) {
                           setState(() {
-                            selectedSymbols.add(symbols[index]);
+                            selectedSymbols.add(index + 1);
                           });
                         }
                       },
@@ -138,7 +153,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                     children: List.generate(3, (index) {
                       if (index < selectedSymbols.length) {
                         return Image.asset(
-                          selectedSymbols[index],
+                          symbols[selectedSymbols[index]],
                           height: 80,
                           width: 80,
                         );
@@ -166,19 +181,20 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                       ElevatedButton(
                         onPressed: () {
                           if (selectedSymbols.length == 3 &&
-                              selectedSymbols[0] == correctCombination[0] &&
-                              selectedSymbols[1] == correctCombination[1] &&
-                              selectedSymbols[2] == correctCombination[2]) {
+                              selectedSymbols[0] == studentPassword[0] &&
+                              selectedSymbols[1] == studentPassword[1] &&
+                              selectedSymbols[2] == studentPassword[2]) {
                             _showSuccessDialog();
+                            student_global = student;
                             Future.delayed(const Duration(seconds: 2), () {
                               Navigator.pop(context);
                               Future.delayed(const Duration(seconds: 1), () {
                                 Navigator.pop(context);
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return const StudentTasks(
-                                    userName: "Sergio",
-                                    userSurname: "Lopez",
+                                  return StudentTasks(
+                                    userName: student.nombre,
+                                    userSurname: student.apellidos,
                                   );
                                 }));
                               });

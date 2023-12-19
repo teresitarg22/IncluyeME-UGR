@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
             const StudentDetailsPage(userName: "Sergio", userSurname: "Lopez"),
         // ----------------------------------------------------------
         '/studentTasks': (context) =>
-            const StudentTasks(userName: "Sergio", userSurname: "Lopez")
+            StudentTasks(userName: student_global?.nombre ?? '', userSurname: student_global?.apellidos ?? '')
       },
     );
   }
@@ -109,7 +109,7 @@ class MyTest extends StatelessWidget {
         const StudentDetailsPage(userName: "Sergio", userSurname: "Lopez"),
         // ----------------------------------------------------------
         '/studentTasks': (context) =>
-        const StudentTasks(userName: "Sergio", userSurname: "Lopez")
+            StudentTasks(userName: student_global?.nombre ?? '', userSurname: student_global?.apellidos ?? '')
       },
     );
   }

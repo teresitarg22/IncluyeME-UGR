@@ -1,30 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/components/bottom_student_bar.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
+import 'package:incluye_me/globals/globals.dart';
 
 class StudentTasks extends StatefulWidget {
   final String userName;
   final String userSurname;
 
-  const StudentTasks({
+  StudentTasks({
     super.key,
     required this.userName,
     required this.userSurname,
   });
 
   @override
-  _StudentTasksState createState() => _StudentTasksState();
+  _StudentTasksState createState() => _StudentTasksState(userName, userSurname);
 }
 
 // ----------------------------------------------------------------------------
 
 class _StudentTasksState extends State<StudentTasks> {
-  final TaskController taskController = TaskController();
+  TaskController taskController = TaskController();
+  String userName = "";
+  String userSurname = "";
   String tipo = "";
   String pictograma = "";
 
   List<Map<String, dynamic>> tareasPendientes = [];
   List<Map<String, dynamic>> tareasCompletadas = [];
+
+  _StudentTasksState(String userName, String userSurname) {
+    this.userName = userName;
+    this.userSurname = userSurname;
+  }
+
 
   // --------------------------------------------------------------
 
@@ -80,7 +89,7 @@ class _StudentTasksState extends State<StudentTasks> {
         iconTheme: const IconThemeData(color: Colors.white),
         title: Container(
           margin: const EdgeInsets.only(left: 8.0),
-          child: const Row(
+          child:  Row(
             children: [
               // Imagen circular
               CircleAvatar(
@@ -91,7 +100,8 @@ class _StudentTasksState extends State<StudentTasks> {
               SizedBox(width: 15),
               // --------------------------
               Text(
-                '¡Bienvenido Sergio Lopez!',
+                //Take the name from the database
+                '¡Bienvenido ${student_global?.nombre ?? ''} ${student_global?.apellidos ?? ''}!',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.white,

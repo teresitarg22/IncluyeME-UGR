@@ -6,7 +6,7 @@ int currentBottomNavigationBarIndex = 0;
 DataBaseDriver dbDriver =  DataBaseDriver();
 
 Teacher? teacher; //Si es nulo, no hay ningún profesor logueado
-Estudiante? student; //Si es nulo, no hay ningún estudiante logueado
+Estudiante? student_global; //Si es nulo, no hay ningún estudiante logueado
 int imageHeight = 256;
 int imageWidth = 256;
 
