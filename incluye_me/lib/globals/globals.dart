@@ -3,7 +3,7 @@ import 'package:incluye_me/model/student.dart';
 import 'package:incluye_me/model/teacher.dart';
 
 int currentBottomNavigationBarIndex = 0;
-DataBaseDriver dbDriver =  DataBaseDriver();
+DataBaseDriver dbDriver = DataBaseDriver();
 
 Teacher? teacher; // Si es nulo, no hay ningún profesor logueado
 Estudiante? student_global; // Si es nulo, no hay ningún estudiante logueado

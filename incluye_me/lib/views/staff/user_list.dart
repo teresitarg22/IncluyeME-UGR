@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/model/student.dart';
 import '../../components/bottom_navigation_bar.dart';
 import 'user_details.dart';
 import 'edit_user.dart';
@@ -21,7 +23,7 @@ class UserListPage extends StatefulWidget {
 // ------------------------------------------------------------------
 
 class _UserListPageState extends State<UserListPage> {
-  bool isAdmin = false;
+  bool isAdmin = true;
   var estudiantes = [];
   var personal = [];
   var usuarios = [];
@@ -42,12 +44,20 @@ class _UserListPageState extends State<UserListPage> {
   void initState() {
     super.initState();
     initializeData();
+    initializeList();
   }
 
   // -----------------------------
   Future<void> initializeData() async {
     await loadUsersIds();
     await initializeAdminStatus();
+  }
+
+  // -----------------------------
+  Future<void> initializeList() async {
+    var contenido = await dbDriver.request("Select * from estudiante");
+    studentList = Estudiante.fromJsonList(contenido);
+    setState(() {});
   }
 
   // -----------------------------
@@ -174,6 +184,7 @@ class _UserListPageState extends State<UserListPage> {
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
+                Estudiante estudiante = studentList![index];
                 final nombre = filteredUsers[index][tipo]?['nombre'];
 
                 if (nombre != null) {
@@ -230,13 +241,41 @@ class _UserListPageState extends State<UserListPage> {
                       // -----------------------------
                       subtitle:
                           Text(filteredUsers[index][tipo]?['correo'] ?? ''),
-                      leading: const Icon(
-                        Icons.person,
-                        size: 45,
+                      leading: // Imagen circular
+                          CircleAvatar(
+                        radius: 18,
+                        child: ClipOval(
+                          child: estudiante?.foto != null
+                              ? Image.memory(
+                                  estudiante?.foto,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/usuario_sin_foto.png',
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/graphics',
+                                  arguments: {
+                                    'userName': widget.userName,
+                                    'userSurname': widget.userSurname,
+                                    'nombre': filteredUsers[index][tipo]
+                                        ['nombre'],
+                                    'apellidos': filteredUsers[index][tipo]
+                                        ['apellidos'],
+                                  });
+                            },
+                            icon: const Icon(
+                              Icons.bar_chart,
+                              color: Color.fromARGB(255, 76, 76, 76),
+                            ),
+                          ),
                           // ------------------------------------
                           IconButton(
                             icon: const Icon(Icons.edit,
@@ -466,8 +505,27 @@ class _UserListPageState extends State<UserListPage> {
                         Icons.person,
                         size: 45,
                       ),
-                      trailing: const Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/graphics',
+                                  arguments: {
+                                    'userName': widget.userName,
+                                    'userSurname': widget.userSurname,
+                                    'nombre': filteredUsers[index]['estudiante']
+                                        ['nombre'],
+                                    'apellidos': filteredUsers[index]
+                                        ['estudiante']['apellidos'],
+                                  });
+                            },
+                            icon: const Icon(
+                              Icons.bar_chart,
+                              color: Color.fromARGB(255, 76, 76, 76),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

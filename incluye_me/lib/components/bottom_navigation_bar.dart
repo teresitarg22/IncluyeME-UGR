@@ -34,39 +34,23 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           if (currentRouteName != '/userList') {
             print(currentRouteName);
             print("Test");
-            Navigator.pushReplacementNamed(context, '/userList', arguments: {
-              'userName': teacher!.getName(),
-              'userSurname': teacher!.getSurnames(),
-            });
+            Navigator.pushReplacementNamed(context, '/userList');
           }
         } else if (index == 1) {
           // ----------------------------------------------------------
           // Lista de tareas
           String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
           if (currentRouteName != '/taskList') {
-            Navigator.pushReplacementNamed(context, '/taskList', arguments: {
-              'userName': teacher!.getName(),
-              'userSurname': teacher!.getSurnames(),
-            });
+            Navigator.pushReplacementNamed(context, '/taskList');
           }
         } else if (index == 2) {
-          // ----------------------------------------------------------
-          // Gráficos
-          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
-          if (currentRouteName != '/graphics') {
-            Navigator.pushReplacementNamed(context, '/graphics', arguments: {
-              'userName': teacher!.getName(),
-              'userSurname': teacher!.getSurnames(),
-            });
-          }
-        } else if (index == 3) {
           // ----------------------------------------------------------
           // Detalles del usuario
           String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
           if (currentRouteName != '/userDetails') {
             Navigator.pushReplacementNamed(context, '/userDetails');
           }
-        } else if (index == 4) {
+        } else if (index == 3) {
           // ----------------------------------------------------------
           // Cerrar sesión
           teacher = null;
@@ -84,11 +68,6 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           backgroundColor: Colors.blue,
           icon: Icon(Icons.assignment, color: Colors.white),
           label: 'Tareas',
-        ),
-        BottomNavigationBarItem(
-          backgroundColor: Colors.blue,
-          icon: Icon(Icons.bar_chart, color: Colors.white),
-          label: 'Gráficos',
         ),
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,

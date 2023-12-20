@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String user = "";
     return MaterialApp(
       initialRoute: '/',
       routes: {
@@ -42,11 +41,11 @@ class MyApp extends StatelessWidget {
         // ----------------------------------------------------------
         '/registroPage': (context) => const HomeScreen(),
         // ----------------------------------------------------------
-        '/taskList': (context) =>
-            const TaskListPage(userName: '', userSurname: ''),
+        '/taskList': (context) => TaskListPage(
+            userName: teacher!.name, userSurname: teacher!.surnames),
         // ----------------------------------------------------------
-        '/userList': (context) =>
-            UserListPage(userName: user, userSurname: user),
+        '/userList': (context) => UserListPage(
+            userName: teacher!.name, userSurname: teacher!.surnames),
         // ----------------------------------------------------------
         '/userDetails': (context) => UserDetailsPage(
             nombre: teacher!.name,
