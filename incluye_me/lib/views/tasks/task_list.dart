@@ -312,7 +312,6 @@ class _TaskListPageState extends State<TaskListPage> {
                                           // Actualización en la base de datos:
                                           controlador.eliminarTarea(
                                               tareas[index]['tarea']['id']);
-
                                           // Actualizar la vista:
                                           setState(() {
                                             tareas.removeAt(index);

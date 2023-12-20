@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 class Tarea {
   String titulo;
@@ -38,14 +39,12 @@ class Tarea {
   }
 }
 
-
-
 class Paso {
   String descripcion;
   String propietario;
-  String? imagen;
+  Uint8List imagen;
 
-  Paso({required this.descripcion, required this.propietario, this.imagen = ''});
+  Paso({required this.descripcion, required this.propietario, required this.imagen});
 
   factory Paso.fromJson(List<Map<String, Map<String, dynamic>>> json_raw) {
     //Null check
@@ -53,7 +52,7 @@ class Paso {
       return Paso(
         descripcion: '',
         propietario: '',
-        imagen: '',
+        imagen: Uint8List(0),
       );
     }
     var json = json_raw[0]['pasos'];
@@ -62,7 +61,7 @@ class Paso {
     return Paso(
       descripcion: json?['descripcion'],
       propietario: json?['propietario'],
-      imagen: json?['imagen'],
+      imagen: json?['imagen'] ?? Uint8List(0),
     );
   }
 }

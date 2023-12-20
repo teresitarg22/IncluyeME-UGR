@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:incluye_me/model/general_task.dart';
 import 'package:incluye_me/globals/globals.dart';
@@ -7,7 +11,8 @@ class AddTaskView extends StatefulWidget {
   final Function(Tarea) onAddTask;
   final Controller controller;
 
-  AddTaskView({Key? key, required this.onAddTask, required this.controller}) : super(key: key); // Agrega controller aquí
+  AddTaskView({Key? key, required this.onAddTask, required this.controller})
+      : super(key: key); // Agrega controller aquí
 
   @override
   _AddTaskPageState createState() => _AddTaskPageState();
@@ -19,7 +24,10 @@ class _AddTaskPageState extends State<AddTaskView> {
 
   void addPaso() {
     setState(() {
-      pasos.add(Paso(descripcion: '', imagen: '', propietario: teacher!.getName() + ' ' + teacher!.getSurnames()));
+      pasos.add(Paso(
+          descripcion: '',
+          imagen: Uint8List(0),
+          propietario: teacher!.getName() + ' ' + teacher!.getSurnames()));
     });
   }
 
@@ -39,14 +47,19 @@ class _AddTaskPageState extends State<AddTaskView> {
         _showSnackBar('Por favor, añade una descripción a cada paso');
         return;
       }
+
+      if (paso.imagen.isEmpty) {
+        _showSnackBar('Por favor, añade una imagen a cada paso');
+        return;
+      }
     }
 
-    List<int> indicesPasos = await widget.controller.insertarPasosYObtenerIds(pasos);
+    List<int> indicesPasos =
+        await widget.controller.insertarPasosYObtenerIds(pasos);
     final tarea = Tarea(
         titulo: _titleController.text,
         indicesPasos: indicesPasos,
-        propietario: teacher!.getName() + ' ' + teacher!.getSurnames()
-    );
+        propietario: teacher!.getName() + ' ' + teacher!.getSurnames());
 
     await widget.controller.addTarea(tarea.titulo, false, DateTime.now());
     widget.onAddTask(tarea);
@@ -58,7 +71,6 @@ class _AddTaskPageState extends State<AddTaskView> {
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,9 +136,7 @@ class _AddTaskPageState extends State<AddTaskView> {
         IconButton(
           icon: Icon(Icons.image),
           onPressed: () async {
-            // Aquí deberías implementar la selección de la imagen
-            // Por ejemplo, usando un dialogo para seleccionar una imagen de assets
-            String imagePath = await _selectImage();
+            Uint8List imagePath = await _selectImage();
             setState(() => pasos[index].imagen = imagePath);
           },
         ),
@@ -138,10 +148,14 @@ class _AddTaskPageState extends State<AddTaskView> {
     );
   }
 
-  Future<String> _selectImage() async {
-    // Implementa la lógica para seleccionar una imagen
-    // Por ejemplo, mostrar un diálogo con opciones de imágenes
-    // Retorna el path de la imagen seleccionada
-    return '';
+  Future<Uint8List> _selectImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      return await image.readAsBytes();
+    } else {
+      return Uint8List(0);
+    }
   }
 }
