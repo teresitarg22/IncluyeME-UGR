@@ -49,16 +49,37 @@ class TaskController {
     var material = await dbDriver.esTareaMaterial(id);
     var comanda = await dbDriver.esTareaComanda(id);
 
+    
+
     if (general.isNotEmpty) {
       return "general";
     } else if (material.isNotEmpty) {
       return "material";
     } else if (comanda.isNotEmpty) {
-      return "comanda";
+      String tareaNombre = comanda[0]['tarea']!['nombre'].toString().toLowerCase();
+      if (tareaNombre.contains("comanda")) {
+        return "comanda";
+      }
     }
-
     return "error";
   }
+
+  // -----------------------------
+  Future<bool>sabeLeer(String nombre, String apellidos) async {
+    var value = await dbDriver.sabeLeer(nombre, apellidos);
+
+    if (value.isNotEmpty) {
+      var estudianteData = value[0]['estudiante'];
+
+      if (estudianteData != null && estudianteData['sabe_leer'] == true) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  
 
   // -----------------------------
   Future<List<Map<String, Map<String, dynamic>>>> getTareaGeneral(

@@ -218,13 +218,13 @@ class DataBaseDriver {
   // Función para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaMaterial(
       int id) async {
-    return await request("SELECT * FROM tarea_material WHERE id = $id ");
+    return await request("SELECT * FROM tarea_material WHERE id_tarea = $id ");
   }
 
   // ----------------------------------------------------
   // Función para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaComanda(int id) async {
-    return await request("SELECT * FROM comanda WHERE id = $id ");
+    return await request("SELECT * FROM tarea WHERE id = $id ");
   }
 
   // ----------------------------------------------------
@@ -471,5 +471,12 @@ class DataBaseDriver {
 
   Future<void> taskDone(int ID) async {
     await request("UPDATE tarea SET completada = 'true' where id = $ID");
+  }
+
+  //Funcion para saber si un alumno sabe leer 
+  Future<List<Map<String, Map<String, dynamic>>>> sabeLeer(
+      String nombre, String apellidos) async {
+    return await request(
+        "SELECT sabe_leer FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 }

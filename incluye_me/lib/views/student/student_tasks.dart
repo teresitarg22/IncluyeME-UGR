@@ -5,6 +5,8 @@ import 'package:incluye_me/controllers/user_controller.dart';
 import 'package:incluye_me/globals/globals.dart';
 import 'package:incluye_me/model/student.dart';
 import 'package:incluye_me/model/user.dart';
+import 'package:incluye_me/views/classroom/classroom_choose.dart';
+import 'package:incluye_me/views/classroom/classroom_choose_image.dart';
 
 class StudentTasks extends StatefulWidget {
   final String userName;
@@ -193,7 +195,30 @@ class _StudentTasksState extends State<StudentTasks> {
                                   right: 15.0),
                               child: ListTile(
                                 title: GestureDetector(
-                                  // ----------------------
+                                  onTap: () async {
+                                  String tipo = await taskController.tipoTarea(tareasPendientes[index]['tarea']['id']);
+                                  bool leer = await taskController.sabeLeer(widget.userName, widget.userSurname);
+
+                                    if (tipo == "comanda" && leer) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ClaseDropdown(
+                                              taskID: tareasPendientes[index]
+                                                  ['tarea']['id']),
+                                        ),
+                                      );
+                                    } else if (tipo == "comanda" && !leer) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ClaseDropdownImage(
+                                              taskID: tareasPendientes[index]
+                                                  ['tarea']['id']),
+                                        ),
+                                      );
+                                    }
+                                  },
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -203,7 +228,7 @@ class _StudentTasksState extends State<StudentTasks> {
                                         "${tareasPendientes[index]['tarea']?['nombre']}",
                                         style: const TextStyle(
                                           color:
-                                              Color.fromARGB(255, 76, 76, 76),
+                                              Color.fromARGB(255, 94, 72, 72),
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),

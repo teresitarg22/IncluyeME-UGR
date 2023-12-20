@@ -200,7 +200,7 @@ class _SummaryPageImageState extends State<SummaryPageImage> {
                 // Por ejemplo:
                 // finalizarTarea();
                 Controller().completarTarea(widget.taskID);
-                Navigator.pop(context);
+                 Navigator.pushNamed(context, '/studentTasks');
               },
               child: Text('Finalizar Tarea'),
             ),

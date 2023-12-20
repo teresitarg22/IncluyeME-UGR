@@ -5,24 +5,6 @@ import 'package:incluye_me/views/command/command_task_image.dart';
 import '../../controllers/user_controller.dart';
 import '../command/sumary_page_image.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    String user = "";
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const ClaseDropdownImage(taskID: 88),
-      },
-    );
-  }
-}
 
 class ClaseDropdownImage extends StatefulWidget {
   final int taskID;

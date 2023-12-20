@@ -78,7 +78,7 @@ class SummaryPage extends StatelessWidget {
               }
             }
 
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/studentTasks');
           },
           child: Text('Finalizar Tarea',
           style: TextStyle(fontSize: 25),),

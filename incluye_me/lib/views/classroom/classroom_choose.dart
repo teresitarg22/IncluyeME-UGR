@@ -3,24 +3,6 @@ import '../command/command_task.dart';
 import '../../controllers/register_controller.dart';
 import '../command/summary_page.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    String user = "";
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const ClaseDropdown(taskID: 88),
-      },
-    );
-  }
-}
 
 class ClaseList extends StatelessWidget {
   final List<String> classList;
