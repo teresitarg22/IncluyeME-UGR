@@ -29,7 +29,7 @@ class _StudentLoginViewState extends State<StudentLoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Estudiantes')),
-      body: ResponsiveBuilder(
+      body: studentList?.length == 0 ? Center(child: CircularProgressIndicator())  : ResponsiveBuilder(
         builder: (context, sizingInformation) {
           double buttonPadding = sizingInformation.isMobile ? 5.0 : 20.0;
           double childAspectRatio = sizingInformation.isMobile ? 1.0 : 1.59;
@@ -60,12 +60,7 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                         Estudiante estudiante = studentList![index + pageIndex * 6];
                         return ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoginWithSymbols(student: estudiante),
-                              ),
-                            );
+                            _showLoginOptions(context, estudiante);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
@@ -149,6 +144,55 @@ class _StudentLoginViewState extends State<StudentLoginView> {
     var contenido = await dbDriver.request("Select * from estudiante");
     studentList = Estudiante.fromJsonList(contenido);
     setState(() {}); // Actualiza la interfaz de usuario una vez que los datos están listos
+  }
+
+
+
+  void _showLoginOptions(BuildContext context, Estudiante estudiante) {
+    if (estudiante.sabeLeer) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Elegir Método de Ingreso'),
+            content: Text('Selecciona tu método de ingreso preferido.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Símbolos'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cierra el diálogo
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginWithSymbols(student: estudiante),
+                    ),
+                  );
+                },
+              ),
+              TextButton(
+                child: Text('Contraseña'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cierra el diálogo
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginWithPassword(student: estudiante),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginWithSymbols(student: estudiante),
+        ),
+      );
+    }
   }
 
 }

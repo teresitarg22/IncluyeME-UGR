@@ -94,7 +94,7 @@ class _StudentTasksState extends State<StudentTasks> {
               // Imagen circular
               CircleAvatar(
                 radius: 18, // Ajusta según sea necesario
-                backgroundImage: AssetImage('assets/usuario_sin_foto.png'),
+                backgroundImage: MemoryImage(student_global?.foto ?? []),
               ),
               // --------------------------
               SizedBox(width: 15),
