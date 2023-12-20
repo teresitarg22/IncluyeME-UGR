@@ -237,6 +237,23 @@ class _UserListPageState extends State<UserListPage> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/graphics',
+                                  arguments: {
+                                    'userName': widget.userName,
+                                    'userSurname': widget.userSurname,
+                                    'nombre': filteredUsers[index][tipo]
+                                        ['nombre'],
+                                    'apellidos': filteredUsers[index][tipo]
+                                        ['apellidos'],
+                                  });
+                            },
+                            icon: const Icon(
+                              Icons.bar_chart,
+                              color: Color.fromARGB(255, 76, 76, 76),
+                            ),
+                          ),
                           // ------------------------------------
                           IconButton(
                             icon: const Icon(Icons.edit,
@@ -466,8 +483,27 @@ class _UserListPageState extends State<UserListPage> {
                         Icons.person,
                         size: 45,
                       ),
-                      trailing: const Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/graphics',
+                                  arguments: {
+                                    'userName': widget.userName,
+                                    'userSurname': widget.userSurname,
+                                    'nombre': filteredUsers[index]['estudiante']
+                                        ['nombre'],
+                                    'apellidos': filteredUsers[index]
+                                        ['estudiante']['apellidos'],
+                                  });
+                            },
+                            icon: const Icon(
+                              Icons.bar_chart,
+                              color: Color.fromARGB(255, 76, 76, 76),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
