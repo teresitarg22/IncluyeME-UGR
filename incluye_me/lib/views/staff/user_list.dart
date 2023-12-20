@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/model/student.dart';
 import '../../components/bottom_navigation_bar.dart';
 import 'user_details.dart';
 import 'edit_user.dart';
@@ -42,12 +44,20 @@ class _UserListPageState extends State<UserListPage> {
   void initState() {
     super.initState();
     initializeData();
+    initializeList();
   }
 
   // -----------------------------
   Future<void> initializeData() async {
     await loadUsersIds();
     await initializeAdminStatus();
+  }
+
+  // -----------------------------
+  Future<void> initializeList() async {
+    var contenido = await dbDriver.request("Select * from estudiante");
+    studentList = Estudiante.fromJsonList(contenido);
+    setState(() {});
   }
 
   // -----------------------------
@@ -174,6 +184,7 @@ class _UserListPageState extends State<UserListPage> {
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
+                Estudiante estudiante = studentList![index];
                 final nombre = filteredUsers[index][tipo]?['nombre'];
 
                 if (nombre != null) {
@@ -230,9 +241,20 @@ class _UserListPageState extends State<UserListPage> {
                       // -----------------------------
                       subtitle:
                           Text(filteredUsers[index][tipo]?['correo'] ?? ''),
-                      leading: const Icon(
-                        Icons.person,
-                        size: 45,
+                      leading: // Imagen circular
+                          CircleAvatar(
+                        radius: 18,
+                        child: ClipOval(
+                          child: estudiante?.foto != null
+                              ? Image.memory(
+                                  estudiante?.foto,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/usuario_sin_foto.png',
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
