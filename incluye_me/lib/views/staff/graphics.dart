@@ -49,7 +49,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
   // -------------------------------------------------------------------
 
   Future<List<Map<String, dynamic>>> setTareas() async {
-    return controlador.getTareaAsignadaPorEstudiante(
+    return await controlador.getTareaAsignadaPorEstudiante(
         widget.nombre, widget.apellidos);
   }
 
@@ -57,6 +57,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
 
   Future<void> setDatos() async {
     var tareas = await tareasFuture;
+  
 
     for (var tarea in tareas) {
       var esSemanal =
@@ -74,13 +75,12 @@ class _GraphicsPageState extends State<GraphicsPage> {
           tareasNoCompletadas++;
         }
       }
-
-      setState(() {
+    }
         tareasCompletadasPorcentaje = (tareasCompletadas / tareasTotales) * 100;
         tareasNoCompletadasPorcentaje =
             (tareasNoCompletadas / tareasTotales) * 100;
-      });
-    }
+   
+    
   }
 
   // -------------------------------------------------------------------
@@ -92,13 +92,10 @@ class _GraphicsPageState extends State<GraphicsPage> {
       builder: (context, snapshot) {
         // snapshot contiene el estado actual del Future
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // Muestra un indicador de carga mientras espera que el Future se complete
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          // Muestra un mensaje de error si ocurre algún problema
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          // Muestra los datos obtenidos del Future
           return Scaffold(
             appBar: AppBar(
               title: const Text(
@@ -123,6 +120,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
               userSurname: widget.userSurname,
             ),
           );
+        
         }
       },
     );
