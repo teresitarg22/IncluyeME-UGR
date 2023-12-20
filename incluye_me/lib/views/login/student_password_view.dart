@@ -153,7 +153,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                     children: List.generate(3, (index) {
                       if (index < selectedSymbols.length) {
                         return Image.asset(
-                          symbols[selectedSymbols[index]],
+                          symbols[selectedSymbols[index]-1],
                           height: 80,
                           width: 80,
                         );
