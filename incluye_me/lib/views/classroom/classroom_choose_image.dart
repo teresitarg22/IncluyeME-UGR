@@ -64,7 +64,7 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
           'Selecciona una Clase',
           style: TextStyle(fontSize: 28),
         ),
-        backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+        backgroundColor:  Colors.blue, 
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
