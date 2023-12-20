@@ -29,9 +29,9 @@ class _GraphicsPageState extends State<GraphicsPage> {
   var tareasFuture;
   bool datosCargados = false;
 
-  int tareasCompletadas = 0;
-  int tareasNoCompletadas = 0;
-  int tareasTotales = 0;
+  static int tareasCompletadas = 0;
+  static int tareasNoCompletadas = 0;
+  static int tareasTotales = 0;
   List<int> idTareasSemanales = [];
 
   double tareasCompletadasPorcentaje = 50.0;
@@ -43,9 +43,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
   void initState() {
     super.initState();
     tareasFuture = setTareas();
-    setState(() {
-      setDatos();
-    });
+    setDatos();
   }
 
   // -------------------------------------------------------------------
@@ -59,6 +57,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
 
   Future<void> setDatos() async {
     var tareas = await tareasFuture;
+
     for (var tarea in tareas) {
       var esSemanal =
           await controlador.esTareaSemamal(tarea['asignada']?['id_tarea']);
@@ -76,10 +75,11 @@ class _GraphicsPageState extends State<GraphicsPage> {
         }
       }
 
-      datosCargados = true;
-      tareasCompletadasPorcentaje = (tareasCompletadas / tareasTotales) * 100;
-      tareasNoCompletadasPorcentaje =
-          (tareasNoCompletadas / tareasTotales) * 100;
+      setState(() {
+        tareasCompletadasPorcentaje = (tareasCompletadas / tareasTotales) * 100;
+        tareasNoCompletadasPorcentaje =
+            (tareasNoCompletadas / tareasTotales) * 100;
+      });
     }
   }
 
@@ -87,33 +87,44 @@ class _GraphicsPageState extends State<GraphicsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Gráfica Semanal',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-          textAlign: TextAlign.center,
-          selectionColor: Colors.white,
-        ),
-        backgroundColor: Colors.blue,
-        automaticallyImplyLeading: false,
-      ),
-      body: datosCargados
-          ? PieChart(
-              swapAnimationDuration: const Duration(milliseconds: 1500),
-              PieChartData(
-                startDegreeOffset: 90,
-                sectionsSpace: 0,
-                centerSpaceRadius: 60,
-                sections: loadDatos(),
-              ))
-          : const Center(
-              child: CircularProgressIndicator(),
+    return FutureBuilder(
+      future: setDatos(),
+      builder: (context, snapshot) {
+        // snapshot contiene el estado actual del Future
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Muestra un indicador de carga mientras espera que el Future se complete
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Muestra un mensaje de error si ocurre algún problema
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          // Muestra los datos obtenidos del Future
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'Gráfica Semanal',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+                textAlign: TextAlign.center,
+                selectionColor: Colors.white,
+              ),
+              backgroundColor: Colors.blue,
+              automaticallyImplyLeading: false,
             ),
-      bottomNavigationBar: CustomNavigationBar(
-        userName: widget.userName,
-        userSurname: widget.userSurname,
-      ),
+            body: PieChart(
+                swapAnimationDuration: const Duration(milliseconds: 1500),
+                PieChartData(
+                  startDegreeOffset: 90,
+                  sectionsSpace: 0,
+                  centerSpaceRadius: 60,
+                  sections: loadDatos(),
+                )),
+            bottomNavigationBar: CustomNavigationBar(
+              userName: widget.userName,
+              userSurname: widget.userSurname,
+            ),
+          );
+        }
+      },
     );
   }
 
