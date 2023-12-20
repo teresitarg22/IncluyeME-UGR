@@ -21,7 +21,7 @@ class UserListPage extends StatefulWidget {
 // ------------------------------------------------------------------
 
 class _UserListPageState extends State<UserListPage> {
-  bool isAdmin = false;
+  bool isAdmin = true;
   var estudiantes = [];
   var personal = [];
   var usuarios = [];
