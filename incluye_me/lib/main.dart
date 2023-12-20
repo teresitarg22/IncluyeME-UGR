@@ -37,15 +37,13 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const StartView(),
         '/registroPage': (context) => const HomeScreen(),
-        '/taskList': (context) => const TaskListPage(userName: '', userSurname: ''),
-        '/userList': (context) => UserListPage(userName: user, userSurname: user),
+        '/taskList': (context) => TaskListPage(userName: teacher?.name ?? '', userSurname: teacher?.surnames ?? ''),
+        '/userList': (context) => UserListPage(userName: teacher?.name ?? '', userSurname: teacher?.surnames ?? ''),
         '/userDetails': (context) => UserDetailsPage(nombre: teacher!.name, apellidos: teacher!.surnames, esEstudiante: false, userName: teacher!.name, userSurname: teacher!.surnames),
       },
     );
   }
 }
-
-
 
 
 // -------------------------------------------------------------------

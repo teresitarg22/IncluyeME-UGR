@@ -9,6 +9,7 @@ class Controller {
 
     if (value.isNotEmpty) {
       var personalData = value[0]['personal'];
+      print(personalData);
 
       if (personalData != null && personalData['es_admin'] == true) {
         return true;

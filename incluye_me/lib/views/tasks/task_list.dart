@@ -12,10 +12,10 @@ import '../command/command_task_asign.dart';
 // --------------------------------------------
 // Clase para la página de lista de usuarios
 class TaskListPage extends StatefulWidget {
-  final String userName;
-  final String userSurname;
+  String userName;
+  String userSurname;
 
-  const TaskListPage(
+  TaskListPage(
       {super.key, required this.userName, required this.userSurname});
 
   @override
@@ -68,9 +68,18 @@ class _TaskListPageState extends State<TaskListPage> {
 
   // -----------------------------
   Future<void> initializeAdminStatus() async {
+    print(widget.userName);
+    print(widget.userSurname);
     bool adminStatus =
     await controlador.esAdmin(widget.userName, widget.userSurname);
     setState(() => isAdmin = adminStatus);
+  }
+
+  // -----------------------------
+  void addTask(Tarea tarea) async {
+    await controlador.addTareaGeneral(tarea.indicesPasos, tarea.titulo, tarea.propietario);
+    await loadTaskIds();
+    setState(() {});
   }
 
   // -----------------------------
@@ -188,133 +197,133 @@ class _TaskListPageState extends State<TaskListPage> {
                               : tipo == "general"
                               ? Color.fromARGB(255, 186, 213, 235)
                               : const Color.fromARGB(255, 200, 219, 230),
-                        // onTap: () {
-                        //   Navigator.push(context,
-                        //       MaterialPageRoute(builder: (context) {
-                        //     return TaskDetailsPage(
-                        //       taskID: tareas[index]['tarea']['id'],
-                        //       tipo: tipo,
-                        //       userName: widget.userName,
-                        //       userSurname: widget.userSurname,
-                        //     );
-                        //   }));
-                        // },
-                        // ---------------------------------------
-                        child: Card(
-                          color: tareas[index]['tarea']['completada']
-                              ? Color.fromARGB(255, 229, 250, 238)
-                              : asignada == false
-                                  ? Color.fromARGB(255, 223, 241, 255)
-                                  : Color.fromARGB(255, 241, 233, 255),
-                          margin: const EdgeInsets.only(
-                              top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
-                          child: ListTile(
-                            title: GestureDetector(
-                              // ----------------------
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    "${tareas[index]?['tarea']?['nombre']}",
-                                    style: const TextStyle(
-                                      color: Color.fromARGB(255, 76, 76, 76),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                          // onTap: () {
+                          //   Navigator.push(context,
+                          //       MaterialPageRoute(builder: (context) {
+                          //     return TaskDetailsPage(
+                          //       taskID: tareas[index]['tarea']['id'],
+                          //       tipo: tipo,
+                          //       userName: widget.userName,
+                          //       userSurname: widget.userSurname,
+                          //     );
+                          //   }));
+                          // },
+                          // ---------------------------------------
+                          child: Card(
+                            color: tareas[index]['tarea']['completada']
+                                ? Color.fromARGB(255, 229, 250, 238)
+                                : asignada == false
+                                ? Color.fromARGB(255, 223, 241, 255)
+                                : Color.fromARGB(255, 241, 233, 255),
+                            margin: const EdgeInsets.only(
+                                top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
+                            child: ListTile(
+                              title: GestureDetector(
+                                // ----------------------
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "${tareas[index]?['tarea']?['nombre']}",
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 76, 76, 76),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
+                                    const SizedBox(height: 8),
+                                  ],
+                                ),
+                              ),
+                              // -----------------------
+                              subtitle: Text(
+                                  tareas[index]['tarea']['completada'] == true
+                                      ? "Completada ${alumnoAsignado}"
+                                      : asignada
+                                      ? "Asignada ${alumnoAsignado}"
+                                      : "No asignada"),
+                              leading: const Icon(
+                                Icons.task,
+                                size: 35,
+                              ),
+                              // -----------------------
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                      tareas[index]['tarea']['completada'] == true
+                                          ? "Completada"
+                                          : asignada
+                                          ? "Asignada"
+                                          : "No asignada"),
+                                  // ------------------------------------
+                                  IconButton(
+                                    icon: const Icon(Icons.people_alt_rounded,
+                                        color: Color.fromARGB(255, 76, 76, 76)),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AsignTaskCommand(
+                                              userName: widget.userName,
+                                              userSurname: widget.userSurname,
+                                              taskID: tareas[index]['tarea']
+                                              ['id']),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  const SizedBox(height: 8),
+                                  // -----------------
+                                  IconButton(
+                                      icon: const Icon(Icons.delete,
+                                          color: Color.fromARGB(255, 76, 76, 76)),
+                                      onPressed: () async {
+                                        // Mostrar un diálogo de confirmación
+                                        bool confirmar = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Confirmar Eliminación'),
+                                              content: const Text(
+                                                  '¿Seguro que quiere eliminar la tarea?'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: const Text('Sí'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(
+                                                        true); // Confirma la eliminación
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: const Text('No'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(
+                                                        false); // Cancela la eliminación
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+
+                                        if (confirmar) {
+                                          // Actualización en la base de datos:
+                                          controlador.eliminarTarea(
+                                              tareas[index]['tarea']['id']);
+
+                                          // Actualizar la vista:
+                                          setState(() {
+                                            tareas.removeAt(index);
+                                          });
+                                        }
+                                      }),
                                 ],
                               ),
                             ),
-                            // -----------------------
-                            subtitle: Text(
-                                tareas[index]['tarea']['completada'] == true
-                                    ? "Completada ${alumnoAsignado}"
-                                    : asignada
-                                        ? "Asignada ${alumnoAsignado}"
-                                        : "No asignada"),
-                            leading: const Icon(
-                              Icons.task,
-                              size: 35,
-                            ),
-                            // -----------------------
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                    tareas[index]['tarea']['completada'] == true
-                                        ? "Completada"
-                                        : asignada
-                                        ? "Asignada"
-                                        : "No asignada"),
-                                // ------------------------------------
-                                IconButton(
-                                  icon: const Icon(Icons.people_alt_rounded,
-                                      color: Color.fromARGB(255, 76, 76, 76)),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AsignTaskCommand(
-                                            userName: widget.userName,
-                                            userSurname: widget.userSurname,
-                                            taskID: tareas[index]['tarea']
-                                                ['id']),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                // -----------------
-                                IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Color.fromARGB(255, 76, 76, 76)),
-                                    onPressed: () async {
-                                      // Mostrar un diálogo de confirmación
-                                      bool confirmar = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: const Text(
-                                                'Confirmar Eliminación'),
-                                            content: const Text(
-                                                '¿Seguro que quiere eliminar la tarea?'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text('Sí'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      true); // Confirma la eliminación
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: const Text('No'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      false); // Cancela la eliminación
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-
-                                      if (confirmar) {
-                                        // Actualización en la base de datos:
-                                        controlador.eliminarTarea(
-                                            tareas[index]['tarea']['id']);
-
-                                        // Actualizar la vista:
-                                        setState(() {
-                                          tareas.removeAt(index);
-                                        });
-                                      }
-                                    }),
-                              ],
-                            ),
                           ),
                         ),
-                      ),
                       );
                     },
                   ),
@@ -348,14 +357,12 @@ class _TaskListPageState extends State<TaskListPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      AddTaskView(
-                                        onAddTask: (tarea) {
-                                          controlador.addTareaGeneral(tarea.indicesPasos, tarea.titulo, tarea.propietario);
-                                        },
-                                        controller: controlador,
-                                      )
-                                  ),
+                                    builder: (context) =>
+                                        AddTaskView(
+                                          onAddTask: addTask,
+                                          controller: controlador,
+                                        )
+                                ),
                               );
                             } else if (value == 'TareaComanda') {
                               Navigator.push(
@@ -525,8 +532,8 @@ class _TaskListPageState extends State<TaskListPage> {
                           color: tareas[index]['tarea']['completada']
                               ? Color.fromARGB(255, 229, 250, 238)
                               : asignada == false
-                                  ? Color.fromARGB(255, 223, 241, 255)
-                                  : Color.fromARGB(255, 241, 233, 255),
+                              ? Color.fromARGB(255, 223, 241, 255)
+                              : Color.fromARGB(255, 241, 233, 255),
                           margin: const EdgeInsets.only(
                               top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
                           child: ListTile(
@@ -540,7 +547,7 @@ class _TaskListPageState extends State<TaskListPage> {
                                     style: const TextStyle(
                                       color: Color.fromARGB(255, 76, 76, 76),
                                       fontSize:
-                                          14, // Tamaño de fuente más grande
+                                      14, // Tamaño de fuente más grande
                                       fontWeight:
                                       FontWeight.bold, // Texto en negrita
                                     ),
@@ -553,8 +560,8 @@ class _TaskListPageState extends State<TaskListPage> {
                                 tareas[index]['tarea']['completada'] == true
                                     ? "Completada ${alumnoAsignado}"
                                     : asignada
-                                        ? "Asignada ${alumnoAsignado}"
-                                        : "No asignada"),
+                                    ? "Asignada ${alumnoAsignado}"
+                                    : "No asignada"),
                             leading: const Icon(
                               Icons.task,
                               size: 35,
@@ -643,11 +650,11 @@ class _TaskListPageState extends State<TaskListPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PedirMaterial(
-                              userName: widget.userName,
-                              userSurname: widget.userSurname,
+                              builder: (context) => PedirMaterial(
+                                userName: widget.userName,
+                                userSurname: widget.userSurname,
+                              )
                           )
-                        )
                       );
                     },
                     // --------------------------
@@ -671,7 +678,7 @@ class _TaskListPageState extends State<TaskListPage> {
                         Text('Nueva Tarea Reparto Material',
                             style:
                             TextStyle(fontSize: 16)), // El texto del botón.
-                     ],
+                      ],
                     ),
                   ),
                 ),

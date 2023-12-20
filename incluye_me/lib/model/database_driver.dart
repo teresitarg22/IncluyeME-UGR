@@ -37,6 +37,7 @@ class DataBaseDriver {
       results = await connection!.mappedResultsQuery(query);
     } catch (e) {
       print('Error: $e');
+      print(query);
     } finally {
       // No cerrar la conexión aquí
       print('Query executed');
@@ -218,13 +219,13 @@ class DataBaseDriver {
   // Función para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaMaterial(
       int id) async {
-    return await request("SELECT * FROM tarea_material WHERE id = $id ");
+    return await request("SELECT * FROM tarea_material WHERE id_tarea = $id ");
   }
 
   // ----------------------------------------------------
   // Función para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaComanda(int id) async {
-    return await request("SELECT * FROM comanda WHERE id = $id ");
+    return await request("SELECT * FROM comanda WHERE id_tarea = $id ");
   }
 
   // ----------------------------------------------------
