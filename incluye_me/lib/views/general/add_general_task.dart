@@ -24,17 +24,41 @@ class _AddTaskPageState extends State<AddTaskView> {
   }
 
   void _saveTask() async {
+    if (_titleController.text.isEmpty) {
+      _showSnackBar('Por favor, introduce un título para la tarea');
+      return;
+    }
+
+    if (pasos.isEmpty) {
+      _showSnackBar('Por favor, añade al menos un paso');
+      return;
+    }
+
+    for (var paso in pasos) {
+      if (paso.descripcion.isEmpty) {
+        _showSnackBar('Por favor, añade una descripción a cada paso');
+        return;
+      }
+    }
+
     List<int> indicesPasos = await widget.controller.insertarPasosYObtenerIds(pasos);
     final tarea = Tarea(
         titulo: _titleController.text,
         indicesPasos: indicesPasos,
         propietario: teacher!.getName() + ' ' + teacher!.getSurnames()
     );
+
     await widget.controller.addTarea(tarea.titulo, false, DateTime.now());
     widget.onAddTask(tarea);
 
     Navigator.pop(context);
   }
+
+  void _showSnackBar(String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +90,7 @@ class _AddTaskPageState extends State<AddTaskView> {
                   onPressed: addPaso,
                   child: Text('Añadir Paso'),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue, // Establecer color aquí
+                    backgroundColor: Colors.blue, // Establecer color aquí
                   ),
                 ),
               ),
@@ -76,7 +100,7 @@ class _AddTaskPageState extends State<AddTaskView> {
                   onPressed: _saveTask,
                   child: Text('Guardar Tarea'),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue, // Establecer color aquí
+                    backgroundColor: Colors.blue, // Establecer color aquí
                   ),
                 ),
               ),

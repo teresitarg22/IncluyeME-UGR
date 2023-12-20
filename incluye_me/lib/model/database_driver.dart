@@ -356,6 +356,33 @@ class DataBaseDriver {
     return Paso.fromJson(data);
   }
 
+  // ----------------------------------------------------
+  // Función para obtener todos los pasos
+  Future<List<Paso>> getAllPasos() async {
+    List<Map<String, Map<String, dynamic>>> data = await request("SELECT * FROM pasos");
+    List<Paso> pasos = [];
+
+    for (Map<String, Map<String, dynamic>> row in data) {
+      pasos.add(Paso.fromJson([row]));
+    }
+
+    return pasos;
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener todos los pasos de una tarea general
+  Future<List<Paso>> getPasosTareaGeneral(int id) async {
+    List<Map<String, Map<String, dynamic>>> data = await request("SELECT * FROM tareas_generales WHERE id = $id");
+    List<int> indicesPasos = data[0]['tareas_generales']!['indices_pasos'].cast<int>();
+    List<Paso> pasos = [];
+
+    for (int indice in indicesPasos) {
+      pasos.add(await getPaso(indice));
+    }
+
+    return pasos;
+  }
+
   // Insertar tarea en la tabla tarea (nombre, completada: true/false, fecha_tarea)
   Future<void> insertarTarea2(String nombre, bool completada, DateTime fecha) async {
     try {
@@ -465,5 +492,11 @@ class DataBaseDriver {
     await request(
       "UPDATE tarea SET completada = 'true' where id = $ID"
     );
+  }
+
+  // ----------------------------------------------------
+  // Funcion para listar toda la tabla asignada
+  Future<List<Map<String, Map<String, dynamic>>>> listaAsignada() async {
+    return await request("SELECT * FROM asignada");
   }
 }
