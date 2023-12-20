@@ -98,7 +98,7 @@ class DataBaseDriver {
   Future<void> registrarProfesor(String nombre, String apellidos, String correo,
       var contrasena, var foto, bool esAdmin) async {
     await request(
-        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', '$foto', '$esAdmin')");
+        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', E'\\\\x$foto', '$esAdmin')");
   }
 
   // ----------------------------------------------------
@@ -140,7 +140,7 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Insertar en la tabla imparte_en el nombre y apeliidos  del profesor y el nombre del aula
   Future<void> insertarImparteEn(
-      String nombre, String apellidos, String aula) async {
+      String aula, String nombre, String apellidos) async {
     await request(
         " INSERT INTO imparte_en (nombre_aula, nombre_personal, apellidos_personal) VALUES ('$aula', '$nombre', '$apellidos')");
   }
@@ -181,7 +181,7 @@ class DataBaseDriver {
   // Funcion para elimiar estudiante.
   Future<void> eliminarEstudiante(String nombre, String apellidos) async {
     await request(
-        "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
+        "DELETE FROM usuario WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 
   // ----------------------------------------------------

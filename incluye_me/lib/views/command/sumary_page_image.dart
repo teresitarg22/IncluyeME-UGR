@@ -98,7 +98,10 @@ class _SummaryPageImageState extends State<SummaryPageImage> {
     super.initState();
     numeros[0] = "assets/cero.png";
     numeros[1] = "assets/uno.png";
-    // Asigna aquí las imágenes restantes
+    numeros[2] = "assets/dos.png";
+    numeros[3] = "assets/tres.png";
+    numeros[4] = "assets/cuatro.png";
+    numeros[5] = "assets/cinco.png";
   }
 
   @override
