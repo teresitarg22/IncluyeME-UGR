@@ -294,6 +294,7 @@ class _UserListPageState extends State<UserListPage> {
                                         TextButton(
                                           child: const Text('Sí'),
                                           onPressed: () {
+                                            controlador.eliminarEstudiante(nombre, filteredUsers[index][tipo]['apellidos']); 
                                             Navigator.of(context).pop(
                                                 true); // Confirma la eliminación
                                           },

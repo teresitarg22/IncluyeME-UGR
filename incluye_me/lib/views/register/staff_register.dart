@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../../controllers/register_controller.dart';
+import 'package:convert/convert.dart';
 
 class ProfesorRegistration extends StatefulWidget {
   const ProfesorRegistration({super.key});
@@ -325,12 +326,14 @@ class _ProfesorRegistrationState extends State<ProfesorRegistration> {
                           );
                           // ----------------------------------------------
                         } else {
+                          List<int> imageBytes = _image!.readAsBytesSync();
+                          String imageHex = hex.encode(imageBytes);
                           await _controlador.handleRegisterProfesor(
                               _nombre!,
                               _apellidos!,
                               _correoElectronico!,
                               _passwd!,
-                              _image,
+                               imageHex,
                               _isAdmin!,
                               _aulasProfesor);
 
