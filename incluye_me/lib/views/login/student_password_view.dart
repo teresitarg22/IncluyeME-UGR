@@ -8,16 +8,20 @@ import 'package:responsive_builder/responsive_builder.dart';
 import '../../model/student.dart';
 import '../student/student_tasks.dart';
 
-class LoginWithSymbols extends StatefulWidget {
+// Juliana --> 7,2,8
+// Sergio --> 6,2,8
+// Teresa --> 1,2,3
 
+class LoginWithSymbols extends StatefulWidget {
   // Variable estudiante
-  Estudiante student;
+  final Estudiante student;
 
   // Constructor
   LoginWithSymbols({Key? key, required this.student}) : super(key: key);
 
   @override
-  _LoginWithSymbolsState createState() => _LoginWithSymbolsState(student: student);
+  _LoginWithSymbolsState createState() =>
+      _LoginWithSymbolsState(student: student);
 }
 
 // -----------------------------------------------------------------------------------
@@ -30,15 +34,15 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
   // Constructor
   _LoginWithSymbolsState({required this.student}) {
     student = this.student;
-    studentPassword= student.getPasswordAsList();
+    studentPassword = student.getPasswordAsList();
   }
 
-  List<int> selectedSymbols = []; // Guarda los indices de los símbolos seleccionados
+  List<int> selectedSymbols =
+      []; // Guarda los indices de los símbolos seleccionados
   final List<String> symbols =
       List.generate(9, (index) => 'assets/symbol$index.png');
 
   // Combinación correcta de símbolos
-
 
   // ------------------------------------------------------------------------
   @override
@@ -138,7 +142,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
             // ---------------------------------------------------------------
             Container(
               height: 1.5,
-              color: Colors.blue, // Línea azul de separación.
+              color: Colors.blue,
             ),
             // ----------------------------
             const SizedBox(height: 15),

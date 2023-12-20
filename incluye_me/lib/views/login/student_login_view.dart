@@ -57,13 +57,15 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                       ),
                       itemCount: studentList!.length - pageIndex * 6,
                       itemBuilder: (BuildContext context, int index) {
-                        Estudiante estudiante = studentList![index + pageIndex * 6];
+                        Estudiante estudiante =
+                            studentList![index + pageIndex * 6];
                         return ElevatedButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginWithSymbols(student: estudiante),
+                                builder: (context) =>
+                                    LoginWithSymbols(student: estudiante),
                               ),
                             );
                           },
@@ -78,17 +80,17 @@ class _StudentLoginViewState extends State<StudentLoginView> {
                               vertical: 20,
                             ),
                           ),
-                          //Image and text
+                          // --------------------------------------
                           child: Stack(
                             alignment: Alignment.center,
                             children: <Widget>[
-                              Image.memory(estudiante.foto), // La imagen del estudiante
+                              Image.memory(estudiante.foto),
                               Text(
-                                estudiante.nombre, // Suponiendo que estudiante tiene un campo 'nombre'
-                                style: TextStyle(
-                                  color: Colors.white, // Color del texto
-                                  fontSize: 16, // Tamaño del texto
-                                  backgroundColor: Colors.black45, // Fondo del texto para mayor legibilidad
+                                estudiante.nombre,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  backgroundColor: Colors.black45,
                                 ),
                               ),
                             ],
@@ -148,7 +150,7 @@ class _StudentLoginViewState extends State<StudentLoginView> {
   Future<void> initializeList() async {
     var contenido = await dbDriver.request("Select * from estudiante");
     studentList = Estudiante.fromJsonList(contenido);
-    setState(() {}); // Actualiza la interfaz de usuario una vez que los datos están listos
+    setState(
+        () {}); // Actualiza la interfaz de usuario una vez que los datos están listos
   }
-
 }

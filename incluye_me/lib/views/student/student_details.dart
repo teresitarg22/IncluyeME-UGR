@@ -9,16 +9,20 @@ class StudentDetailsPage extends StatefulWidget {
   final String userName;
   final String userSurname;
 
-  const StudentDetailsPage(
+  StudentDetailsPage(
       {super.key, required this.userName, required this.userSurname});
 
   @override
-  _StudentDetailsPageState createState() => _StudentDetailsPageState();
+  _StudentDetailsPageState createState() =>
+      _StudentDetailsPageState(userName, userSurname);
 }
 
 // ----------------------------------------------------------------------
 
 class _StudentDetailsPageState extends State<StudentDetailsPage> {
+  String userName = "";
+  String userSurname = "";
+
   List<Map<String, dynamic>> tareasPendientes = [];
   List<Map<String, dynamic>> tareasCompletadas = [];
 
@@ -29,30 +33,16 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
   final TaskController taskController = TaskController();
   final Controller detailController = Controller();
 
-  var resultado;
   User? user;
 
-  // -----------------------------------------------------------------------------------------
-  // Buscamos en la BD los detalles del usuario, teniendo en cuenta si es estudiante o no.
+  // ---------------------------------------------
+  // Buscamos en la BD los detalles del usuario
   Future<void> buscarDatosUsuario() async {
-    resultado = await detailController.getEstudiante(
+    var resultado = await detailController.getEstudiante(
         widget.userName, widget.userSurname);
+    user = Estudiante.fromJson(resultado[0]);
 
-    setState(() {
-      var detalles = resultado[0]['estudiante'];
-
-      user = Estudiante(
-          nombre: detalles['nombre'],
-          apellidos: detalles['apellidos'],
-          correo: detalles['correo'],
-          foto: "",
-          contrasenia: detalles['contrasenia'],
-          tipo_letra: detalles['tipo_letra'] ?? '',
-          maymin: detalles['maymin'] ?? '',
-          formato: detalles['formato'] ?? '',
-          contrasenia_iconos: detalles['contrasenia_iconos'] ?? '',
-          sabeLeer: detalles['sabeLeer'] ?? false);
-    });
+    setState(() {});
   }
 
   // -----------------------------------------------------------------
@@ -103,6 +93,13 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
     //setTareas();
   }
 
+  // ---------------------------
+
+  _StudentDetailsPageState(String userName, String userSurname) {
+    this.userName = userName;
+    this.userSurname = userSurname;
+  }
+
   // ---------------------------------------------------------
 
   @override
@@ -142,11 +139,33 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(10),
                   child: Row(children: [
-                    // Imagen circular del alumno.
+                    //Imagen circular del alumno.
                     CircleAvatar(
                       radius: MediaQuery.of(context).size.width > 600 ? 80 : 55,
-                      backgroundImage:
-                          const AssetImage('assets/usuario_sin_foto.png'),
+                      backgroundColor: Colors.transparent,
+                      child: ClipOval(
+                        child: user?.foto != null
+                            ? Image.memory(
+                                user?.foto,
+                                width: MediaQuery.of(context).size.width > 600
+                                    ? 160
+                                    : 110,
+                                height: MediaQuery.of(context).size.width > 600
+                                    ? 160
+                                    : 110,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/usuario_sin_foto.png',
+                                width: MediaQuery.of(context).size.width > 600
+                                    ? 160
+                                    : 110,
+                                height: MediaQuery.of(context).size.width > 600
+                                    ? 160
+                                    : 110,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
                     // -----------------------------
                     const SizedBox(width: 30),

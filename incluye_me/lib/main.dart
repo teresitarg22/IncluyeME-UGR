@@ -12,7 +12,6 @@ import 'views/staff/user_list.dart';
 
 // -------------------------------------------------------------------
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -62,16 +61,17 @@ class MyApp extends StatelessWidget {
             userName: teacher!.name,
             userSurname: teacher!.surnames),
         // ----------------------------------------------------------
-        '/studentDetails': (context) =>
-            const StudentDetailsPage(userName: "Sergio", userSurname: "Lopez"),
+        '/studentDetails': (context) => StudentDetailsPage(
+            userName: student_global!.nombre ?? '',
+            userSurname: student_global!.apellidos ?? ''),
         // ----------------------------------------------------------
-        '/studentTasks': (context) =>
-            StudentTasks(userName: student_global?.nombre ?? '', userSurname: student_global?.apellidos ?? '')
+        '/studentTasks': (context) => StudentTasks(
+            userName: student_global?.nombre ?? '',
+            userSurname: student_global?.apellidos ?? '')
       },
     );
   }
 }
-
 
 class MyTest extends StatelessWidget {
   const MyTest({super.key});
@@ -87,7 +87,7 @@ class MyTest extends StatelessWidget {
         '/registroPage': (context) => const HomeScreen(),
         // ----------------------------------------------------------
         '/taskList': (context) =>
-        const TaskListPage(userName: '', userSurname: ''),
+            const TaskListPage(userName: '', userSurname: ''),
         // ----------------------------------------------------------
         '/userList': (context) =>
             UserListPage(userName: user, userSurname: user),
@@ -105,11 +105,13 @@ class MyTest extends StatelessWidget {
             userName: teacher!.name,
             userSurname: teacher!.surnames),
         // ----------------------------------------------------------
-        '/studentDetails': (context) =>
-        const StudentDetailsPage(userName: "Sergio", userSurname: "Lopez"),
+        '/studentDetails': (context) => StudentDetailsPage(
+            userName: student_global?.nombre ?? '',
+            userSurname: student_global?.apellidos ?? ''),
         // ----------------------------------------------------------
-        '/studentTasks': (context) =>
-            StudentTasks(userName: student_global?.nombre ?? '', userSurname: student_global?.apellidos ?? '')
+        '/studentTasks': (context) => StudentTasks(
+            userName: student_global?.nombre ?? '',
+            userSurname: student_global?.apellidos ?? '')
       },
     );
   }
