@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:incluye_me/components/bottom_student_bar.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
 import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/views/classroom/classroom_choose.dart';
+import 'package:incluye_me/views/classroom/classroom_choose_image.dart';
+import '../general/general_task_student_view.dart';
+import '../material/material_view.dart';
 
 class StudentTasks extends StatefulWidget {
   final String userName;
@@ -163,7 +167,59 @@ class _StudentTasksState extends State<StudentTasks> {
                                   right: 15.0),
                               child: ListTile(
                                 title: GestureDetector(
-                                  // ----------------------
+                                  onTap: () async {
+                                    String tipo = await taskController
+                                        .tipoTarea(tareasPendientes[index]
+                                            ['tarea']['id']);
+                                    bool leer = await taskController.sabeLeer(
+                                        widget.userName, widget.userSurname);
+
+                                    if (tipo == "comanda" && leer) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ClaseDropdown(
+                                              taskID: tareasPendientes[index]
+                                                  ['tarea']['id']),
+                                        ),
+                                      );
+                                    } else if (tipo == "comanda" && !leer) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ClaseDropdownImage(
+                                                  taskID:
+                                                      tareasPendientes[index]
+                                                          ['tarea']['id']),
+                                        ),
+                                      );
+                                    } else if (tipo == "general") {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TareaGeneralView(
+                                                  taskId:
+                                                      tareasPendientes[index]
+                                                          ['tarea']['id']),
+                                        ),
+                                      );
+                                    } else if (tipo == "material") {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MaterialView(
+                                            userName: widget.userName,
+                                            userSurname: widget.userSurname,
+                                            sabeLeer: leer,
+                                            taskID: tareasPendientes[index]
+                                                ['tarea']['id'],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
