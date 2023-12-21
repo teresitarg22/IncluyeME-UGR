@@ -12,4 +12,5 @@ int imageHeight = 256;
 int imageWidth = 256;
 
 List<Estudiante>? studentList;
+List<Teacher>? teacherList;
 List<Aula>? aulaList;
