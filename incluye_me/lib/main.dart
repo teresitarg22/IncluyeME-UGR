@@ -16,6 +16,7 @@ void main() {
   runApp(const MyApp());
 }
 
+
 //Código de testeo para cerrar la base de datos cuando la app se cierra
 // class LifecycleWatcher extends WidgetsBindingObserver {
 //   @override
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String user = "";
     return MaterialApp(
       initialRoute: '/',
       routes: {
@@ -86,7 +88,7 @@ class MyTest extends StatelessWidget {
         '/registroPage': (context) => const HomeScreen(),
         // ----------------------------------------------------------
         '/taskList': (context) =>
-            const TaskListPage(userName: '', userSurname: ''),
+            TaskListPage(userName: '', userSurname: ''),
         // ----------------------------------------------------------
         '/userList': (context) =>
             UserListPage(userName: user, userSurname: user),
@@ -115,6 +117,7 @@ class MyTest extends StatelessWidget {
     );
   }
 }
+
 
 
 

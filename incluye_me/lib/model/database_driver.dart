@@ -313,8 +313,12 @@ class DataBaseDriver {
 
   Future<int> insertarPaso(Paso paso) async {
     try {
+      // Asegúrate de que la imagen esté codificada en Base64
+      String base64Image = base64Encode(paso.imagen);
+
+      // Modifica la consulta para usar la función decode de SQL
       var result = await request(
-          "INSERT INTO pasos (descripcion, propietario, imagen) VALUES ('${paso.descripcion}', '${paso.propietario}', '${paso.imagen}') RETURNING id");
+          "INSERT INTO pasos (descripcion, propietario, imagen) VALUES ('${paso.descripcion}', '${paso.propietario}', decode('$base64Image', 'base64')) RETURNING id");
 
       // Verificar si el resultado no está vacío y tiene la estructura esperada
       if (result.isNotEmpty &&
@@ -357,6 +361,33 @@ class DataBaseDriver {
     List<Map<String, Map<String, dynamic>>> data =
         await request("SELECT * FROM pasos WHERE id = $id");
     return Paso.fromJson(data);
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener todos los pasos
+  Future<List<Paso>> getAllPasos() async {
+    List<Map<String, Map<String, dynamic>>> data = await request("SELECT * FROM pasos");
+    List<Paso> pasos = [];
+
+    for (Map<String, Map<String, dynamic>> row in data) {
+      pasos.add(Paso.fromJson([row]));
+    }
+
+    return pasos;
+  }
+
+  // ----------------------------------------------------
+  // Función para obtener todos los pasos de una tarea general
+  Future<List<Paso>> getPasosTareaGeneral(int id) async {
+    List<Map<String, Map<String, dynamic>>> data = await request("SELECT * FROM tareas_generales WHERE id = $id");
+    List<int> indicesPasos = data[0]['tareas_generales']!['indices_pasos'].cast<int>();
+    List<Paso> pasos = [];
+
+    for (int indice in indicesPasos) {
+      pasos.add(await getPaso(indice));
+    }
+
+    return pasos;
   }
 
   // Insertar tarea en la tabla tarea (nombre, completada: true/false, fecha_tarea)
@@ -473,10 +504,29 @@ class DataBaseDriver {
     await request("UPDATE tarea SET completada = 'true' where id = $ID");
   }
 
-  //Funcion para saber si un alumno sabe leer 
+  //Funcion para saber si un alumno sabe leer
   Future<List<Map<String, Map<String, dynamic>>>> sabeLeer(
       String nombre, String apellidos) async {
     return await request(
         "SELECT sabe_leer FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
+  }
+
+  // ----------------------------------------------------
+  // Funcion para listar toda la tabla asignada
+  Future<List<Map<String, Map<String, dynamic>>>> listaAsignada() async {
+    return await request("SELECT * FROM asignada");
+  }
+
+  insertarTareaGeneralConId(int tareaId, List<int> indicesPasos, String nombre, String propietario) {
+    // Convertir la lista de enteros en una cadena con el formato de arreglo de PostgreSQL
+    String indicesPasosFormatted = '{' + indicesPasos.join(',') + '}';
+
+    try {
+      request(
+          "INSERT INTO tareas_generales (id, indices_pasos, nombre, propietario) VALUES ('$tareaId', '$indicesPasosFormatted', '$nombre', '$propietario')");
+    } catch (e) {
+      print('Error al insertar tarea general: $e');
+      throw Exception('No se pudo insertar la tarea general');
+    }
   }
 }

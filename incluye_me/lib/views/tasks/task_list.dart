@@ -12,11 +12,10 @@ import '../command/command_task_asign.dart';
 // --------------------------------------------
 // Clase para la página de lista de usuarios
 class TaskListPage extends StatefulWidget {
-  final String userName;
-  final String userSurname;
+  String userName;
+  String userSurname;
 
-  const TaskListPage(
-      {super.key, required this.userName, required this.userSurname});
+  TaskListPage({super.key, required this.userName, required this.userSurname});
 
   @override
   _TaskListPageState createState() => _TaskListPageState();
@@ -75,6 +74,14 @@ class _TaskListPageState extends State<TaskListPage> {
     bool adminStatus =
         await controlador.esAdmin(widget.userName, widget.userSurname);
     setState(() => isAdmin = adminStatus);
+  }
+
+  // -----------------------------
+  void addTask(Tarea tarea) async {
+    await controlador.addTareaGeneral(
+        tarea.indicesPasos, tarea.titulo, tarea.propietario);
+    await loadTaskIds();
+    setState(() {});
   }
 
   // -----------------------------
@@ -152,7 +159,6 @@ class _TaskListPageState extends State<TaskListPage> {
           ),
         ],
       ),
-      // --------------------------------------------------------------
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -341,12 +347,7 @@ class _TaskListPageState extends State<TaskListPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AddTaskView(
-                                          onAddTask: (tarea) {
-                                            controlador.addTareaGeneral(
-                                                tarea.indicesPasos,
-                                                tarea.titulo,
-                                                tarea.propietario);
-                                          },
+                                          onAddTask: addTask,
                                           controller: controlador,
                                         )),
                               );
@@ -418,6 +419,7 @@ class _TaskListPageState extends State<TaskListPage> {
   // -------------------------------------------------------------------------
   // Lógica para construir la interfaz no administrador
   Widget buildNonAdminUI() {
+    //var tareas = material;
     tipo = "material";
 
     return Scaffold(
@@ -521,6 +523,17 @@ class _TaskListPageState extends State<TaskListPage> {
                             );
                           }));
                         },
+                        // onTap: () {
+                        //   Navigator.push(context,
+                        //       MaterialPageRoute(builder: (context) {
+                        //     return TaskDetailsPage(
+                        //       taskID: tareas[index][tipo]['id'],
+                        //       tipo: tipo,
+                        //       userName: widget.userName,
+                        //       userSurname: widget.userSurname,
+                        //     );
+                        //   }));
+                        // },
                         child: Card(
                           color: tareas[index]['tarea']['completada'] == true
                               ? Color.fromARGB(255, 229, 250, 238)
@@ -610,11 +623,14 @@ class _TaskListPageState extends State<TaskListPage> {
                                       );
 
                                       if (confirmar) {
+                                        // Realizar la actualización en la base de datos
                                         controlador.eliminarTarea(
                                             tareas[index]['tarea']['id']);
 
                                         // Actualizamos la vista
                                         setState(() {
+                                          // Aquí puedes realizar las actualizaciones necesarias para refrescar la página.
+                                          // Por ejemplo, podrías eliminar el usuario de la lista de usuarios filtrados:
                                           tareas.removeAt(index);
                                         });
                                       }
