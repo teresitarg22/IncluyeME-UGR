@@ -6,6 +6,7 @@ import 'package:incluye_me/views/classroom/classroom_choose.dart';
 import 'package:incluye_me/views/classroom/classroom_choose_image.dart';
 import '../general/general_task_student_view.dart';
 import '../material/material_view.dart';
+import 'package:incluye_me/views/staff/graphics.dart';
 
 class StudentTasks extends StatefulWidget {
   final String userName;
@@ -116,6 +117,20 @@ class _StudentTasksState extends State<StudentTasks> {
             ],
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => GraphicsPage(
+                        nombre: widget.userName,
+                        apellidos: widget.userSurname,
+                        userName: widget.userName,
+                        userSurname: widget.userSurname,
+                      )));
+            },
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,

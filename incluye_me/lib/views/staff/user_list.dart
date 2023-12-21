@@ -269,26 +269,28 @@ class _UserListPageState extends State<UserListPage> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => GraphicsPage(
-                                          nombre: filteredUsers[index][tipo]
-                                              ['nombre'],
-                                          apellidos: filteredUsers[index][tipo]
-                                              ['apellidos'],
-                                          userName: widget.userName,
-                                          userSurname: widget.userSurname,
-                                        )),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.bar_chart,
-                              color: Color.fromARGB(255, 76, 76, 76),
+                          if (tipo == 'estudiante')
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => GraphicsPage(
+                                            nombre: filteredUsers[index][tipo]
+                                                ['nombre'],
+                                            apellidos: filteredUsers[index]
+                                                [tipo]['apellidos'],
+                                            userName: widget.userName,
+                                            userSurname: widget.userSurname,
+                                          )),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.bar_chart,
+                                color: Color.fromARGB(255, 76, 76, 76),
+                              ),
                             ),
-                          ),
                           // ------------------------------------
+
                           IconButton(
                             icon: const Icon(Icons.edit,
                                 color: Color.fromARGB(255, 76, 76, 76)),

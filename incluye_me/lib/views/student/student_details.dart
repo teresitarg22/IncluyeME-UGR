@@ -4,6 +4,8 @@ import 'package:incluye_me/controllers/user_controller.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
 import 'package:incluye_me/model/student.dart';
 import 'package:incluye_me/model/user.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:incluye_me/views/staff/graphics.dart';
 
 class StudentDetailsPage extends StatefulWidget {
   final String userName;
@@ -26,10 +28,6 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
   List<Map<String, dynamic>> tareasPendientes = [];
   List<Map<String, dynamic>> tareasCompletadas = [];
 
-  double tareasCompletadasPorcentaje = 50.0;
-  double tareasNoCompletadasPorcentaje = 50.0;
-  int tareasTotales = 0;
-
   final TaskController taskController = TaskController();
   final Controller detailController = Controller();
 
@@ -45,52 +43,11 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
     setState(() {});
   }
 
-  // -----------------------------------------------------------------
-
-  Future<void> setTareas() async {
-    List<Map<String, dynamic>> tareasAsignadas =
-        await taskController.getTareaAsignadaPorEstudiante(
-      widget.userName,
-      widget.userSurname,
-    );
-
-    List<Map<String, dynamic>> pendientes = [];
-    List<Map<String, dynamic>> completadas = [];
-
-    // Itera sobre los IDs de tareas y obtiene los datos
-    for (var tareaAsignada in tareasAsignadas) {
-      int idTarea = tareaAsignada['asignada']['id_tarea'];
-
-      // Llama a la función que obtiene los detalles de la tarea
-      List<Map<String, Map<String, dynamic>>> detallesTarea =
-          await taskController.getTarea(idTarea);
-
-      // Verifica si la tarea está completada o pendiente
-      if (detallesTarea.isNotEmpty &&
-          detallesTarea[0]['tarea']?['completada'] == true) {
-        completadas.addAll(detallesTarea);
-      } else {
-        pendientes.addAll(detallesTarea);
-      }
-
-      setState(() {
-        tareasPendientes = pendientes;
-        tareasCompletadas = completadas;
-
-        tareasCompletadasPorcentaje =
-            (tareasCompletadas.length / tareasTotales) * 100;
-        tareasNoCompletadasPorcentaje =
-            (tareasPendientes.length / tareasTotales) * 100;
-      });
-    }
-  }
-
   // ---------------------------
   @override
   void initState() {
     super.initState();
     buscarDatosUsuario();
-    //setTareas();
   }
 
   // ---------------------------
@@ -258,6 +215,7 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                 // -----------------------------------------------------
                 const SizedBox(height: 20),
                 const Divider(height: 1, color: Colors.grey),
+
                 // -----------------------------------------------------
               ]),
         ),
