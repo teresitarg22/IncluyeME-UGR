@@ -12,7 +12,6 @@ import 'views/staff/user_list.dart';
 
 // -------------------------------------------------------------------
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -35,11 +34,54 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String user = "";
     return MaterialApp(
       initialRoute: '/',
       routes: {
         '/': (context) => const StartView(),
+        // ----------------------------------------------------------
+        '/registroPage': (context) => const HomeScreen(),
+        // ----------------------------------------------------------
+        '/taskList': (context) => TaskListPage(
+            userName: teacher!.name, userSurname: teacher!.surnames),
+        // ----------------------------------------------------------
+        '/userList': (context) => UserListPage(
+            userName: teacher!.name, userSurname: teacher!.surnames),
+        // ----------------------------------------------------------
+        '/userDetails': (context) => UserDetailsPage(
+            nombre: teacher!.name,
+            apellidos: teacher!.surnames,
+            esEstudiante: false,
+            userName: teacher!.name,
+            userSurname: teacher!.surnames),
+        // ----------------------------------------------------------
+        '/graphics': (context) => GraphicsPage(
+            nombre: teacher!.name,
+            apellidos: teacher!.surnames,
+            userName: teacher!.name,
+            userSurname: teacher!.surnames),
+        // ----------------------------------------------------------
+        '/studentDetails': (context) => StudentDetailsPage(
+            userName: student_global!.nombre ?? '',
+            userSurname: student_global!.apellidos ?? ''),
+        // ----------------------------------------------------------
+        '/studentTasks': (context) => StudentTasks(
+            userName: student_global?.nombre ?? '',
+            userSurname: student_global?.apellidos ?? '')
+      },
+    );
+  }
+}
+
+class MyTest extends StatelessWidget {
+  const MyTest({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    String user = "";
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const StudentLoginView(),
         // ----------------------------------------------------------
         '/registroPage': (context) => const HomeScreen(),
         // ----------------------------------------------------------
@@ -62,54 +104,13 @@ class MyApp extends StatelessWidget {
             userName: teacher!.name,
             userSurname: teacher!.surnames),
         // ----------------------------------------------------------
-        '/studentDetails': (context) =>
-            const StudentDetailsPage(userName: "Sergio", userSurname: "Lopez"),
+        '/studentDetails': (context) => StudentDetailsPage(
+            userName: student_global?.nombre ?? '',
+            userSurname: student_global?.apellidos ?? ''),
         // ----------------------------------------------------------
-        '/studentTasks': (context) =>
-            StudentTasks(userName: student_global?.nombre ?? '', userSurname: student_global?.apellidos ?? '')
-      },
-    );
-  }
-}
-
-
-class MyTest extends StatelessWidget {
-  const MyTest({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    String user = "";
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const StudentLoginView(),
-        // ----------------------------------------------------------
-        '/registroPage': (context) => const HomeScreen(),
-        // ----------------------------------------------------------
-        '/taskList': (context) =>
-        const TaskListPage(userName: '', userSurname: ''),
-        // ----------------------------------------------------------
-        '/userList': (context) =>
-            UserListPage(userName: user, userSurname: user),
-        // ----------------------------------------------------------
-        '/userDetails': (context) => UserDetailsPage(
-            nombre: teacher!.name,
-            apellidos: teacher!.surnames,
-            esEstudiante: false,
-            userName: teacher!.name,
-            userSurname: teacher!.surnames),
-        // ----------------------------------------------------------
-        '/graphics': (context) => GraphicsPage(
-            nombre: teacher!.name,
-            apellidos: teacher!.surnames,
-            userName: teacher!.name,
-            userSurname: teacher!.surnames),
-        // ----------------------------------------------------------
-        '/studentDetails': (context) =>
-        const StudentDetailsPage(userName: "Sergio", userSurname: "Lopez"),
-        // ----------------------------------------------------------
-        '/studentTasks': (context) =>
-            StudentTasks(userName: student_global?.nombre ?? '', userSurname: student_global?.apellidos ?? '')
+        '/studentTasks': (context) => StudentTasks(
+            userName: student_global?.nombre ?? '',
+            userSurname: student_global?.apellidos ?? '')
       },
     );
   }

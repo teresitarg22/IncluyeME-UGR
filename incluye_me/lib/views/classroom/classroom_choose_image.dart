@@ -1,30 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/model/aula.dart';
 import 'package:incluye_me/views/command/command_task_image.dart';
 import '../../controllers/user_controller.dart';
 import '../command/sumary_page_image.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    String user = "";
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const ClaseDropdownImage(),
-        '/classroomChoose': (context) => const ClaseDropdownImage(),
-      },
-    );
-  }
-}
 
 class ClaseDropdownImage extends StatefulWidget {
-  const ClaseDropdownImage({super.key});
+  final int taskID;
+
+  const ClaseDropdownImage({super.key, required this.taskID});
 
   @override
   _ClaseDropdownImageState createState() => _ClaseDropdownImageState();
@@ -33,8 +18,8 @@ class ClaseDropdownImage extends StatefulWidget {
 class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
   String? _selectedClase;
   final Controller controlador = Controller();
-  List<String> aulas = [];
   Map<String, Map<String, int>> amount = {};
+
   final PageController _pageController =
       PageController(); // Controlador de la página
   int _currentPageIndex = 0; // Índice de la página actual
@@ -42,14 +27,15 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
   @override
   void initState() {
     super.initState();
+    aulaList = [];
     loadClass();
   }
 
   Future<void> loadClass() async {
-    if (aulas.isNotEmpty) return;
-    for (var _class in await controlador.listaAulas()) {
-      aulas.add(_class['aula']!['nombre'].toString());
-    }
+    var contenido = await dbDriver.request(
+        "SELECT nombre_aula, foto FROM imparte_en, personal where imparte_en.nombre_personal = personal.nombre and imparte_en.apellidos_personal = personal.apellidos");
+    //var contenido = await dbDriver.request("Select * from personal");
+    aulaList = Aula.fromJsonList(contenido);
     setState(() {}); // Actualizar el estado después de cargar las aulas
   }
 
@@ -61,7 +47,7 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
           'Selecciona una Clase',
           style: TextStyle(fontSize: 28),
         ),
-        backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+        backgroundColor: Colors.blue,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -73,43 +59,50 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                 setState(() {
                   Map<String, int> amountAux = result['menu'];
                   amount[result['clase']] = amountAux;
-                  aulas.remove(result['clase']);
-                  _selectedClase = aulas.isNotEmpty ? aulas[0] : null;
+                  aulaList!
+                      .removeWhere((aula) => aula.nombre == result['clase']);
+                  _selectedClase =
+                      aulaList!.isNotEmpty ? aulaList![0].toString() : null;
 
-                  if (aulas.isEmpty) {
+                  if (aulaList!.isEmpty) {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return SummaryPageImage(
                         amount: amount,
+                        taskID: widget.taskID,
                       );
                     }));
                   }
                 });
               } else if (result['devolver'] != null) {
                 setState(() {
-                  aulas.add(result['devolver']);
-                  _selectedClase = aulas.isNotEmpty ? aulas[0] : null;
+                  aulaList!.add(result['devolver']);
+                  _selectedClase =
+                      aulaList!.isNotEmpty ? aulaList![0].toString() : null;
                 });
               }
             });
           },
         ),
       ),
-      body: aulas.isEmpty
+      body: aulaList!.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
-                    itemCount: aulas.length,
+                    itemCount: aulaList!.length,
                     onPageChanged: (index) {
                       setState(() {
                         _currentPageIndex = index;
+                        _selectedClase =
+                            aulaList![index].toString(); // Move this line here
                       });
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      _selectedClase = aulas[index];
+                      _selectedClase = aulaList![index].toString();
+                      Aula aula = aulaList![index];
 
                       return Column(
                         children: [
@@ -125,15 +118,19 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                                   setState(() {
                                     Map<String, int> amountAux = result['menu'];
                                     amount[result['clase']] = amountAux;
-                                    aulas.remove(result['clase']);
-                                    _selectedClase =
-                                        aulas.isNotEmpty ? aulas[0] : null;
 
-                                    if (aulas.isEmpty) {
+                                    aulaList!.removeWhere((aula) =>
+                                        aula.nombre == result['clase']);
+                                    _selectedClase = aulaList!.isNotEmpty
+                                        ? aulaList![0].toString()
+                                        : null;
+
+                                    if (aulaList!.isEmpty) {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return SummaryPageImage(
                                           amount: amount,
+                                          taskID: widget.taskID,
                                         );
                                       }));
                                     } else {
@@ -151,8 +148,15 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               side: const BorderSide(width: 1.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                              ),
                             ),
-                            child: Image.asset('assets/aula.png'),
+                            child: Container(
+                              width: 250,
+                              height: 250,
+                              child: Image.memory(aula.foto, fit: BoxFit.cover),
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Text(_selectedClase!),
@@ -178,7 +182,7 @@ class _ClaseDropdownImageState extends State<ClaseDropdownImage> {
                     IconButton(
                       icon: const Icon(Icons.arrow_forward),
                       onPressed: () {
-                        if (_currentPageIndex < aulas.length - 1) {
+                        if (_currentPageIndex < aulaList!.length - 1) {
                           _pageController.nextPage(
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.easeInOut,
