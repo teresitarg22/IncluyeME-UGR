@@ -95,8 +95,12 @@ class _TaskListPageState extends State<TaskListPage> {
   Widget buildAdminUI() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Tareas'),
+        title: const Text(
+          'Lista de Tareas',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () {
@@ -104,8 +108,7 @@ class _TaskListPageState extends State<TaskListPage> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  String query =
-                      ''; // Variable para almacenar la consulta de búsqueda.
+                  String query = '';
 
                   return AlertDialog(
                     title: const Text('Buscar por Nombre'),
@@ -149,7 +152,10 @@ class _TaskListPageState extends State<TaskListPage> {
                 },
               );
             },
-            icon: const Icon(Icons.search), // Icono de lupa.
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ), // Icono de lupa.
           ),
         ],
       ),
@@ -319,7 +325,10 @@ class _TaskListPageState extends State<TaskListPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: PopupMenuButton<String>(
-                          icon: const Icon(Icons.add),
+                          icon: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
                           color: Colors.white,
                           onSelected: (String value) {
                             // ----------------------------

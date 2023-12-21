@@ -57,7 +57,8 @@ class _GraphicsPageState extends State<GraphicsPage> {
 
   Future<void> setDatos() async {
     var tareas = await tareasFuture;
-  
+    tareasCompletadas = 0 ; 
+    tareasNoCompletadas = 0 ;
 
     for (var tarea in tareas) {
       var esSemanal =
@@ -76,11 +77,8 @@ class _GraphicsPageState extends State<GraphicsPage> {
         }
       }
     }
-        tareasCompletadasPorcentaje = (tareasCompletadas / tareasTotales) * 100;
-        tareasNoCompletadasPorcentaje =
-            (tareasNoCompletadas / tareasTotales) * 100;
-   
-    
+    tareasCompletadasPorcentaje = (tareasCompletadas / tareasTotales) * 100;
+    tareasNoCompletadasPorcentaje = (tareasNoCompletadas / tareasTotales) * 100;
   }
 
   // -------------------------------------------------------------------
@@ -92,7 +90,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
       builder: (context, snapshot) {
         // snapshot contiene el estado actual del Future
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
@@ -105,7 +103,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
                 selectionColor: Colors.white,
               ),
               backgroundColor: Colors.blue,
-              automaticallyImplyLeading: false,
+              iconTheme: const IconThemeData(color: Colors.white),
             ),
             body: PieChart(
                 swapAnimationDuration: const Duration(milliseconds: 1500),
@@ -115,12 +113,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
                   centerSpaceRadius: 60,
                   sections: loadDatos(),
                 )),
-            bottomNavigationBar: CustomNavigationBar(
-              userName: widget.userName,
-              userSurname: widget.userSurname,
-            ),
           );
-        
         }
       },
     );

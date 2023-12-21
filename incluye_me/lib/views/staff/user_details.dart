@@ -93,7 +93,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         backgroundColor: Colors.blue,
-        automaticallyImplyLeading: false,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(5.0),
@@ -132,13 +132,20 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // -----------------------------
-                        const Text(
-                          'Información personal',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 25, 72, 110),
-                          ),
-                          textAlign: TextAlign.center,
+                        const Row(
+                          children: [
+                            Icon(Icons.book,
+                                color: Color.fromARGB(255, 25, 72, 110)),
+                            SizedBox(width: 5),
+                            Text(
+                              'Información personal',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 25, 72, 110),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                         // -----------------------------
                         const SizedBox(height: 10),
@@ -149,7 +156,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const Text(
                               'Nombre:',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -171,7 +178,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const Text(
                               'Apellido:',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -191,7 +198,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             // -----------------------------
                             const Text('Email:',
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
                             const SizedBox(width: 8),
                             Text(
                               user?.correo ?? 'No tiene',
@@ -202,15 +209,22 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         // -----------------------------
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 25),
                         // -----------------------------
-                        const Text(
-                          'Autentificación',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 25, 72, 110),
-                          ),
-                          textAlign: TextAlign.center,
+                        const Row(
+                          children: [
+                            Icon(Icons.security,
+                                color: Color.fromARGB(255, 25, 72, 110)),
+                            SizedBox(width: 5),
+                            Text(
+                              'Autentificación',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 25, 72, 110),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                         // -----------------------------
                         const SizedBox(height: 10),
@@ -220,7 +234,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             const Text(
                               'Contraseña:',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -239,9 +253,11 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                         Row(
                           children: [
                             Text(
-                              widget.esEstudiante ? 'Contraseña de iconos' : "",
+                              widget.esEstudiante
+                                  ? 'Contraseña de iconos:'
+                                  : "",
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -258,15 +274,22 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                           ],
                         ),
                         // -----------------------------
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 25),
                         // -----------------------------
-                        Text(
-                          widget.esEstudiante ? 'Accesibilidad' : "",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 25, 72, 110),
-                          ),
-                          textAlign: TextAlign.center,
+                        Row(
+                          children: [
+                            const Icon(Icons.info_outline,
+                                color: Color.fromARGB(255, 25, 72, 110)),
+                            const SizedBox(width: 5),
+                            Text(
+                              widget.esEstudiante ? 'Accesibilidad' : "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 25, 72, 110),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                         // -----------------------------
                         const SizedBox(height: 10),
@@ -276,7 +299,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             Text(
                               widget.esEstudiante ? 'Tipo de letra:' : "",
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -301,7 +324,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                   ? 'Mayúsculas y minúsculas:'
                                   : "",
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -324,7 +347,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             Text(
                               widget.esEstudiante ? 'Formato:' : "",
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -347,7 +370,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             Text(
                               widget.esEstudiante ? 'Sabe Leer:' : "",
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

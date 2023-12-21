@@ -75,7 +75,7 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
         title: Text(
           'Selecciona las comandas para $currentClass',
         ),
-        backgroundColor:  Colors.blue,
+        backgroundColor: Colors.blue,
         automaticallyImplyLeading: false,
       ),
       body: Column(
@@ -134,74 +134,77 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 100, // Ancho de la imagen izquierda
-            child: Image.asset(
-              contador[mainImagePath]!, // Ruta de tu imagen izquierda
-              fit: BoxFit.contain,
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Image.asset(
-                mainImagePath,
-                fit: BoxFit.contain,
+          // Fila para la imagen del menú
+          Row(
+            children: [
+              Container(
+                width: 100, // Ancho de la imagen izquierda
+                child: Image.asset(
+                  contador[mainImagePath]!, // Ruta de tu imagen izquierda
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Image.asset(
+                    mainImagePath,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: 16.0),
-          Expanded(
-            flex: 4,
-            child: Row(
-              children: repeatedImages.map((imagePath) {
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedImagePath = imagePath;
-                            if (amount.containsKey(mainImagePath)) {
-                              if (amount[mainImagePath] != null &&
-                                  numeros[imagePath] != null) {
-                                amount[mainImagePath] = numeros[imagePath]!;
-                              }
+          SizedBox(height: 16.0),
+          // Fila para las imágenes de la mano
+          Row(
+            children: repeatedImages.map((imagePath) {
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedImagePath = imagePath;
+                          if (amount.containsKey(mainImagePath)) {
+                            if (amount[mainImagePath] != null &&
+                                numeros[imagePath] != null) {
+                              amount[mainImagePath] = numeros[imagePath]!;
                             }
+                          }
 
-                            contador[mainImagePath] = imagePath;
-                            changeImage();
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                              width: 2.0,
-                            ),
-                            color: selectedImagePath == imagePath
-                                ? Colors.grey.withOpacity(0.5)
-                                : Colors.transparent,
+                          contador[mainImagePath] = imagePath;
+                          changeImage();
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2.0,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Image.asset(
-                              imagePath,
-                              fit: BoxFit.contain,
-                            ),
+                          color: selectedImagePath == imagePath
+                              ? Colors.grey.withOpacity(0.5)
+                              : Colors.transparent,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Image.asset(
+                            imagePath,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
                     ),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),

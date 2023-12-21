@@ -3,6 +3,41 @@ import '../../components/bottom_navigation_bar.dart';
 import '../../controllers/task_controller.dart' as TC;
 import '../../controllers/user_controller.dart' as UC;
 
+// -------------------------------------------------------------------
+
+void main() {
+  runApp(const MyApp());
+}
+
+//Código de testeo para cerrar la base de datos cuando la app se cierra
+// class LifecycleWatcher extends WidgetsBindingObserver {
+//   @override
+//   void didChangeAppLifecycleState(AppLifecycleState state) {
+//     super.didChangeAppLifecycleState(state);
+//     if (state == AppLifecycleState.paused ||
+//         state == AppLifecycleState.detached) {
+//       // Aquí es donde cierras la base de datos
+//       dbDriver.close();
+//     }
+//   }
+// }
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MaterialView(userName: "Sergio", userSurname: "Muñoz", sabeLeer: true, taskID: 88,),
+        
+      },
+    );
+  }
+}
+
+
 class MaterialView extends StatefulWidget {
   String userName;
   String userSurname;
@@ -121,8 +156,8 @@ class _MaterialViewState extends State<MaterialView> {
                 ElevatedButton(
                   onPressed: () async {
                     await saveHecho();
-                    // Navigate back to the previous screen
-                    Navigator.pop(context);
+                
+                    Navigator.pushNamed(context, '/studentTasks');
                   },
                   child:
                     widget.sabeLeer

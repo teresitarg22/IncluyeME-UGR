@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/globals/globals.dart';
 import 'package:incluye_me/model/student.dart';
+import 'package:incluye_me/model/teacher.dart';
 import '../../components/bottom_navigation_bar.dart';
 import 'user_details.dart';
 import 'edit_user.dart';
@@ -45,7 +46,7 @@ class _UserListPageState extends State<UserListPage> {
   void initState() {
     super.initState();
     initializeData();
-    initializeList();
+    initializeLists();
   }
 
   // -----------------------------
@@ -55,9 +56,13 @@ class _UserListPageState extends State<UserListPage> {
   }
 
   // -----------------------------
-  Future<void> initializeList() async {
-    var contenido = await dbDriver.request("Select * from estudiante");
-    studentList = Estudiante.fromJsonList(contenido);
+  Future<void> initializeLists() async {
+    var students = await dbDriver.request("Select * from estudiante");
+    studentList = Estudiante.fromJsonList(students);
+
+    // var teachers = await dbDriver.request("Select * from personal");
+    // teacherList = Teacher.fromJsonRawList(teachers);
+
     setState(() {});
   }
 
@@ -172,7 +177,11 @@ class _UserListPageState extends State<UserListPage> {
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
-                child: Text(value ?? ''),
+                child: Text(
+                  value ?? '',
+                  style:
+                      TextStyle(color: const Color.fromARGB(255, 16, 89, 148)),
+                ),
               );
             }).toList(),
           ),
@@ -186,6 +195,8 @@ class _UserListPageState extends State<UserListPage> {
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
                 Estudiante estudiante = studentList![index];
+                // Teacher profesor = teacherList![index];
+
                 final nombre = filteredUsers[index][tipo]?['nombre'];
 
                 if (nombre != null) {
@@ -230,9 +241,8 @@ class _UserListPageState extends State<UserListPage> {
                               "${filteredUsers[index]?[tipo]?['nombre']} ${filteredUsers[index]?[tipo]?['apellidos']}",
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 76, 76, 76),
-                                fontSize: 16, // Tamaño de fuente más grande.
-                                fontWeight:
-                                    FontWeight.bold, // Texto en negrita.
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -246,40 +256,41 @@ class _UserListPageState extends State<UserListPage> {
                           CircleAvatar(
                         radius: 18,
                         child: ClipOval(
-                          child: estudiante?.foto != null
-                              ? Image.memory(
-                                  estudiante?.foto,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  'assets/usuario_sin_foto.png',
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
+                            child: estudiante?.foto != null
+                                ? Image.memory(
+                                    estudiante?.foto,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'assets/usuario_sin_foto.png',
+                                    fit: BoxFit.cover,
+                                  )),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          IconButton(
-                            onPressed: () {
-                               Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => GraphicsPage(
-                                          nombre: filteredUsers[index][tipo]
-                                              ['nombre'],
-                                          apellidos: filteredUsers[index][tipo]
-                                              ['apellidos'],
-                                          userName: widget.userName,
-                                          userSurname: widget.userSurname,
-                                        )),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.bar_chart,
-                              color: Color.fromARGB(255, 76, 76, 76),
+                          if (tipo == 'estudiante')
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => GraphicsPage(
+                                            nombre: filteredUsers[index][tipo]
+                                                ['nombre'],
+                                            apellidos: filteredUsers[index]
+                                                [tipo]['apellidos'],
+                                            userName: widget.userName,
+                                            userSurname: widget.userSurname,
+                                          )),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.bar_chart,
+                                color: Color.fromARGB(255, 76, 76, 76),
+                              ),
                             ),
-                          ),
                           // ------------------------------------
+
                           IconButton(
                             icon: const Icon(Icons.edit,
                                 color: Color.fromARGB(255, 76, 76, 76)),
@@ -319,7 +330,10 @@ class _UserListPageState extends State<UserListPage> {
                                         TextButton(
                                           child: const Text('Sí'),
                                           onPressed: () {
-                                            controlador.eliminarEstudiante(nombre, filteredUsers[index][tipo]['apellidos']); 
+                                            controlador.eliminarEstudiante(
+                                                nombre,
+                                                filteredUsers[index][tipo]
+                                                    ['apellidos']);
                                             Navigator.of(context).pop(
                                                 true); // Confirma la eliminación
                                           },
@@ -517,10 +531,10 @@ class _UserListPageState extends State<UserListPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => GraphicsPage(
-                                          nombre: filteredUsers[index]['estudiante']
-                                              ['nombre'],
-                                          apellidos: filteredUsers[index]['estudiante']
-                                              ['apellidos'],
+                                          nombre: filteredUsers[index]
+                                              ['estudiante']['nombre'],
+                                          apellidos: filteredUsers[index]
+                                              ['estudiante']['apellidos'],
                                           userName: widget.userName,
                                           userSurname: widget.userSurname,
                                         )),
