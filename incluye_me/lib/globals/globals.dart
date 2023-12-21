@@ -1,6 +1,7 @@
 import 'package:incluye_me/model/database_driver.dart';
 import 'package:incluye_me/model/student.dart';
 import 'package:incluye_me/model/teacher.dart';
+import 'package:incluye_me/model/aula.dart';
 
 int currentBottomNavigationBarIndex = 0;
 DataBaseDriver dbDriver = DataBaseDriver();
@@ -12,3 +13,4 @@ int imageWidth = 256;
 
 List<Estudiante>? studentList;
 List<Teacher>? teacherList;
+List<Aula>? aulaList;

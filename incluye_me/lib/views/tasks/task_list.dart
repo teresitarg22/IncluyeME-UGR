@@ -191,7 +191,7 @@ class _TaskListPageState extends State<TaskListPage> {
                           }));
                         },
                         child: Card(
-                          color: completada
+                          color: tareas[index]['tarea']['completada'] == true
                               ? Color.fromARGB(255, 229, 250, 238)
                               : asignada == false
                                   ? Color.fromARGB(255, 223, 241, 255)
@@ -513,7 +513,7 @@ class _TaskListPageState extends State<TaskListPage> {
                           }));
                         },
                         child: Card(
-                          color: completada
+                          color: tareas[index]['tarea']['completada'] == true
                               ? Color.fromARGB(255, 229, 250, 238)
                               : asignada == false
                                   ? Color.fromARGB(255, 223, 241, 255)

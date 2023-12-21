@@ -7,6 +7,7 @@ import 'user_details.dart';
 import 'edit_user.dart';
 import '../../controllers/user_controller.dart';
 import '../../controllers/session_controller.dart';
+import 'graphics.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -266,15 +267,17 @@ class _UserListPageState extends State<UserListPage> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/graphics',
-                                  arguments: {
-                                    'userName': widget.userName,
-                                    'userSurname': widget.userSurname,
-                                    'nombre': filteredUsers[index][tipo]
-                                        ['nombre'],
-                                    'apellidos': filteredUsers[index][tipo]
-                                        ['apellidos'],
-                                  });
+                               Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => GraphicsPage(
+                                          nombre: filteredUsers[index][tipo]
+                                              ['nombre'],
+                                          apellidos: filteredUsers[index][tipo]
+                                              ['apellidos'],
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
+                                        )),
+                              );
                             },
                             icon: const Icon(
                               Icons.bar_chart,
@@ -321,6 +324,7 @@ class _UserListPageState extends State<UserListPage> {
                                         TextButton(
                                           child: const Text('Sí'),
                                           onPressed: () {
+                                            controlador.eliminarEstudiante(nombre, filteredUsers[index][tipo]['apellidos']); 
                                             Navigator.of(context).pop(
                                                 true); // Confirma la eliminación
                                           },
@@ -515,15 +519,17 @@ class _UserListPageState extends State<UserListPage> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/graphics',
-                                  arguments: {
-                                    'userName': widget.userName,
-                                    'userSurname': widget.userSurname,
-                                    'nombre': filteredUsers[index]['estudiante']
-                                        ['nombre'],
-                                    'apellidos': filteredUsers[index]
-                                        ['estudiante']['apellidos'],
-                                  });
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => GraphicsPage(
+                                          nombre: filteredUsers[index]['estudiante']
+                                              ['nombre'],
+                                          apellidos: filteredUsers[index]['estudiante']
+                                              ['apellidos'],
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
+                                        )),
+                              );
                             },
                             icon: const Icon(
                               Icons.bar_chart,

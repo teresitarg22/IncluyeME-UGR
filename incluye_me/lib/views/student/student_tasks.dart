@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/components/bottom_student_bar.dart';
 import 'package:incluye_me/controllers/task_controller.dart';
-import 'package:incluye_me/controllers/user_controller.dart';
 import 'package:incluye_me/globals/globals.dart';
-import 'package:incluye_me/model/student.dart';
-import 'package:incluye_me/model/user.dart';
 
 class StudentTasks extends StatefulWidget {
   final String userName;
@@ -24,30 +21,18 @@ class StudentTasks extends StatefulWidget {
 
 class _StudentTasksState extends State<StudentTasks> {
   TaskController taskController = TaskController();
-  Controller detailController = Controller();
   String userName = "";
   String userSurname = "";
-  String tipo = "";
   String pictograma = "";
 
   List<Map<String, dynamic>> tareasPendientes = [];
   List<Map<String, dynamic>> tareasCompletadas = [];
+  List<String> tiposPendientes = [];
+  List<String> tiposCompletadas = [];
 
   _StudentTasksState(String userName, String userSurname) {
     this.userName = userName;
     this.userSurname = userSurname;
-  }
-
-  User? user;
-
-  // ---------------------------------------------
-  // Buscamos en la BD los detalles del usuario
-  Future<void> buscarDatosUsuario() async {
-    var resultado = await detailController.getEstudiante(
-        widget.userName, widget.userSurname);
-    user = Estudiante.fromJson(resultado[0]);
-
-    setState(() {});
   }
 
   // --------------------------------------------------------------
@@ -74,8 +59,10 @@ class _StudentTasksState extends State<StudentTasks> {
       if (detallesTarea.isNotEmpty &&
           detallesTarea[0]['tarea']?['completada'] == true) {
         completadas.addAll(detallesTarea);
+        tiposCompletadas.add(await taskController.tipoTarea(idTarea));
       } else {
         pendientes.addAll(detallesTarea);
+        tiposPendientes.add(await taskController.tipoTarea(idTarea));
       }
     }
 
@@ -91,7 +78,6 @@ class _StudentTasksState extends State<StudentTasks> {
   void initState() {
     super.initState();
     setTareas();
-    buscarDatosUsuario();
   }
 
   // --------------------------------------------------------------
@@ -109,26 +95,16 @@ class _StudentTasksState extends State<StudentTasks> {
             children: [
               // Imagen circular
               CircleAvatar(
-                radius: 18,
-                child: ClipOval(
-                  child: user?.foto != null
-                      ? Image.memory(
-                          user?.foto,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset(
-                          'assets/usuario_sin_foto.png',
-                          fit: BoxFit.cover,
-                        ),
-                ),
+                radius: 18, // Ajusta según sea necesario
+                backgroundImage: MemoryImage(student_global?.foto ?? []),
               ),
               // --------------------------
-              const SizedBox(width: 15),
+              SizedBox(width: 15),
               // --------------------------
               Text(
                 //Take the name from the database
                 '¡Bienvenido ${student_global?.nombre ?? ''} ${student_global?.apellidos ?? ''}!',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.white,
                 ),
@@ -162,13 +138,7 @@ class _StudentTasksState extends State<StudentTasks> {
                   child: ListView.builder(
                     itemCount: tareasPendientes.length,
                     itemBuilder: (BuildContext context, int index) {
-                      taskController
-                          .tipoTarea(tareasPendientes[index]['tarea']['id'])
-                          .then((resultado) {
-                        tipo = resultado;
-                      });
-
-                      switch (tipo) {
+                      switch (tiposPendientes[index]) {
                         case "general":
                           pictograma = "assets/tarea_general.png";
                           break;
@@ -250,13 +220,7 @@ class _StudentTasksState extends State<StudentTasks> {
                   child: ListView.builder(
                     itemCount: tareasCompletadas.length,
                     itemBuilder: (BuildContext context, int index) {
-                      taskController
-                          .tipoTarea(tareasCompletadas[index]['tarea']['id'])
-                          .then((resultado) {
-                        tipo = resultado;
-                      });
-
-                      switch (tipo) {
+                      switch (tiposCompletadas[index]) {
                         case "general":
                           pictograma = "assets/tarea_general.png";
                           break;
