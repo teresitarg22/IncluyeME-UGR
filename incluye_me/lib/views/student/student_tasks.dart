@@ -215,9 +215,12 @@ class _StudentTasksState extends State<StudentTasks> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               TareaGeneralView(
-                                                  taskId:
-                                                      tareasPendientes[index]
-                                                          ['tarea']['id']),
+                                            taskId: tareasPendientes[index]
+                                                ['tarea']['id'],
+                                            onTaskCompleted: () {
+                                              setTareas();
+                                            },
+                                          ),
                                         ),
                                       );
                                     } else if (tipo == "material") {

@@ -8,7 +8,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 Future<void> main() async {
-  var contenido = await dbDriver.listaTareasGenerales();
+  var contenido = await dbDriver.getTareaCompletada(669);
   print(contenido);
 
   dbDriver.close();
