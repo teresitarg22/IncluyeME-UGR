@@ -18,7 +18,7 @@ class Teacher {
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
       photo: json['foto'],
-      isAdmin: json['es_admin'] ?? false,
+      isAdmin: json['es_admin'],
       name: json['nombre'],
       surnames: json['apellidos'],
       correo: json['correo'],
@@ -29,7 +29,7 @@ class Teacher {
     var json = jsonRaw['personal'];
     return Teacher(
       photo: json['foto'],
-      isAdmin: json['es_admin'] ?? false,
+      isAdmin: json['es_admin'],
       name: json['nombre'],
       surnames: json['apellidos'],
       correo: json['correo'],

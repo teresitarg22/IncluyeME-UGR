@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 class Tarea {
   String titulo;
@@ -22,13 +23,16 @@ class Tarea {
         propietario: '',
       );
     }
-    var json = json_raw[0]['tareas'];
-    print(json);
-    //Imprime los datos separados de la variable json
+
+    var json = json_raw['tareas_generales'];
+    if (json == null) {
+      return Tarea(titulo: '', indicesPasos: [], propietario: '');
+    }
+
     return Tarea(
-      titulo: json?['titulo'],
-      indicesPasos: json?['indicesPasos'].cast<int>(),
-      propietario: json?['propietario'],
+      titulo: json['nombre'] ?? '',
+      indicesPasos: json['indices_pasos']?.cast<int>() ?? [],
+      propietario: json['propietario'] ?? '',
     );
   }
 
@@ -38,31 +42,27 @@ class Tarea {
   }
 }
 
-
-
 class Paso {
   String descripcion;
   String propietario;
-  String? imagen;
+  Uint8List imagen;
 
-  Paso({required this.descripcion, required this.propietario, this.imagen = ''});
+  Paso({required this.descripcion, required this.propietario, required this.imagen});
 
   factory Paso.fromJson(List<Map<String, Map<String, dynamic>>> json_raw) {
-    //Null check
     if (json_raw.isEmpty) {
       return Paso(
         descripcion: '',
         propietario: '',
-        imagen: '',
+        imagen: Uint8List(0),
       );
     }
     var json = json_raw[0]['pasos'];
-    print(json);
-    //Imprime los datos separados de la variable json
+
     return Paso(
       descripcion: json?['descripcion'],
       propietario: json?['propietario'],
-      imagen: json?['imagen'],
+      imagen: json?['imagen'] ?? Uint8List(0),
     );
   }
 }
