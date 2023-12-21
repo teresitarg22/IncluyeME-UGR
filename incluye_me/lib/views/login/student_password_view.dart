@@ -9,7 +9,6 @@ import '../../model/student.dart';
 import '../student/student_tasks.dart';
 
 class LoginWithSymbols extends StatefulWidget {
-
   // Variable estudiante
   Estudiante student;
 
@@ -17,7 +16,8 @@ class LoginWithSymbols extends StatefulWidget {
   LoginWithSymbols({Key? key, required this.student}) : super(key: key);
 
   @override
-  _LoginWithSymbolsState createState() => _LoginWithSymbolsState(student: student);
+  _LoginWithSymbolsState createState() =>
+      _LoginWithSymbolsState(student: student);
 }
 
 // -----------------------------------------------------------------------------------
@@ -31,16 +31,16 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
   // Constructor
   _LoginWithSymbolsState({required this.student}) {
     student = this.student;
-    studentPassword= student.getPasswordAsList();
+    studentPassword = student.getPasswordAsList();
     nombre = student.nombre;
   }
 
-  List<int> selectedSymbols = []; // Guarda los indices de los símbolos seleccionados
+  List<int> selectedSymbols =
+      []; // Guarda los indices de los símbolos seleccionados
   final List<String> symbols =
       List.generate(9, (index) => 'assets/symbol$index.png');
 
   // Combinación correcta de símbolos
-
 
   // ------------------------------------------------------------------------
   @override
@@ -108,7 +108,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
 
                   // ------------------------------------------------------------------------------------
                   return Semantics(
-                    label: 'Descripción del símbolo $index',
+                    label: label,
                     child: InkWell(
                       onTap: () {
                         if (selectedSymbols.length < 3) {
@@ -155,7 +155,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
                     children: List.generate(3, (index) {
                       if (index < selectedSymbols.length) {
                         return Image.asset(
-                          symbols[selectedSymbols[index]-1],
+                          symbols[selectedSymbols[index] - 1],
                           height: 80,
                           width: 80,
                         );
@@ -302,11 +302,7 @@ class _LoginWithSymbolsState extends State<LoginWithSymbols> {
   }
 }
 
-
-
-
 class LoginWithPassword extends StatefulWidget {
-
   // Variable estudiante
   Estudiante student;
 
@@ -314,7 +310,8 @@ class LoginWithPassword extends StatefulWidget {
   LoginWithPassword({Key? key, required this.student}) : super(key: key);
 
   @override
-  _LoginWithPasswordState createState() => _LoginWithPasswordState(student: student);
+  _LoginWithPasswordState createState() =>
+      _LoginWithPasswordState(student: student);
 }
 
 // -----------------------------------------------------------------------------------
@@ -326,11 +323,10 @@ class _LoginWithPasswordState extends State<LoginWithPassword> {
   late String studentPassword;
   String nombre = "";
 
-
   // Constructor
   _LoginWithPasswordState({required this.student}) {
     student = this.student;
-    studentPassword= student.contrasenia;
+    studentPassword = student.contrasenia;
     nombre = student.nombre;
   }
 
@@ -378,7 +374,6 @@ class _LoginWithPasswordState extends State<LoginWithPassword> {
       });
     }
   }
-
 
   // ------------------------------------------------------------------------
 
@@ -522,14 +517,13 @@ class _LoginWithPasswordState extends State<LoginWithPassword> {
     );
   }
 
-
   // ------------------------------------------------------------------------
 
   Future<void> _showSuccessDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible:
-      false, // El usuario debe tocar el botón para cerrar el diálogo.
+          false, // El usuario debe tocar el botón para cerrar el diálogo.
       builder: (BuildContext context) {
         return const AlertDialog(
           title: Row(
@@ -564,7 +558,6 @@ class _LoginWithPasswordState extends State<LoginWithPassword> {
     print(password);
     print(studentPassword);
 
-
     if (password == studentPassword) {
       _showSuccessDialog();
       student_global = student;
@@ -572,23 +565,18 @@ class _LoginWithPasswordState extends State<LoginWithPassword> {
         Navigator.pop(context);
         Future.delayed(const Duration(seconds: 1), () {
           Navigator.pop(context);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) {
-                return StudentTasks(
-                  userName: student.nombre,
-                  userSurname: student.apellidos,
-                );
-              }));
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return StudentTasks(
+              userName: student.nombre,
+              userSurname: student.apellidos,
+            );
+          }));
         });
       });
-    }
-    else {
-        setState(() {
-          _passwordErrorMessage =
-          'Contraseña incorrecta o email no registrado';});
+    } else {
+      setState(() {
+        _passwordErrorMessage = 'Contraseña incorrecta o email no registrado';
+      });
     }
   }
-
-
-
 }

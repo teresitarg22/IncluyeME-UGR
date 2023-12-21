@@ -57,7 +57,6 @@ class _GraphicsPageState extends State<GraphicsPage> {
 
   Future<void> setDatos() async {
     var tareas = await tareasFuture;
-  
 
     for (var tarea in tareas) {
       var esSemanal =
@@ -76,11 +75,8 @@ class _GraphicsPageState extends State<GraphicsPage> {
         }
       }
     }
-        tareasCompletadasPorcentaje = (tareasCompletadas / tareasTotales) * 100;
-        tareasNoCompletadasPorcentaje =
-            (tareasNoCompletadas / tareasTotales) * 100;
-   
-    
+    tareasCompletadasPorcentaje = (tareasCompletadas / tareasTotales) * 100;
+    tareasNoCompletadasPorcentaje = (tareasNoCompletadas / tareasTotales) * 100;
   }
 
   // -------------------------------------------------------------------
@@ -105,7 +101,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
                 selectionColor: Colors.white,
               ),
               backgroundColor: Colors.blue,
-              automaticallyImplyLeading: false,
+              iconTheme: const IconThemeData(color: Colors.white),
             ),
             body: PieChart(
                 swapAnimationDuration: const Duration(milliseconds: 1500),
@@ -120,7 +116,6 @@ class _GraphicsPageState extends State<GraphicsPage> {
               userSurname: widget.userSurname,
             ),
           );
-        
         }
       },
     );

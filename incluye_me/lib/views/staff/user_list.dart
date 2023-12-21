@@ -177,7 +177,11 @@ class _UserListPageState extends State<UserListPage> {
                 .map<DropdownMenuItem<String?>>((String? value) {
               return DropdownMenuItem<String?>(
                 value: value,
-                child: Text(value ?? ''),
+                child: Text(
+                  value ?? '',
+                  style:
+                      TextStyle(color: const Color.fromARGB(255, 16, 89, 148)),
+                ),
               );
             }).toList(),
           ),
@@ -267,7 +271,7 @@ class _UserListPageState extends State<UserListPage> {
                         children: [
                           IconButton(
                             onPressed: () {
-                               Navigator.of(context).push(
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => GraphicsPage(
                                           nombre: filteredUsers[index][tipo]
@@ -324,7 +328,10 @@ class _UserListPageState extends State<UserListPage> {
                                         TextButton(
                                           child: const Text('Sí'),
                                           onPressed: () {
-                                            controlador.eliminarEstudiante(nombre, filteredUsers[index][tipo]['apellidos']); 
+                                            controlador.eliminarEstudiante(
+                                                nombre,
+                                                filteredUsers[index][tipo]
+                                                    ['apellidos']);
                                             Navigator.of(context).pop(
                                                 true); // Confirma la eliminación
                                           },
@@ -522,10 +529,10 @@ class _UserListPageState extends State<UserListPage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => GraphicsPage(
-                                          nombre: filteredUsers[index]['estudiante']
-                                              ['nombre'],
-                                          apellidos: filteredUsers[index]['estudiante']
-                                              ['apellidos'],
+                                          nombre: filteredUsers[index]
+                                              ['estudiante']['nombre'],
+                                          apellidos: filteredUsers[index]
+                                              ['estudiante']['apellidos'],
                                           userName: widget.userName,
                                           userSurname: widget.userSurname,
                                         )),

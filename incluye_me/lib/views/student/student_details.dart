@@ -141,7 +141,7 @@ class _StudentDetailsPageState extends State<StudentDetailsPage> {
                   child: Row(children: [
                     //Imagen circular del alumno.
                     CircleAvatar(
-                      radius: MediaQuery.of(context).size.width > 600 ? 80 : 55,
+                      radius: MediaQuery.of(context).size.width > 600 ? 80 : 50,
                       backgroundColor: Colors.transparent,
                       child: ClipOval(
                         child: user?.foto != null
