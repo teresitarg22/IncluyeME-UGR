@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:incluye_me/globals/globals.dart';
-import 'package:incluye_me/model/database_driver.dart';
-import 'package:incluye_me/views/user_list.dart';
+import 'package:incluye_me/views/staff/user_list.dart';
 
 import '../../model/teacher.dart';
 

@@ -4,11 +4,11 @@ import 'package:incluye_me/model/user.dart';
 import 'package:incluye_me/model/student.dart';
 import 'package:incluye_me/views/tasks/task_list.dart';
 import 'user_details.dart';
-import './user_list.dart';
-import '../controllers/user_controller.dart';
+import 'user_list.dart';
+import '../../controllers/user_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import '../components/bottom_navigation_bar.dart';
+import '../../components/bottom_navigation_bar.dart';
 
 class EditUserPage extends StatefulWidget {
   final String nombre;

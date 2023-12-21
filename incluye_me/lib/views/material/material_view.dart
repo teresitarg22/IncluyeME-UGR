@@ -17,7 +17,7 @@ class MaterialView extends StatefulWidget {
 
 class _MaterialViewState extends State<MaterialView> {
   final UC.Controller Ucontrolador = UC.Controller();
-  final TC.Controller Tcontrolador = TC.Controller();
+  final TC.TaskController Tcontrolador = TC.TaskController();
   final List<String> numeros = ["assets/cero.png", "assets/uno.png", "assets/dos.png", "assets/tres.png", "assets/cuatro.png", "assets/cinco.png"];
 
   List<int> listaCantidad = [];

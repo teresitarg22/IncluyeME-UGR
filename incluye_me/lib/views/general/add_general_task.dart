@@ -9,7 +9,7 @@ import 'package:incluye_me/controllers/task_controller.dart';
 
 class AddTaskView extends StatefulWidget {
   final Function(Tarea) onAddTask;
-  final Controller controller;
+  final TaskController controller;
 
   AddTaskView({Key? key, required this.onAddTask, required this.controller})
       : super(key: key); // Agrega controller aquí

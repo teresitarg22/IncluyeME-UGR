@@ -75,7 +75,7 @@ class _CreateTaskImageCommandState extends State<TaskCommandImage> {
         title: Text(
           'Selecciona las comandas para $currentClass',
         ),
-        backgroundColor: const Color.fromARGB(255, 41, 218, 129),
+        backgroundColor:  Colors.blue,
         automaticallyImplyLeading: false,
       ),
       body: Column(

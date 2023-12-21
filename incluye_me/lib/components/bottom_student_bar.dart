@@ -1,56 +1,63 @@
 import 'package:flutter/material.dart';
+
+import 'package:incluye_me/views/student/student_details.dart';
+import 'package:incluye_me/views/student/student_tasks.dart';
 import '../globals/globals.dart';
 
-class CustomNavigationBar extends StatefulWidget {
+class StudentNavigationBar extends StatefulWidget {
   final String userName;
   final String userSurname;
 
-  const CustomNavigationBar(
-      {super.key, required this.userName, required this.userSurname});
+  const StudentNavigationBar(
+      {required this.userName, required this.userSurname});
 
   @override
-  _CustomNavigationBarState createState() => _CustomNavigationBarState();
+  _StudentNavigationBarState createState() => _StudentNavigationBarState();
 }
 
-// ----------------------------------------------------------
-
-class _CustomNavigationBarState extends State<CustomNavigationBar> {
+class _StudentNavigationBarState extends State<StudentNavigationBar> {
   int _currentIndex = currentBottomNavigationBarIndex;
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: Colors.blue,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Color.fromARGB(255, 209, 209, 209),
       currentIndex: _currentIndex,
       onTap: (int index) {
         setState(() {
           _currentIndex = index;
           currentBottomNavigationBarIndex = index;
         });
-        // -----------------------
+
         if (index == 0) {
           // ----------------------------------------------------------
-          // Lista de usuarios
+          // Lista de tareas del estudiante
           String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
-          if (currentRouteName != '/userList') {
+          if (currentRouteName != '/studentTasks') {
             print(currentRouteName);
             print("Test");
-            Navigator.pushReplacementNamed(context, '/userList');
+            Navigator.pushReplacementNamed(context, '/studentTasks',
+                arguments: {
+                  'userName': widget.userName,
+                  'userSurname': widget.userSurname,
+                });
           }
         } else if (index == 1) {
           // ----------------------------------------------------------
-          // Lista de tareas
+          // Detalles del estudiante
           String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
-          if (currentRouteName != '/taskList') {
-            Navigator.pushReplacementNamed(context, '/taskList');
+          if (currentRouteName != '/studentDetails') {
+            print(currentRouteName);
+            print("Test");
+            Navigator.pushReplacementNamed(context, '/studentDetails',
+                arguments: {
+                  'userName': widget.userName,
+                  'userSurname': widget.userSurname,
+                });
           }
         } else if (index == 2) {
-          // ----------------------------------------------------------
-          // Detalles del usuario
-          String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
-          if (currentRouteName != '/userDetails') {
-            Navigator.pushReplacementNamed(context, '/userDetails');
-          }
-        } else if (index == 3) {
           // ----------------------------------------------------------
           // Cerrar sesión
           teacher = null;
@@ -59,11 +66,6 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       },
       // ----------------------------------------------------------
       items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          backgroundColor: Colors.blue,
-          icon: Icon(Icons.people, color: Colors.white),
-          label: 'Usuarios',
-        ),
         BottomNavigationBarItem(
           backgroundColor: Colors.blue,
           icon: Icon(Icons.assignment, color: Colors.white),
@@ -82,8 +84,6 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ],
     );
   }
-
-  // ----------------------------------------------------------
 
   void navigateToRoute(BuildContext context, String newRouteName,
       [Map<String, dynamic> Function()? getArguments]) {

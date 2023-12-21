@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:incluye_me/views/tasks/task_list.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'dart:io';
 import '../../../controllers/user_controller.dart';
-import '../user_list.dart';
-import '../home_view.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import '../../../components/bottom_navigation_bar.dart';
@@ -23,12 +19,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => CreateTaskCommand(userName: "sergio", userSurname: "muñoz",),
+        '/': (context) => CreateTaskCommand(
+              userName: "sergio",
+              userSurname: "muñoz",
+            ),
       },
     );
   }
 }
-
 
 class CreateTaskCommand extends StatefulWidget {
   final String userName;
@@ -46,12 +44,12 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
   String? _name;
   final _controller = TextEditingController();
   Controller controlador = Controller();
-  List<DateTime> _dates = [];
-  List<String> _students = [];
+  final List<DateTime> _dates = [];
+  final List<String> _students = [];
   String? _selectedOption;
   DateTime? _selectedDate;
   List<String> selectedOptions = [];
-  TextEditingController _fechaController = TextEditingController();
+  final TextEditingController _fechaController = TextEditingController();
 
   Future<void> loadUsers() async {
     for (var _student in await controlador.listaEstudiantes()) {
@@ -97,19 +95,18 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                      top: 20), // Agrega espacio en la parte superior
+                  padding: const EdgeInsets.only(top: 20),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         'Estudiante: ',
                         style: TextStyle(fontSize: 20),
                       ),
-                      SizedBox(
-                          width:
-                              20), // Agrega espacio entre el texto y el campo de texto
+                      // ---------------------------
+                      const SizedBox(width: 20),
+                      // ---------------------------
                       Container(
-                        width: 200, // Cambia el ancho del campo de texto aquí
+                        width: 200,
                         child: TypeAheadFormField(
                           textFieldConfiguration: TextFieldConfiguration(
                             controller: _controller,
@@ -145,20 +142,18 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                 Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(
-                          top: 20), // Agrega espacio en la parte superior
+                      padding: const EdgeInsets.only(top: 20),
                       child: Row(
                         children: [
-                          Text(
+                          const Text(
                             'Frecuencia: ',
                             style: TextStyle(fontSize: 20),
                           ),
-                          SizedBox(
-                              width:
-                                  20), // Agrega espacio entre el texto y el campo de texto
+                          // ---------------------------
+                          const SizedBox(width: 20),
+                          // ---------------------------
                           Container(
-                            width:
-                                200, // Cambia el ancho del campo de texto aquí
+                            width: 200,
                             child: DropdownButtonFormField<String>(
                               value: _selectedOption,
                               items: ['Semanal', 'Fecha concreta']
@@ -177,11 +172,9 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                           ),
                           if (_selectedOption == 'Semanal')
                             Padding(
-                              padding: EdgeInsets.only(
-                                  left: 20), // Agrega espacio a la izquierda
+                              padding: const EdgeInsets.only(left: 20),
                               child: Container(
-                                width:
-                                    400, // Cambia el ancho del campo de texto aquí
+                                width: 400,
                                 child: MultiSelectDialogField<String>(
                                   items: multiSelectOptions,
                                   initialValue: selectedOptions,
@@ -206,14 +199,12 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                             ),
                           if (_selectedOption == 'Fecha concreta')
                             Padding(
-                              padding: EdgeInsets.only(
-                                  left: 20), // Agrega espacio a la izquierda
+                              padding: const EdgeInsets.only(left: 20),
                               child: Container(
-                                width:
-                                    200, // Cambia el ancho del campo de texto aquí
+                                width: 200,
                                 child: TextFormField(
                                   controller: _fechaController,
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     labelText: 'Fecha',
                                   ),
                                   onTap: () async {
@@ -225,7 +216,7 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime.now(),
                                             lastDate: DateTime.now().add(
-                                              Duration(days: 365),
+                                              const Duration(days: 365),
                                             ));
                                     if (picked != null &&
                                         picked != _selectedDate) {
@@ -266,8 +257,12 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                                     List<String> parts = _name!.split(' ');
                                     if (_selectedOption == 'Semanal') {
                                       for (var fecha in _dates) {
-                                        var tarea = await controlador
-                                            .insertarTarea("comanda" + DateFormat('dd/MM/yyyy').format(fecha)  , fecha);
+                                        var tarea =
+                                            await controlador.insertarTarea(
+                                                "comanda" +
+                                                    DateFormat('dd/MM/yyyy')
+                                                        .format(fecha),
+                                                fecha);
 
                                         if (parts.length >= 2) {
                                           controlador.insertarAsginada(
@@ -279,7 +274,10 @@ class _CreateTaskCommandState extends State<CreateTaskCommand> {
                                     } else {
                                       var tarea =
                                           await controlador.insertarTarea(
-                                              "comanda " + DateFormat('dd/MM/yyyy').format(_selectedDate!), _selectedDate!);
+                                              "comanda " +
+                                                  DateFormat('dd/MM/yyyy')
+                                                      .format(_selectedDate!),
+                                              _selectedDate!);
                                       if (parts.length >= 2) {
                                         controlador.insertarAsginada(parts[0],
                                             parts.sublist(1).join(' '), tarea);

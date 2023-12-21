@@ -37,7 +37,6 @@ class DataBaseDriver {
       results = await connection!.mappedResultsQuery(query);
     } catch (e) {
       print('Error: $e');
-      print(query);
     } finally {
       // No cerrar la conexión aquí
       print('Query executed');
@@ -99,7 +98,7 @@ class DataBaseDriver {
   Future<void> registrarProfesor(String nombre, String apellidos, String correo,
       var contrasena, var foto, bool esAdmin) async {
     await request(
-        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', '$foto', '$esAdmin')");
+        "INSERT INTO personal (nombre, apellidos, contrasenia, correo, foto, es_admin) VALUES ('$nombre', '$apellidos', '$contrasena', '$correo', E'\\\\x$foto', '$esAdmin')");
   }
 
   // ----------------------------------------------------
@@ -141,13 +140,13 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Insertar en la tabla imparte_en el nombre y apeliidos  del profesor y el nombre del aula
   Future<void> insertarImparteEn(
-      String nombre, String apellidos, String aula) async {
+      String aula, String nombre, String apellidos) async {
     await request(
         " INSERT INTO imparte_en (nombre_aula, nombre_personal, apellidos_personal) VALUES ('$aula', '$nombre', '$apellidos')");
   }
 
   // ----------------------------------------------------
-  Future<List<Map<String, Map<String, dynamic>>>> Login(
+  Future<List<Map<String, Map<String, dynamic>>>> login(
       String email, String password) async {
     return await request(
         "SELECT * FROM personal WHERE correo = '$email' AND contrasenia = '$password'");
@@ -182,7 +181,7 @@ class DataBaseDriver {
   // Funcion para elimiar estudiante.
   Future<void> eliminarEstudiante(String nombre, String apellidos) async {
     await request(
-        "DELETE FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
+        "DELETE FROM usuario WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 
   // ----------------------------------------------------
@@ -225,7 +224,7 @@ class DataBaseDriver {
   // ----------------------------------------------------
   // Función para saber el tipo de tarea
   Future<List<Map<String, Map<String, dynamic>>>> esTareaComanda(int id) async {
-    return await request("SELECT * FROM comanda WHERE id_tarea = $id ");
+    return await request("SELECT * FROM tarea WHERE id = $id ");
   }
 
   // ----------------------------------------------------
@@ -298,14 +297,14 @@ class DataBaseDriver {
 
   // ----------------------------------------------------
   // Funcion para añadir a la tabla de tarea_general el id de la tarea y los indices de los pasos
-  Future<void> insertarTareaGeneral(List<int> indicesPasos, String nombre, String propietario) async {
+  Future<void> insertarTareaGeneral(
+      List<int> indicesPasos, String nombre, String propietario) async {
     // Convertir la lista de enteros en una cadena con el formato de arreglo de PostgreSQL
     String indicesPasosFormatted = '{' + indicesPasos.join(',') + '}';
 
     try {
       await request(
-          "INSERT INTO tareas_generales (indices_pasos, nombre, propietario) VALUES ('$indicesPasosFormatted', '$nombre', '$propietario')"
-      );
+          "INSERT INTO tareas_generales (indices_pasos, nombre, propietario) VALUES ('$indicesPasosFormatted', '$nombre', '$propietario')");
     } catch (e) {
       print('Error al insertar tarea general: $e');
       throw Exception('No se pudo insertar la tarea general');
@@ -315,11 +314,12 @@ class DataBaseDriver {
   Future<int> insertarPaso(Paso paso) async {
     try {
       var result = await request(
-          "INSERT INTO pasos (descripcion, propietario, imagen) VALUES ('${paso.descripcion}', '${paso.propietario}', '${paso.imagen}') RETURNING id"
-      );
+          "INSERT INTO pasos (descripcion, propietario, imagen) VALUES ('${paso.descripcion}', '${paso.propietario}', '${paso.imagen}') RETURNING id");
 
       // Verificar si el resultado no está vacío y tiene la estructura esperada
-      if (result.isNotEmpty && result[0].containsKey('pasos') && result[0]['pasos']!.containsKey('id')) {
+      if (result.isNotEmpty &&
+          result[0].containsKey('pasos') &&
+          result[0]['pasos']!.containsKey('id')) {
         return result[0]['pasos']!['id'];
       } else {
         print('Resultado inesperado: $result');
@@ -327,14 +327,15 @@ class DataBaseDriver {
       }
     } catch (e) {
       print('Error al insertar paso: $e');
-    throw Exception('No se pudo insertar el paso');
+      throw Exception('No se pudo insertar el paso');
     }
   }
 
   // SELECT * FROM tu_tabla LIMIT 1;
   // ----------------------------------------------------
   // Función para obtener una tarea
-  Future<List<Map<String, Map<String, dynamic>>>> getTareaGeneralLimit1() async {
+  Future<List<Map<String, Map<String, dynamic>>>>
+      getTareaGeneralLimit1() async {
     return await request("SELECT * FROM tareas_generales LIMIT 1");
   }
 
@@ -346,13 +347,15 @@ class DataBaseDriver {
 
   // ----------------------------------------------------
   // Función para obtener todas las tareas generales
-  Future<List<Map<String, Map<String, dynamic>>>> getAllTareasGenerales() async {
+  Future<List<Map<String, Map<String, dynamic>>>>
+      getAllTareasGenerales() async {
     return await request("SELECT * FROM tareas_generales");
   }
 
   // Obtener paso por id
   Future<Paso> getPaso(int id) async {
-    List<Map<String, Map<String, dynamic>>> data = await request("SELECT * FROM pasos WHERE id = $id");
+    List<Map<String, Map<String, dynamic>>> data =
+        await request("SELECT * FROM pasos WHERE id = $id");
     return Paso.fromJson(data);
   }
 
@@ -384,12 +387,12 @@ class DataBaseDriver {
   }
 
   // Insertar tarea en la tabla tarea (nombre, completada: true/false, fecha_tarea)
-  Future<void> insertarTarea2(String nombre, bool completada, DateTime fecha) async {
+  Future<void> insertarTarea2(
+      String nombre, bool completada, DateTime fecha) async {
     try {
       await request(
           "INSERT INTO tarea (nombre, completada, fecha_tarea) VALUES ('$nombre', '$completada', '$fecha')");
-    }
-    catch (e) {
+    } catch (e) {
       print('Error al insertar tarea general: $e');
       throw Exception('No se pudo insertar la tarea general');
     }
@@ -430,17 +433,25 @@ class DataBaseDriver {
 
   // ----------------------------------------------------
   // Funcion para añadir a las tablas tarea y tarea_material las informaciones necesarias
-  Future<void> insertarTareaMaterial(String mail, String nombre, String apeliidos, String aula, List<int> material, List<int> cantidad, List<String> hecho) async {
+  Future<void> insertarTareaMaterial(
+      String mail,
+      String nombre,
+      String apeliidos,
+      String aula,
+      List<int> material,
+      List<int> cantidad,
+      List<String> hecho) async {
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     await request(
         "INSERT INTO tarea(nombre, completada, fecha_tarea) VALUES ('tarea_material', false, '$date')");
     int id = (await request("SELECT max(id) FROM tarea"))[0][""]!["max"];
-    String material_list = "{${material[0]}", cantidad_list ="{${cantidad[0]}", hecho_list = "{${hecho[0]}";
-    for(int i = 1; i<material.length; i++)
-    {
-        material_list = "$material_list, ${material[i]}";
-        cantidad_list = "$cantidad_list, ${cantidad[i]}";
-        hecho_list = "$hecho_list, ${hecho[i]}";
+    String material_list = "{${material[0]}",
+        cantidad_list = "{${cantidad[0]}",
+        hecho_list = "{${hecho[0]}";
+    for (int i = 1; i < material.length; i++) {
+      material_list = "$material_list, ${material[i]}";
+      cantidad_list = "$cantidad_list, ${cantidad[i]}";
+      hecho_list = "$hecho_list, ${hecho[i]}";
     }
     material_list = "$material_list}";
     cantidad_list = "$cantidad_list}";
@@ -453,50 +464,65 @@ class DataBaseDriver {
 
   // ----------------------------------------------------
   // Funcion para añadir a la tabla asignada el nombre de la tarea la fecha de entrega
-  Future<List<Map<String, Map<String, dynamic>>>> monstrarTareaMaterial (String mail, DateTime fecha) async {
+  Future<List<Map<String, Map<String, dynamic>>>> monstrarTareaMaterial(
+      String mail, DateTime fecha) async {
     return await request(
         "SELECT tm.id_tarea, ta.fecha_tarea, ta.completada, tm.aula, ARRAY_AGG(lm.nombre) AS nombres, cantidad FROM tarea_material tm JOIN lista_material lm ON tm.material @> ARRAY[lm.id] JOIN tarea ta ON tm.id_tarea = ta.id WHERE tm.correo_estudiante = '$mail' AND ta.fecha_tarea = '$fecha' GROUP BY tm.id_tarea, ta.fecha_tarea, ta.completada;");
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> monstrarListaMaterial () async {
-    return await request(
-        "SELECT * FROM lista_material"
-    );
+  Future<List<Map<String, Map<String, dynamic>>>>
+      monstrarListaMaterial() async {
+    return await request("SELECT * FROM lista_material");
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> materialNombreToID (String ID) async {
-    return await request(
-      "SELECT id FROM lista_material WHERE nombre = '$ID';"
-    );
+  Future<List<Map<String, Map<String, dynamic>>>> materialNombreToID(
+      String ID) async {
+    return await request("SELECT id FROM lista_material WHERE nombre = '$ID';");
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> materialIDToNombre (int ID) async {
-    return await request(
-      "SELECT nombre FROM lista_material WHERE id = $ID;"
-    );
+  Future<List<Map<String, Map<String, dynamic>>>> materialIDToNombre(
+      int ID) async {
+    return await request("SELECT nombre FROM lista_material WHERE id = $ID;");
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> getListMaterial (int ID) async {
+  Future<List<Map<String, Map<String, dynamic>>>> getListMaterial(
+      int ID) async {
     return await request(
-      "SELECT material, cantidad, hecho FROM tarea_material WHERE id_tarea = $ID;"
-    );
+        "SELECT material, cantidad, hecho FROM tarea_material WHERE id_tarea = $ID;");
   }
 
   Future<void> saveHechoMaterial(String hecho, int ID) async {
     await request(
-      "UPDATE tarea_material SET hecho = '$hecho' where id_tarea = $ID"
-    );
+        "UPDATE tarea_material SET hecho = '$hecho' where id_tarea = $ID");
   }
 
   Future<void> taskDone(int ID) async {
-    await request(
-      "UPDATE tarea SET completada = 'true' where id = $ID"
-    );
+    await request("UPDATE tarea SET completada = 'true' where id = $ID");
+  }
+
+  //Funcion para saber si un alumno sabe leer
+  Future<List<Map<String, Map<String, dynamic>>>> sabeLeer(
+      String nombre, String apellidos) async {
+    return await request(
+        "SELECT sabe_leer FROM estudiante WHERE nombre = '$nombre' AND apellidos = '$apellidos'");
   }
 
   // ----------------------------------------------------
   // Funcion para listar toda la tabla asignada
   Future<List<Map<String, Map<String, dynamic>>>> listaAsignada() async {
     return await request("SELECT * FROM asignada");
+  }
+
+  insertarTareaGeneralConId(int tareaId, List<int> indicesPasos, String nombre, String propietario) {
+    // Convertir la lista de enteros en una cadena con el formato de arreglo de PostgreSQL
+    String indicesPasosFormatted = '{' + indicesPasos.join(',') + '}';
+
+    try {
+      request(
+          "INSERT INTO tareas_generales (id, indices_pasos, nombre, propietario) VALUES ('$tareaId', '$indicesPasosFormatted', '$nombre', '$propietario')");
+    } catch (e) {
+      print('Error al insertar tarea general: $e');
+      throw Exception('No se pudo insertar la tarea general');
+    }
   }
 }

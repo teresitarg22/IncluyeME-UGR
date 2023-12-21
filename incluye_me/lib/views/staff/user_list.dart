@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../components/bottom_navigation_bar.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/model/student.dart';
+import '../../components/bottom_navigation_bar.dart';
 import 'user_details.dart';
 import 'edit_user.dart';
-import '../controllers/user_controller.dart';
-import '../controllers/session_controller.dart';
+import '../../controllers/user_controller.dart';
+import '../../controllers/session_controller.dart';
+import 'graphics.dart';
 
 // --------------------------------------------
 // Clase para la página de lista de usuarios
@@ -21,7 +24,7 @@ class UserListPage extends StatefulWidget {
 // ------------------------------------------------------------------
 
 class _UserListPageState extends State<UserListPage> {
-  bool isAdmin = false;
+  bool isAdmin = true;
   var estudiantes = [];
   var personal = [];
   var usuarios = [];
@@ -42,12 +45,20 @@ class _UserListPageState extends State<UserListPage> {
   void initState() {
     super.initState();
     initializeData();
+    initializeList();
   }
 
   // -----------------------------
   Future<void> initializeData() async {
     await loadUsersIds();
     await initializeAdminStatus();
+  }
+
+  // -----------------------------
+  Future<void> initializeList() async {
+    var contenido = await dbDriver.request("Select * from estudiante");
+    studentList = Estudiante.fromJsonList(contenido);
+    setState(() {});
   }
 
   // -----------------------------
@@ -98,31 +109,29 @@ class _UserListPageState extends State<UserListPage> {
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
         backgroundColor: Colors.blue,
+        automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             onPressed: () {
-              // Abre un cuadro de diálogo para la búsqueda.
+              // Cuadro de diálogo para la búsqueda.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  String query =
-                      ''; // Variable para almacenar la consulta de búsqueda.
+                  String query = '';
 
                   return AlertDialog(
                     title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
-                        query =
-                            text; // Almacena la consulta a medida que se escribe.
+                        query = text;
                       },
                     ),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          // Cierra el cuadro de diálogo y realiza la búsqueda
                           Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query".
+
                           var searchResults = usuarios.where((user) {
                             final estudianteNombre =
                                 user['estudiante']?['nombre']?.toLowerCase() ??
@@ -136,9 +145,7 @@ class _UserListPageState extends State<UserListPage> {
                                 personalNombre.contains(query.toLowerCase());
                           }).toList();
 
-                          // Filtra la lista de usuarios según "query".
                           setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
                             filteredUsers.clear();
                             filteredUsers.addAll(searchResults
                                 .cast<Map<String, Map<String, dynamic>>>());
@@ -151,8 +158,9 @@ class _UserListPageState extends State<UserListPage> {
                 },
               );
             },
-            icon: const Icon(Icons.search), // Icono de lupa.
+            icon: const Icon(Icons.search),
           ),
+          // -----------------------------
           DropdownButton<String?>(
             value: selectedFilter,
             onChanged: (String? newValue) {
@@ -170,12 +178,14 @@ class _UserListPageState extends State<UserListPage> {
           ),
         ],
       ),
+      // -------------------------------------------------------
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
               itemCount: filteredUsers.length,
               itemBuilder: (BuildContext context, int index) {
+                Estudiante estudiante = studentList![index];
                 final nombre = filteredUsers[index][tipo]?['nombre'];
 
                 if (nombre != null) {
@@ -206,6 +216,7 @@ class _UserListPageState extends State<UserListPage> {
                       );
                     }));
                   },
+                  // -----------------------------
                   child: Card(
                     margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
@@ -228,15 +239,46 @@ class _UserListPageState extends State<UserListPage> {
                           ],
                         ),
                       ),
+                      // -----------------------------
                       subtitle:
                           Text(filteredUsers[index][tipo]?['correo'] ?? ''),
-                      leading: const Icon(
-                        Icons.person,
-                        size: 45,
+                      leading: // Imagen circular
+                          CircleAvatar(
+                        radius: 18,
+                        child: ClipOval(
+                          child: estudiante?.foto != null
+                              ? Image.memory(
+                                  estudiante?.foto,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/usuario_sin_foto.png',
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          IconButton(
+                            onPressed: () {
+                               Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => GraphicsPage(
+                                          nombre: filteredUsers[index][tipo]
+                                              ['nombre'],
+                                          apellidos: filteredUsers[index][tipo]
+                                              ['apellidos'],
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
+                                        )),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.bar_chart,
+                              color: Color.fromARGB(255, 76, 76, 76),
+                            ),
+                          ),
                           // ------------------------------------
                           IconButton(
                             icon: const Icon(Icons.edit,
@@ -277,6 +319,7 @@ class _UserListPageState extends State<UserListPage> {
                                         TextButton(
                                           child: const Text('Sí'),
                                           onPressed: () {
+                                            controlador.eliminarEstudiante(nombre, filteredUsers[index][tipo]['apellidos']); 
                                             Navigator.of(context).pop(
                                                 true); // Confirma la eliminación
                                           },
@@ -361,32 +404,34 @@ class _UserListPageState extends State<UserListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Alumnos'),
+        title: const Text(
+          'Lista de Estudiantes',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () {
-              // Abre un cuadro de diálogo para la búsqueda.
+              // Cuadro de diálogo para la búsqueda.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  String query =
-                      ''; // Variable para almacenar la consulta de búsqueda.
+                  String query = '';
 
                   return AlertDialog(
                     title: const Text('Buscar por Nombre'),
                     content: TextField(
                       onChanged: (text) {
-                        query =
-                            text; // Almacena la consulta a medida que se escribe.
+                        query = text;
                       },
                     ),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          // Cierra el cuadro de diálogo y realiza la búsqueda.
                           Navigator.of(context).pop();
-                          // Lógica de búsqueda con "query".
+
                           var searchResults = estudiantes
                               .where((user) =>
                                   user['nombre'] != null &&
@@ -394,9 +439,8 @@ class _UserListPageState extends State<UserListPage> {
                                       .toLowerCase()
                                       .contains(query.toLowerCase()))
                               .toList();
-                          // Filtra la lista de usuarios según "query".
+                          // -----------------------------
                           setState(() {
-                            // Actualiza la lista de usuarios para mostrar los resultados de la búsqueda.
                             filteredUsers.clear();
                             filteredUsers.addAll(searchResults
                                 .cast<Map<String, Map<String, dynamic>>>());
@@ -409,7 +453,7 @@ class _UserListPageState extends State<UserListPage> {
                 },
               );
             },
-            icon: const Icon(Icons.search), // Icono de lupa
+            icon: const Icon(Icons.search),
           ),
         ],
       ),
@@ -434,6 +478,7 @@ class _UserListPageState extends State<UserListPage> {
                       );
                     }));
                   },
+                  // -----------------------------
                   child: Card(
                     margin: const EdgeInsets.only(
                         top: 10.0, bottom: 10.0, left: 15.0, right: 15.0),
@@ -451,6 +496,7 @@ class _UserListPageState extends State<UserListPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            // -----------------------
                             const SizedBox(height: 4),
                           ],
                         ),
@@ -463,8 +509,29 @@ class _UserListPageState extends State<UserListPage> {
                         Icons.person,
                         size: 45,
                       ),
-                      trailing: const Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => GraphicsPage(
+                                          nombre: filteredUsers[index]['estudiante']
+                                              ['nombre'],
+                                          apellidos: filteredUsers[index]['estudiante']
+                                              ['apellidos'],
+                                          userName: widget.userName,
+                                          userSurname: widget.userSurname,
+                                        )),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.bar_chart,
+                              color: Color.fromARGB(255, 76, 76, 76),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

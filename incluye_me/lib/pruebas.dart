@@ -1,16 +1,11 @@
 
 
-import 'package:incluye_me/model/database_driver.dart';
-import 'package:incluye_me/model/teacher.dart';
-import 'package:incluye_me/model/general_task.dart';
+import 'package:incluye_me/globals/globals.dart';
+import 'package:incluye_me/model/student.dart';
 
-main() async {
-
-  DataBaseDriver dbDriver =  DataBaseDriver();
-
-  var result = await dbDriver.listaTareas();
-  print(result);
+Future<void> main() async {
+  var contenido = await dbDriver.listaTareasGenerales();
+  print(contenido);
 
   dbDriver.close();
-
 }

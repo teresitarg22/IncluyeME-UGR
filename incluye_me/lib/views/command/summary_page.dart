@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../controllers/user_controller.dart'; 
+import '../../../controllers/user_controller.dart'; 
 
 class SummaryPage extends StatelessWidget {
   Map<String, Map<String, Map<String, int>>> amount = {};
@@ -78,7 +78,7 @@ class SummaryPage extends StatelessWidget {
               }
             }
 
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/studentTasks');
           },
           child: Text('Finalizar Tarea',
           style: TextStyle(fontSize: 25),),

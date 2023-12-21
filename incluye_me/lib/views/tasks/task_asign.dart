@@ -3,12 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:incluye_me/views/tasks/task_list.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'dart:io';
-import '../../controllers/user_controller.dart';
-import '../views/user_list.dart';
-import '../views/home_view.dart';
+import '../../../controllers/user_controller.dart';
+import '../staff/user_list.dart';
+import '../home_view.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
-import '../components/bottom_navigation_bar.dart';
+import '../../components/bottom_navigation_bar.dart';
 
 void main() {
   runApp(const MyApp());

@@ -6,7 +6,7 @@ import '../../model/general_task.dart';
 import 'add_general_task.dart';
 
 class TaskView extends StatefulWidget {
-  final Controller controller;
+  final TaskController controller;
 
   TaskView({Key? key, required this.controller}) : super(key: key);
 
