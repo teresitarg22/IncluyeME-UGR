@@ -1,7 +1,4 @@
-
-
 //Clase que representa un profesor
-
 
 class Teacher {
   var photo;
@@ -21,11 +18,38 @@ class Teacher {
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
       photo: json['foto'],
-      isAdmin: json['es_admin'],
+      isAdmin: json['es_admin'] ?? false,
       name: json['nombre'],
       surnames: json['apellidos'],
       correo: json['correo'],
     );
+  }
+
+  factory Teacher.fromJsonRaw(Map<String, dynamic> jsonRaw) {
+    var json = jsonRaw['personal'];
+    return Teacher(
+      photo: json['foto'],
+      isAdmin: json['es_admin'] ?? false,
+      name: json['nombre'],
+      surnames: json['apellidos'],
+      correo: json['correo'],
+    );
+  }
+
+  static List<Teacher> fromJsonList(List<dynamic> jsonList) {
+    List<Teacher> lista = [];
+    for (var json in jsonList) {
+      lista.add(Teacher.fromJson(json));
+    }
+    return lista;
+  }
+
+  static List<Teacher> fromJsonRawList(List<dynamic> jsonList) {
+    List<Teacher> lista = [];
+    for (var json in jsonList) {
+      lista.add(Teacher.fromJsonRaw(json));
+    }
+    return lista;
   }
 
   @override
@@ -33,12 +57,11 @@ class Teacher {
     return 'Teacher{photo: $photo, isAdmin: $isAdmin, name: $name, surnames: $surnames, correo: $correo}';
   }
 
-  getName(){
+  getName() {
     return name;
   }
 
-  getSurnames(){
+  getSurnames() {
     return surnames;
   }
-
 }
