@@ -57,6 +57,8 @@ class _GraphicsPageState extends State<GraphicsPage> {
 
   Future<void> setDatos() async {
     var tareas = await tareasFuture;
+    tareasCompletadas = 0 ; 
+    tareasNoCompletadas = 0 ;
 
     for (var tarea in tareas) {
       var esSemanal =
