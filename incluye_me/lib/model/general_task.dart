@@ -23,13 +23,16 @@ class Tarea {
         propietario: '',
       );
     }
-    var json = json_raw[0]['tareas'];
-    print(json);
-    //Imprime los datos separados de la variable json
+
+    var json = json_raw['tareas_generales'];
+    if (json == null) {
+      return Tarea(titulo: '', indicesPasos: [], propietario: '');
+    }
+
     return Tarea(
-      titulo: json?['titulo'],
-      indicesPasos: json?['indicesPasos'].cast<int>(),
-      propietario: json?['propietario'],
+      titulo: json['nombre'] ?? '',
+      indicesPasos: json['indices_pasos']?.cast<int>() ?? [],
+      propietario: json['propietario'] ?? '',
     );
   }
 
@@ -47,7 +50,6 @@ class Paso {
   Paso({required this.descripcion, required this.propietario, required this.imagen});
 
   factory Paso.fromJson(List<Map<String, Map<String, dynamic>>> json_raw) {
-    //Null check
     if (json_raw.isEmpty) {
       return Paso(
         descripcion: '',
@@ -56,8 +58,7 @@ class Paso {
       );
     }
     var json = json_raw[0]['pasos'];
-    print(json);
-    //Imprime los datos separados de la variable json
+
     return Paso(
       descripcion: json?['descripcion'],
       propietario: json?['propietario'],

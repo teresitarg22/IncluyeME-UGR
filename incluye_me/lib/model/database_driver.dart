@@ -313,8 +313,12 @@ class DataBaseDriver {
 
   Future<int> insertarPaso(Paso paso) async {
     try {
+      // Asegúrate de que la imagen esté codificada en Base64
+      String base64Image = base64Encode(paso.imagen);
+
+      // Modifica la consulta para usar la función decode de SQL
       var result = await request(
-          "INSERT INTO pasos (descripcion, propietario, imagen) VALUES ('${paso.descripcion}', '${paso.propietario}', '${paso.imagen}') RETURNING id");
+          "INSERT INTO pasos (descripcion, propietario, imagen) VALUES ('${paso.descripcion}', '${paso.propietario}', decode('$base64Image', 'base64')) RETURNING id");
 
       // Verificar si el resultado no está vacío y tiene la estructura esperada
       if (result.isNotEmpty &&
