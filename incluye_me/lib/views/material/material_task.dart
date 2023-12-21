@@ -242,6 +242,7 @@ class _PedirMaterialState extends State<PedirMaterial> {
                       ),
                       onPressed: () {
                         addMaterialToStudent(selectedStudent, selectedAula);
+                        Navigator.pushNamed(context, '/taskList');
                       }),
                 ],
               ),

@@ -156,8 +156,8 @@ class _MaterialViewState extends State<MaterialView> {
                 ElevatedButton(
                   onPressed: () async {
                     await saveHecho();
-                    // Navigate back to the previous screen
-                    Navigator.pop(context);
+                
+                    Navigator.pushNamed(context, '/studentTasks');
                   },
                   child:
                     widget.sabeLeer
