@@ -30,7 +30,7 @@ class _TaskListPageState extends State<TaskListPage> {
   var general = [];
   var comanda = [];
 
-  bool asignada = false;
+  bool asignada = true;
   bool mostrarBoton = false;
   bool completada = false;
 
