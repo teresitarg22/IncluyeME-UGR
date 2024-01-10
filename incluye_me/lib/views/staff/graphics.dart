@@ -57,8 +57,8 @@ class _GraphicsPageState extends State<GraphicsPage> {
 
   Future<void> setDatos() async {
     var tareas = await tareasFuture;
-    tareasCompletadas = 0 ; 
-    tareasNoCompletadas = 0 ;
+    tareasCompletadas = 0;
+    tareasNoCompletadas = 0;
 
     for (var tarea in tareas) {
       var esSemanal =
@@ -126,7 +126,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
       PieChartSectionData(
         color: const Color.fromARGB(255, 139, 243, 143),
         value: tareasCompletadasPorcentaje,
-        title: 'Tareas Realizadas: $tareasCompletadas',
+        title: 'Tareas Realizadas: ${tareasCompletadas - 1}',
         radius: 80,
         titleStyle: const TextStyle(
           fontSize: 16,
@@ -137,7 +137,7 @@ class _GraphicsPageState extends State<GraphicsPage> {
       PieChartSectionData(
         color: const Color.fromARGB(255, 238, 115, 106),
         value: tareasNoCompletadasPorcentaje,
-        title: ' Tareas No Realizadas: $tareasNoCompletadas',
+        title: ' Tareas No Realizadas: ${tareasNoCompletadas - 1}',
         radius: 80,
         titleStyle: const TextStyle(
           fontSize: 16,
